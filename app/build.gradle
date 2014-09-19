@@ -22,6 +22,10 @@ android {
     }
 }
 
+jacoco {
+    reportsDir = file("$buildDir/JaCoCoReports")
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'org.slf4j:slf4j-android:1.7.7'
@@ -54,6 +58,7 @@ class MyDownload extends DefaultTask {
         ant.get(src: sourceUrl, dest: target)
     }
 }
+
 task libsClean(type: Delete) {
     delete 'app/libs'
 }
