@@ -3,6 +3,12 @@ apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'pmd'
 
+sourceSets {
+    main {
+
+    }
+}
+
 android {
     compileSdkVersion 'android-L'
     buildToolsVersion "20.0.0"
@@ -23,7 +29,31 @@ android {
 }
 
 jacoco {
-    reportsDir = file("$buildDir/JaCoCoReports")
+    reportsDir = file("$buildDir/reports/jacoco")
+}
+
+findbugs {
+    ignoreFailures = true
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    effort = "max"
+}
+
+pmd {
+    ignoreFailures = true
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/pmd")
+    ruleSets = [
+            "android",
+            "basic",
+            "braces",
+            "code size",
+            "comments",
+            "design",
+            "finalizer",
+            "naming",
+            "optimization"
+    ]
 }
 
 dependencies {
