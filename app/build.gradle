@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+apply plugin: 'pmd'
 
 android {
     compileSdkVersion 'android-L'
