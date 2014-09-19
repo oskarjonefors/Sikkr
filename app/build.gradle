@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 'android-L'
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "edu.chalmers.sikkr"
+        minSdkVersion 19
+        targetSdkVersion 'L'
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'org.slf4j:slf4j-android:1.7.7'
+}
+
+task downloadSDP(type: MyDownload) {
+    sourceUrl = 'http://developer.lindholmen.se/repo/artifacts/SDP/1.0/SDP-1.0.jar'
+    target = file('libs/SDP-1.0-SNAPSHOT.jar')
+}
+
+task downloadVilConfig(type: MyDownload) {
+    sourceUrl = 'http://developer.lindholmen.se/repo/artifacts/VIL/1.0/VIL-1.0.jar'
+    target = file('libs/VIL-1.0-SNAPSHOT.jar')
+}
+
+task downloadAutomotiveAPI(type: MyDownload) {
+    sourceUrl = 'http://developer.lindholmen.se/repo/artifacts/Automotive-API/1.0/Automotive-API-1.0.jar'
+    target = file('libs/Automotive-API-1.0-SNAPSHOT.jar')
+}
+
+class MyDownload extends DefaultTask {
+    @Input
+    String sourceUrl
+
+    @OutputFile
+    File target
+
+    @TaskAction
+    void download() {
+        ant.get(src: sourceUrl, dest: target)
+    }
+}
+task libsClean(type: Delete) {
+    delete 'app/libs'
+}
+preBuild.dependsOn downloadSDP
+preBuild.dependsOn downloadVilConfig
+preBuild.dependsOn downloadAutomotiveAPI
