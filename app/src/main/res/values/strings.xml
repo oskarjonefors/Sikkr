@@ -7,5 +7,6 @@
     <string name="title_activity_start">StartActivity</string>
     <string name="butt1">Button!</string>
     <string name="title_activity_contact">ContactActivity</string>
+    <string name="title_activity_contact_book">ContactBookActivity</string>
 
 </resources>
