@@ -13,7 +13,7 @@ public class ContactActivity extends Activity {
     private TextView contactName = (TextView)findViewById(R.id.contactName);
 
     public ContactActivity(Contact contact) {
-        contactName.setText(contact.getFullName());
+        contactName.setText(contact.getName());
     }
 
     @Override
