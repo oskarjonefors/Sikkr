@@ -7,11 +7,7 @@ import java.util.List;
  */
 public interface Contact {
 
-    public String getFirstName();
-
-    public String getLastName();
-
-    public String getFullName();
+    public String getName();
 
     /**
      * Return a list of all the contact's phone numbers.

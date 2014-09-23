@@ -9,29 +9,17 @@ import java.util.List;
  */
 public class SikkrContact implements Contact {
 
-    private String firstName;
-    private String lastName;
+    private String name;
     private List<String> phoneNumbers;
 
-    public SikkrContact(String firstName, String lastName, List<String> phoneNumbers) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public SikkrContact(String name, List<String> phoneNumbers) {
+        this.name = name;
         this.phoneNumbers = phoneNumbers;
     }
 
     @Override
-    public String getFirstName() {
-        return firstName;
-    }
-
-    @Override
-    public String getLastName() {
-        return lastName;
-    }
-
-    @Override
-    public String getFullName() {
-        return firstName + " " + lastName;
+    public String getName() {
+        return name;
     }
 
     @Override
