@@ -26,12 +26,14 @@
             <Button
                 android:layout_width="170dp"
                 android:layout_height="130dp"
-                android:text="Last call" />
+                android:text="Last call"
+                android:id="@+id/lastCall"/>
 
             <Button
                 android:layout_width="170dp"
                 android:layout_height="130dp"
-                android:text="Fav. contacts" />
+                android:text="Fav. contacts"
+                android:id="@+id/fav_contacts"/>
         </LinearLayout>
 
         <LinearLayout
@@ -42,12 +44,16 @@
             <Button
                 android:layout_width="170dp"
                 android:layout_height="130dp"
-                android:text="Message" />
+                android:text="Message"
+                android:id="@+id/message"/>
 
             <Button
                 android:layout_width="170dp"
                 android:layout_height="130dp"
-                android:text="Contact book" />
+                android:text="Contact book"
+                android:id="@+id/contactBook"
+                android:onClick="clickedButton"
+                />
 
         </LinearLayout>
 
