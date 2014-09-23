@@ -29,12 +29,12 @@ public abstract class ContactBook {
     }
 
     private void addPhoneNumbers(SikkrContact contact, Cursor cursor) {
-        String contact_Id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-        Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
+        final String contact_Id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+        final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
                 Phone.CONTACT_ID + " = " + contact_Id, null, null);
         while (phoneNumbers.moveToNext()) {
-            String phNumber = phoneNumbers.getString(phoneNumbers.getColumnIndex(Phone.NUMBER));
-            int PHONE_TYPE = phoneNumbers.getInt(phoneNumbers.getColumnIndex(Phone.TYPE));
+            final String phNumber = phoneNumbers.getString(phoneNumbers.getColumnIndex(Phone.NUMBER));
+            final int PHONE_TYPE = phoneNumbers.getInt(phoneNumbers.getColumnIndex(Phone.TYPE));
 
             if (PHONE_TYPE == Phone.TYPE_HOME) {
                 contact.addPhoneNumber(phNumber);
