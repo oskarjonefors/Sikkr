@@ -1,5 +1,7 @@
 package edu.chalmers.sikkr.backend;
 
+import java.util.List;
+
 /**
  * Interface representing a contact.
  */

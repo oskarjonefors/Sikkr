@@ -1,5 +1,7 @@
 package edu.chalmers.sikkr.backend;
 
+import java.util.List;
+
 /**
  * @author Oskar Jönefors
  */
@@ -8,7 +10,7 @@ public interface ContactBook {
     /**
      * Get a list of all the contacts' initial letters.
      */
-    List<char> getInitialLetters();
+    List<Character> getInitialLetters();
 
     /**
      * Get a list of all the contacts in the contact book.
