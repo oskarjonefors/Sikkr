@@ -9,12 +9,16 @@ import java.util.List;
  */
 public class SikkrContact implements Contact {
 
-    private String name;
-    private List<String> phoneNumbers;
+    final private String name;
+    final private List<String> phoneNumbers;
+    final private List<String> mobilePhoneNumbers;
 
-    public SikkrContact(String name, List<String> phoneNumbers) {
+
+
+    public SikkrContact(String name) {
         this.name = name;
-        this.phoneNumbers = phoneNumbers;
+        phoneNumbers = new ArrayList<String>();
+        mobilePhoneNumbers = new ArrayList<String>();
     }
 
     @Override
@@ -22,8 +26,23 @@ public class SikkrContact implements Contact {
         return name;
     }
 
+    public void addPhoneNumber(String number) {
+        phoneNumbers.add(number);
+    }
+
+    public void addMobilePhoneNumber(String number) {
+        addPhoneNumber(number);
+        mobilePhoneNumbers.add(number);
+    }
+
     @Override
     public List<String> getPhoneNumbers() {
         return phoneNumbers;
     }
+
+    @Override
+    public List<String> getMobilePhoneNumbers() {
+        return mobilePhoneNumbers;
+    }
+
 }

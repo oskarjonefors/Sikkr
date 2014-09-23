@@ -14,4 +14,9 @@ public interface Contact {
      */
     public List<String> getPhoneNumbers();
 
+    /**
+     * Return a list of all the contact's mobile phone numbers.
+     */
+    public List<String> getMobilePhoneNumbers();
+
 }
