@@ -4,9 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import edu.chalmers.sikkr.backend.Contact;
 
 
 public class ContactActivity extends Activity {
+
+    private TextView contactName = (TextView)findViewById(R.id.contactName);
+
+    public ContactActivity(Contact contact) {
+        contactName.setText(contact.getFullName());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
