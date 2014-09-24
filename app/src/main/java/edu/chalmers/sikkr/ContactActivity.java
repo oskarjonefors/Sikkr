@@ -13,6 +13,7 @@ public class ContactActivity extends Activity {
 
     private TextView contactName = (TextView)findViewById(R.id.contactName);
 
+
     public void buttonClick(View v) {
 
     }
