@@ -4,5 +4,9 @@
     <string name="app_name">Sikkr</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="lastCall">LastCall</string>
+    <string name="favCont">Fav. Contact</string>
+    <string name="contBook">ContactBook</string>
+    <string name="message">Message</string>
 
 </resources>
