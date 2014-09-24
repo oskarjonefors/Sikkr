@@ -5,18 +5,26 @@ import java.util.List;
 /**
  * Interface representing a contact.
  */
-public interface Contact {
+public interface Contact extends Comparable<Contact> {
 
-    public String getName();
+    /**
+     * Returns the internal representation of the contact.
+     */
+    String getID();
+
+    /**
+     * Returns the name to be shown to the user.
+     */
+    String getName();
 
     /**
      * Return a list of all the contact's phone numbers.
      */
-    public List<String> getPhoneNumbers();
+    List<String> getPhoneNumbers();
 
     /**
      * Return a list of all the contact's mobile phone numbers.
      */
-    public List<String> getMobilePhoneNumbers();
+    List<String> getMobilePhoneNumbers();
 
 }

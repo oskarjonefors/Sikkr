@@ -1,9 +1,8 @@
 package edu.chalmers.sikkr.backend;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
+
 import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,25 +14,27 @@ import static android.provider.ContactsContract.CommonDataKinds.*;
 public class ContactBook {
 
     private final Context context;
-    private final List<Contact> contacts;
+    private final Set<Contact> contacts;
 
-    public ContactBook(Context context) {
+    public ContactBook(final Context context) {
         this.context = context;
-        contacts = new ArrayList<Contact>();
+        contacts = new TreeSet<Contact>();
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             final String name = cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME));
-            final SikkrContact contact = new SikkrContact(name);
+            final String contact_id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+            final SikkrContact contact = new SikkrContact(name, contact_id);
+            final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
+                    Phone.CONTACT_ID + " = " + contact_id, null, null);
 
             contacts.add(contact);
-            addPhoneNumbers(contact, cursor);
+            addPhoneNumbers(contact, phoneNumbers);
         }
     }
 
-    private void addPhoneNumbers(SikkrContact contact, Cursor cursor) {
-        final String contact_Id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-        final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
-                Phone.CONTACT_ID + " = " + contact_Id, null, null);
+    private void addPhoneNumbers(final SikkrContact contact, final Cursor phoneNumbers) {
+
+
         while (phoneNumbers.moveToNext()) {
             final String phNumber = phoneNumbers.getString(phoneNumbers.getColumnIndex(Phone.NUMBER));
             final int PHONE_TYPE = phoneNumbers.getInt(phoneNumbers.getColumnIndex(Phone.TYPE));
@@ -54,7 +55,7 @@ public class ContactBook {
      * Get a set of all the contacts' initial letters.
      */
     public Set<Character> getInitialLetters() {
-        final Set<Character> letters = new HashSet<Character>();
+        final Set<Character> letters = new TreeSet<Character>();
         for (final Contact contact : contacts) {
             letters.add(contact.getName().charAt(0));
         }
@@ -64,7 +65,7 @@ public class ContactBook {
     /**
      * Get a list of all the contacts in the contact book.
      */
-    public List<Contact> getContacts() {
+    public Set<Contact> getContacts() {
         return contacts;
     }
 
@@ -73,8 +74,8 @@ public class ContactBook {
      * @param initialLetter a char ranging from 'a' to 'z' and also 'å' 'ä' or 'ö'
      * @return
      */
-    public List<Contact> getContacts(char initialLetter) {
-        final List<Contact> c = new ArrayList<Contact>();
+    public Set<Contact> getContacts(char initialLetter) {
+        final Set<Contact> c = new TreeSet<Contact>();
         for (final Contact contact : contacts) {
             if (contact.getName().toLowerCase().charAt(0) == initialLetter) {
                 c.add(contact);

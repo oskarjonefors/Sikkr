@@ -10,15 +10,21 @@ import java.util.List;
 public class SikkrContact implements Contact {
 
     final private String name;
+    final private String id;
     final private List<String> phoneNumbers;
     final private List<String> mobilePhoneNumbers;
 
 
-
-    public SikkrContact(String name) {
+    public SikkrContact(final String name, final String id) {
         this.name = name;
+        this.id = id;
         phoneNumbers = new ArrayList<String>();
         mobilePhoneNumbers = new ArrayList<String>();
+    }
+
+    @Override
+    public String getID() {
+        return id;
     }
 
     @Override
@@ -45,4 +51,9 @@ public class SikkrContact implements Contact {
         return mobilePhoneNumbers;
     }
 
+    @Override
+    public int compareTo(Contact another) {
+        int compare = name.compareTo(another.getName());
+        return compare == 0 ? id.compareTo(another.getID()) : compare;
+    }
 }
