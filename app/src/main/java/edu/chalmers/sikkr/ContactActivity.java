@@ -1,12 +1,15 @@
 package edu.chalmers.sikkr;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.net.Uri;
+import android.util.Log;
 
 
 public class ContactActivity extends Activity {
@@ -14,7 +17,20 @@ public class ContactActivity extends Activity {
     private TextView contactName = (TextView)findViewById(R.id.contactName);
 
 
-    public void buttonClick(View v) {
+    public void buttonClick() {
+        //Brings out the phone dialer
+        Intent phoneIntent = new Intent(Intent.ACTION_CALL);
+        //sets the data for which number to call, in this case Joel
+        phoneIntent.setData(Uri.parse("tel:0736958002"));
+        try{
+            startActivity(phoneIntent);
+            finish();
+            Log.i("Finished making a call","");
+        }catch(ActivityNotFoundException e){
+            Log.v("Exception ocurred, could not make a call","");
+
+
+        }
 
     }
 
