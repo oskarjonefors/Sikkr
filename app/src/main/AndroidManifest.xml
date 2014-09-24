@@ -18,6 +18,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SikkrActivity"
+            android:label="SiKKr">
+        </activity>
+        <!--
+        <activity
+            android:name=".ContactActivity"
+            android:label="Sikkr" >
+        </activity>
+        -->
+        <activity
+            android:name=".ContactBookActivity"
+            android:label="SiKKr" >
+        </activity>
     </application>
 
 </manifest>
