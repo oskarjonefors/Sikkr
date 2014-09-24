@@ -1,7 +1,9 @@
 package edu.chalmers.sikkr.backend;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,14 +12,14 @@ import static android.provider.ContactsContract.CommonDataKinds.*;
 /**
  * @author Oskar Jönefors
  */
-public abstract class ContactBook {
+public class ContactBook {
 
     private final Context context;
-    private final List<SikkrContact> contacts;
+    private final List<Contact> contacts;
 
     public ContactBook(Context context) {
         this.context = context;
-        contacts = new ArrayList<SikkrContact>();
+        contacts = new ArrayList<Contact>();
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             final String name = cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME));
@@ -49,20 +51,36 @@ public abstract class ContactBook {
 
 
     /**
-     * Get a list of all the contacts' initial letters.
+     * Get a set of all the contacts' initial letters.
      */
-    public abstract List<Character> getInitialLetters();
+    public Set<Character> getInitialLetters() {
+        final Set<Character> letters = new HashSet<Character>();
+        for (final Contact contact : contacts) {
+            letters.add(contact.getName().charAt(0));
+        }
+        return letters;
+    }
 
     /**
      * Get a list of all the contacts in the contact book.
      */
-    public abstract List<Contact> getContacts();
+    public List<Contact> getContacts() {
+        return contacts;
+    }
 
     /**
      * Get all contacts starting with the given initial letter.
      * @param initialLetter a char ranging from 'a' to 'z' and also 'å' 'ä' or 'ö'
      * @return
      */
-    public abstract List<Contact> getContacts(char initialLetter);
+    public List<Contact> getContacts(char initialLetter) {
+        final List<Contact> c = new ArrayList<Contact>();
+        for (final Contact contact : contacts) {
+            if (contact.getName().toLowerCase().charAt(0) == initialLetter) {
+                c.add(contact);
+            }
+        }
+        return c;
+    }
 
 }
