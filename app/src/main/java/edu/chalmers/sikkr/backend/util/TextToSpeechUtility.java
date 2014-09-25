@@ -19,7 +19,7 @@ public final class TextToSpeechUtility {
         tts = new TextToSpeech(context, setupListener);
     }
 
-    public final static void readAloud(String msg, Context context) {
+    public final static void readAloud(String msg) {
         if (tts != null) {
             tts.speak(msg, TextToSpeech.QUEUE_FLUSH, null);
         }
