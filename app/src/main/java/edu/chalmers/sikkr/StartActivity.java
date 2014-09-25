@@ -40,7 +40,7 @@ public class StartActivity extends Activity {
         Intent intent;
         switch (view.getId()) {
         case R.id.contactBook:
-            intent = new Intent(this, SikkrActivity.class);
+            intent = new Intent(this, ContactActivity.class);
             startActivity(intent);
         break;
         case R.id.message:
