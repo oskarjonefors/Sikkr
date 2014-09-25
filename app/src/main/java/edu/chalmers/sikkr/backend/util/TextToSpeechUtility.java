@@ -19,13 +19,13 @@ public final class TextToSpeechUtility {
         tts = new TextToSpeech(context, setupListener);
     }
 
-    public final static void readAloud(String msg) {
+    public static void readAloud(String msg) {
         if (tts != null) {
             tts.speak(msg, TextToSpeech.QUEUE_FLUSH, null);
         }
     }
 
-    private final static void removeTextToSpeech() {
+    private static void removeTextToSpeech() {
         tts = null;
     }
 
