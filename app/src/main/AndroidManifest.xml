@@ -31,6 +31,11 @@
             android:name=".ContactBookActivity"
             android:label="SiKKr" >
         </activity>
+        <activity
+            android:name=".ContactGridActivity"
+            android:label="contact_grid_activity">
+        </activity>
+
     </application>
 
 </manifest>

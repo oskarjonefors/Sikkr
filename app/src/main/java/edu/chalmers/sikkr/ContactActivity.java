@@ -16,7 +16,7 @@ public class ContactActivity extends Activity {
 
     private TextView contactName = (TextView)findViewById(R.id.contactName);
 
-    public void buttonClick() {
+    public void buttonClick(View view) {
         //Brings out the phone dialer
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
         //sets the data for which number to call, in this case Joel

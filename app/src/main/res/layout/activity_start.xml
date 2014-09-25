@@ -33,7 +33,8 @@
                 android:layout_width="170dp"
                 android:layout_height="130dp"
                 android:text="@string/favCont"
-                android:id="@+id/fav_contacts"/>
+                android:id="@+id/fav_contacts"
+                android:onClick="clickedButton"/>
         </LinearLayout>
 
         <LinearLayout

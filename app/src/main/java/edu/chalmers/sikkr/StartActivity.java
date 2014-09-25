@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import edu.chalmers.sikkr.backend.ContactBook;
 
 
 public class StartActivity extends Activity {
@@ -45,6 +46,9 @@ public class StartActivity extends Activity {
         break;
         case R.id.message:
         case R.id.fav_contacts:
+            intent = new Intent(this, ContactGridActivity.class);
+            startActivity(intent);
+            break;
         case R.id.lastCall:
     }
 
