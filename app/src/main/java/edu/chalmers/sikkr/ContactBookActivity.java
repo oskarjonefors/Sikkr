@@ -1,17 +1,41 @@
 package edu.chalmers.sikkr;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+        import android.app.Activity;
+        import android.content.Context;
+        import android.graphics.Color;
+        import android.os.Bundle;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.AdapterView;
+        import android.widget.BaseAdapter;
+        import android.widget.Button;
+        import android.widget.GridView;
+        import android.widget.ImageView;
+        import android.widget.ListAdapter;
+        import android.widget.Toast;
+
+        import java.util.ArrayList;
+        import java.util.Set;
+
+        import edu.chalmers.sikkr.backend.ContactBook;
 
 
 public class ContactBookActivity extends Activity {
+    private ContactBook cb;
+    private ArrayList<Character> al;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_book);
+
+
+
+        GridView gridview = (GridView) findViewById(R.id.gridview);
+        gridview.setAdapter(new ButtonAdapter(this));
     }
 
 
@@ -33,4 +57,8 @@ public class ContactBookActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
 }
