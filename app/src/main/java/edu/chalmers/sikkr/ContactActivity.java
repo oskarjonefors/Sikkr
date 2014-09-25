@@ -16,8 +16,7 @@ public class ContactActivity extends Activity {
 
     private TextView contactName = (TextView)findViewById(R.id.contactName);
 
-
-    public void buttonClick() {
+    public void buttonClick(View view) {
         //Brings out the phone dialer
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
         //sets the data for which number to call, in this case Joel
@@ -28,17 +27,14 @@ public class ContactActivity extends Activity {
             Log.i("Finished making a call","");
         }catch(ActivityNotFoundException e){
             Log.v("Exception ocurred, could not make a call","");
-
-
         }
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
-        contactName.setText(getIntent().getDataString());
+        //contactName.setText(getIntent().getDataString());
     }
 
 
