@@ -1,5 +1,7 @@
 package edu.chalmers.sikkr.backend;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,13 +15,37 @@ public class SikkrContact implements Contact {
     final private String id;
     final private List<String> phoneNumbers;
     final private List<String> mobilePhoneNumbers;
+    final private Bitmap thumbPhoto;
+    final private Bitmap fullPhoto;
 
 
-    public SikkrContact(final String name, final String id) {
+    public SikkrContact(final String name, final String id, final Bitmap thumbPhoto, final Bitmap fullPhoto) {
         this.name = name;
         this.id = id;
+        this.thumbPhoto = thumbPhoto;
+        this.fullPhoto = fullPhoto;
         phoneNumbers = new ArrayList<String>();
         mobilePhoneNumbers = new ArrayList<String>();
+    }
+
+    public SikkrContact(Final String name, final String id) {
+        this(name, id, null, null);
+    }
+
+    @Override
+    public Bitmap getThumbnail() {
+        if(thumbPhoto == null) {
+            return new Bitmap();
+        }
+        return thumbPhoto;
+    }
+
+    @Override
+    public Bitmap getPhoto() {
+        if(fullPhoto == null) {
+            return new Bitmap();
+        }
+        return fullPhoto;
     }
 
     @Override
