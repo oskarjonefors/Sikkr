@@ -57,15 +57,14 @@ public class ButtonAdapter extends BaseAdapter {
         Button btn;
         if(convertView == null) {
             btn = new Button(mContext);
-            btn.setLayoutParams(new GridView.LayoutParams(200, 200));
-            btn.setPadding(8,8,8,8);
+            btn.setLayoutParams(new GridView.LayoutParams(250,250 ));
         }else{
             btn = (Button) convertView;
         }
-        btn.setText(String.valueOf(al.get(position)));
+        btn.setText(String.valueOf(Character.toUpperCase((al.get(position)))));
         btn.setTextColor(Color.BLACK);
-        btn.setTextSize(50);
-        btn.setBackgroundResource(R.drawable.background);
+        btn.setTextSize(60);
+        btn.setBackgroundResource(R.drawable.button_dark_gradient);
         btn.setId(position);
 
         btn.setOnClickListener(new ContactBookClickListener(position, btn.getText().charAt(0)));
