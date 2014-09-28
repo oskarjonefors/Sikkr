@@ -1,8 +1,14 @@
 package edu.chalmers.sikkr.backend;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Set;
 import java.util.TreeSet;
 
+import android.content.ContentUris;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
@@ -23,6 +29,14 @@ public class ContactBook {
         while (cursor.moveToNext()) {
             final String name = cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME));
             final String contact_id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+            final long longID = Long.valueOf(contact_id);
+
+            final Uri thumb_uri = ContentUris.withAppendedId(Uri.parse(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI), longID);
+            final Uri fullsize_uri = ContentUris.withAppendedId(Uri.parse(ContactsContract.Contacts.PHOTO_URI), longID);
+            final Bitmap thumbnailPic = getPhoto(thumb_uri);
+            final Bitmap fullPic = getPhoto(fullsize_uri);
+            //TODO: If the contact photos do not exist, choose a unique clipart photo for the contact.
+
             final SikkrContact contact = new SikkrContact(name, contact_id);
             final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
                     Phone.CONTACT_ID + " = " + contact_id, null, null);
@@ -46,6 +60,19 @@ public class ContactBook {
                 contact.addMobilePhoneNumber(phNumber);
                 break;
             }
+        }
+    }
+
+    private Bitmap getPhoto(Uri uri) {
+        try {
+            final InputStream input = context.getContentResolver().openInputStream(uri);
+            if (input == null) {
+                return null;
+            } else {
+                return BitmapFactory.decodeStream(input);
+            }
+        } catch (FileNotFoundException e) {
+            return null;
         }
     }
 
