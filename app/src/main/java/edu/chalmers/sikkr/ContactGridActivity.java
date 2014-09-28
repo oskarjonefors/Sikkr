@@ -9,8 +9,6 @@ import android.widget.GridView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import edu.chalmers.sikkr.backend.Contact;
 import edu.chalmers.sikkr.backend.ContactBook;
@@ -28,20 +26,24 @@ public class ContactGridActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ContactBook book = new ContactBook(this);
-        contacts = book.getContacts();
+        final ContactBook book = new ContactBook(this);
+        final Bundle bundle = getIntent().getExtras();
 
-        setContentView(R.layout.activity_contact_grid);
-
-        gridView = (GridView) findViewById(R.id.contact_grid);
+        if(bundle != null && bundle.containsKey("initial_letter")) {
+            contacts = book.getContacts(bundle.getChar("initial_letter"));
+        } else {
+            contacts = book.getContacts();
+        }
 
         final List<Contact> contactList = new ArrayList<Contact>();
-
-        for(Contact c : contacts) {
+        for(final Contact c : contacts) {
             contactList.add(c);
         }
 
+        setContentView(R.layout.activity_contact_grid);
+
         adapter = new ContactViewAdapter(this, R.layout.contact_thumb, contactList);
+        gridView = (GridView) findViewById(R.id.contact_grid);
         gridView.setAdapter(adapter);
     }
 
