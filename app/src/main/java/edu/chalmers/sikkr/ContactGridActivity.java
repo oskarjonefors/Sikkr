@@ -9,8 +9,6 @@ import android.widget.GridView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import edu.chalmers.sikkr.backend.Contact;
 import edu.chalmers.sikkr.backend.ContactBook;
@@ -38,7 +36,7 @@ public class ContactGridActivity extends Activity {
         }
 
         final List<Contact> contactList = new ArrayList<Contact>();
-        for(Contact c : contacts) {
+        for(final Contact c : contacts) {
             contactList.add(c);
         }
 
