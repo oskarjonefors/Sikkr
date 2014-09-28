@@ -10,12 +10,12 @@ import java.util.List;
 public interface Contact extends Comparable<Contact> {
 
     /**
-     * Returns the thumbnail-sized contact photo. If no such photo exists, an empty Bitmap is returned.
+     * Returns the thumbnail-sized contact photo. If no such photo exists, null is returned.
      */
     Bitmap getThumbnail();
 
     /**
-     * Returns the full-sized contact photo. If no such photo exists, an empty Bitmap is returned.
+     * Returns the full-sized contact photo. If no such photo exists, null is returned.
      */
     Bitmap getPhoto();
 

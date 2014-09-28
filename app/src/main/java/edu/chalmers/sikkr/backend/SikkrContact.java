@@ -28,23 +28,17 @@ public class SikkrContact implements Contact {
         mobilePhoneNumbers = new ArrayList<String>();
     }
 
-    public SikkrContact(Final String name, final String id) {
+    public SikkrContact(final String name, final String id) {
         this(name, id, null, null);
     }
 
     @Override
     public Bitmap getThumbnail() {
-        if(thumbPhoto == null) {
-            return new Bitmap();
-        }
         return thumbPhoto;
     }
 
     @Override
     public Bitmap getPhoto() {
-        if(fullPhoto == null) {
-            return new Bitmap();
-        }
         return fullPhoto;
     }
 
