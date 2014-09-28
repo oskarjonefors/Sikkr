@@ -77,7 +77,7 @@ public class ContactBook {
     public Set<Contact> getContacts(char initialLetter) {
         final Set<Contact> c = new TreeSet<Contact>();
         for (final Contact contact : contacts) {
-            if (contact.getName().toLowerCase().charAt(0) == initialLetter) {
+            if (contact.getName().toLowerCase().charAt(0) == Character.toLowerCase(initialLetter)) {
                 c.add(contact);
             }
         }

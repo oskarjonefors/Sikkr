@@ -17,10 +17,9 @@ class ContactBookClickListener implements View.OnClickListener {
     }
 
     public void onClick(View view){
-    Intent intent = new Intent(view.getContext(), ContactGridActivity.class);
-    intent.putExtra("initial_letter", initialLetter);
-    view.getContext().startActivity(intent);
-
+        Intent intent = new Intent(view.getContext(), ContactGridActivity.class);
+        intent.putExtra("initial_letter", initialLetter);
+        view.getContext().startActivity(intent);
     }
 
 }
