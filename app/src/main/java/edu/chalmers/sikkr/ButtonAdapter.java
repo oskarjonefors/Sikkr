@@ -68,7 +68,7 @@ public class ButtonAdapter extends BaseAdapter {
         btn.setBackgroundResource(R.drawable.background);
         btn.setId(position);
 
-        btn.setOnClickListener(new ContactBookClickListener(position));
+        btn.setOnClickListener(new ContactBookClickListener(position, btn.getText().charAt(0)));
 
         return btn;
     }
