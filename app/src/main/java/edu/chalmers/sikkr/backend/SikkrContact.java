@@ -15,31 +15,24 @@ public class SikkrContact implements Contact {
     final private String id;
     final private List<String> phoneNumbers;
     final private List<String> mobilePhoneNumbers;
-    final private Bitmap thumbPhoto;
-    final private Bitmap fullPhoto;
+    final private Bitmap photo;
 
 
-    public SikkrContact(final String name, final String id, final Bitmap thumbPhoto, final Bitmap fullPhoto) {
+    public SikkrContact(final String name, final String id, final Bitmap photo) {
         this.name = name;
         this.id = id;
-        this.thumbPhoto = thumbPhoto;
-        this.fullPhoto = fullPhoto;
+        this.photo = photo;
         phoneNumbers = new ArrayList<String>();
         mobilePhoneNumbers = new ArrayList<String>();
     }
 
     public SikkrContact(final String name, final String id) {
-        this(name, id, null, null);
-    }
-
-    @Override
-    public Bitmap getThumbnail() {
-        return thumbPhoto;
+        this(name, id, null);
     }
 
     @Override
     public Bitmap getPhoto() {
-        return fullPhoto;
+        return photo;
     }
 
     @Override

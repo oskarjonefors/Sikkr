@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
+
 import static android.provider.ContactsContract.CommonDataKinds.*;
 
 /**
@@ -31,13 +33,15 @@ public class ContactBook {
             final String contact_id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
             final long longID = Long.valueOf(contact_id);
 
-            final Uri thumb_uri = ContentUris.withAppendedId(Uri.parse(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI), longID);
-            final Uri fullsize_uri = ContentUris.withAppendedId(Uri.parse(ContactsContract.Contacts.PHOTO_URI), longID);
-            final Bitmap thumbnailPic = getPhoto(thumb_uri);
-            final Bitmap fullPic = getPhoto(fullsize_uri);
+            final Uri contact_uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, longID);
+            Log.d("ContactBook", "CONTACT URI IS " + contact_uri);
+
+            final Uri photo_uri = Uri.withAppendedPath(contact_uri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+
+            final Bitmap photo = getPhoto(photo_uri);
             //TODO: If the contact photos do not exist, choose a unique clipart photo for the contact.
 
-            final SikkrContact contact = new SikkrContact(name, contact_id);
+            final SikkrContact contact = new SikkrContact(name, contact_id, photo);
             final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
                     Phone.CONTACT_ID + " = " + contact_id, null, null);
 
@@ -66,12 +70,14 @@ public class ContactBook {
     private Bitmap getPhoto(Uri uri) {
         try {
             final InputStream input = context.getContentResolver().openInputStream(uri);
+            Log.d("getPhoto", "Input = " + input + " for " + uri);
             if (input == null) {
                 return null;
             } else {
                 return BitmapFactory.decodeStream(input);
             }
         } catch (FileNotFoundException e) {
+            Log.d("getPhoto", "FILE NOT FOUND");
             return null;
         }
     }
