@@ -2,7 +2,6 @@ package edu.chalmers.sikkr.backend;
 
 import android.graphics.Bitmap;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**

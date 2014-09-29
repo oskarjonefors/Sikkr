@@ -1,6 +1,5 @@
 package edu.chalmers.sikkr;
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
@@ -10,10 +9,7 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
-import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.ContactBook;
 
 /**
