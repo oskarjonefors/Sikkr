@@ -2,7 +2,11 @@ package edu.chalmers.sikkr.backend;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.ContentUris;
@@ -22,7 +26,7 @@ import static android.provider.ContactsContract.CommonDataKinds.*;
 public class ContactBook {
 
     private Context context;
-    private final Set<Contact> contacts = new TreeSet<Contact>();;
+    private final Map<String, Contact> contacts = new TreeMap<String, Contact>();;
     private final static ContactBook singleton = new ContactBook();
 
     private ContactBook() { }
@@ -42,7 +46,7 @@ public class ContactBook {
                 final SikkrContact contact = new SikkrContact(name, contact_id, getPhoto(contact_uri));
                 final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
                         Phone.CONTACT_ID + " = " + contact_id, null, null);
-                contacts.add(contact);
+                contacts.put(contact_id, contact);
                 addPhoneNumbers(contact, phoneNumbers);
             }
         }
@@ -98,7 +102,7 @@ public class ContactBook {
      */
     public Set<Character> getInitialLetters() {
         final Set<Character> letters = new TreeSet<Character>();
-        for (final Contact contact : contacts) {
+        for (final Contact contact : contacts.values()) {
             letters.add(Character.toUpperCase(contact.getName().charAt(0)));
         }
         return letters;
@@ -108,7 +112,11 @@ public class ContactBook {
      * Get a list of all the contacts in the contact book.
      */
     public Set<Contact> getContacts() {
-        return contacts;
+        final Set<Contact> c = new TreeSet<Contact>();
+        for (final Contact contact : contacts.values()) {
+            c.add(contact);
+        }
+        return c;
     }
 
     /**
@@ -118,7 +126,7 @@ public class ContactBook {
      */
     public Set<Contact> getContacts(char initialLetter) {
         final Set<Contact> c = new TreeSet<Contact>();
-        for (final Contact contact : contacts) {
+        for (final Contact contact : contacts.values()) {
             if (contact.getName().toLowerCase().charAt(0) == Character.toLowerCase(initialLetter)) {
                 c.add(contact);
             }
@@ -126,4 +134,7 @@ public class ContactBook {
         return c;
     }
 
+    public Contact getContact(String id) {
+        return contacts.get(id);
+    }
 }
