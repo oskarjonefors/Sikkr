@@ -51,7 +51,7 @@ public class ButtonAdapter extends BaseAdapter {
         Button btn;
         if(convertView == null) {
             btn = new Button(mContext);
-            btn.setLayoutParams(new GridView.LayoutParams(900,500 ));
+            btn.setLayoutParams(new GridView.LayoutParams(250,250 ));
         }else{
             btn = (Button) convertView;
         }
