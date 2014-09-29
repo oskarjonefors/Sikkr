@@ -21,26 +21,52 @@ import static android.provider.ContactsContract.CommonDataKinds.*;
  */
 public class ContactBook {
 
-    private final Context context;
-    private final Set<Contact> contacts;
+    private Context context;
+    private final Set<Contact> contacts = new TreeSet<Contact>();;
+    private final static ContactBook singleton = new ContactBook();
 
-    public ContactBook(final Context context) {
+    private ContactBook() { }
+
+    public void setup(Context context) {
         this.context = context;
-        contacts = new TreeSet<Contact>();
+        contacts.clear();
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
-            final String name = cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME));
+            final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             final String contact_id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
             final long longID = Long.valueOf(contact_id);
 
             final Uri contact_uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, longID);
+            Log.d("Contacts", "Added contact with name: " + name + ", " + "id: " + contact_id + " and picture: " + getPhoto(contact_uri));
             final SikkrContact contact = new SikkrContact(name, contact_id, getPhoto(contact_uri));
             final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
                     Phone.CONTACT_ID + " = " + contact_id, null, null);
-
             contacts.add(contact);
             addPhoneNumbers(contact, phoneNumbers);
         }
+        cursor.close();
+    }
+
+    public boolean hasContext() {
+        return context != null;
+    }
+
+    public static void setupSingleton(Context context) {
+        singleton.setup(context);
+    }
+
+    public static ContactBook getSharedInstance() {
+        if (singleton.hasContext()) {
+            return singleton;
+        } else {
+            throw new UnsupportedOperationException("This singleton requires a context");
+        }
+    }
+
+
+    public static ContactBook getSharedInstance(Context context) {
+        singleton.setup(context);
+        return singleton;
     }
 
     private void addPhoneNumbers(final SikkrContact contact, final Cursor phoneNumbers) {
@@ -58,6 +84,7 @@ public class ContactBook {
                 break;
             }
         }
+        phoneNumbers.close();
     }
 
     private Bitmap getPhoto(Uri contactUri) {

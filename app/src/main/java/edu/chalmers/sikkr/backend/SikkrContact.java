@@ -1,6 +1,7 @@
 package edu.chalmers.sikkr.backend;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,11 +48,13 @@ public class SikkrContact implements Contact {
 
     public void addPhoneNumber(String number) {
         phoneNumbers.add(number);
+        Log.d("SikkrContact ", "Added phone number " + number + " for " + name);
     }
 
     public void addMobilePhoneNumber(String number) {
         addPhoneNumber(number);
         mobilePhoneNumbers.add(number);
+        Log.d("SikkrContact ", "Added phone number " + number + " for " + name);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class ButtonAdapter extends BaseAdapter {
 
     public ButtonAdapter(Context c) {
         mContext = c;
-        cb = new ContactBook(mContext);
+        cb = ContactBook.getSharedInstance();
         al = new ArrayList<Character>();
         al.addAll(cb.getInitialLetters());
 

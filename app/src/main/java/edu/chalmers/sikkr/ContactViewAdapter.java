@@ -53,7 +53,7 @@ public class ContactViewAdapter extends ArrayAdapter {
         final Contact contact = contacts.get(position);
         holder.contactName.setText(contact.getName());
         holder.image.setImageBitmap(contact.getPhoto());
-        Log.d("ContactViewAdapter", "SETTING IMAGE " + contact.getPhoto());
+        Log.d("ContactViewAdapter", "SETTING IMAGE " + contact.getPhoto() + "for " + contact.getName());
         return view;
     }
 
