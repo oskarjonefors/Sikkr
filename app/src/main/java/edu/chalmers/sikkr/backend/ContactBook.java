@@ -63,12 +63,6 @@ public class ContactBook {
         }
     }
 
-
-    public static ContactBook getSharedInstance(Context context) {
-        singleton.setup(context);
-        return singleton;
-    }
-
     private void addPhoneNumbers(final SikkrContact contact, final Cursor phoneNumbers) {
 
 
