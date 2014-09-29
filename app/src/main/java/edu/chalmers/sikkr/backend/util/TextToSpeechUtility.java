@@ -15,7 +15,7 @@ public final class TextToSpeechUtility {
         throw new UnsupportedOperationException("Cannot create instance");
     }
 
-    public final void setupTextToSpeech(Context context) {
+    public static void setupTextToSpeech(Context context) {
         tts = new TextToSpeech(context, setupListener);
     }
 
