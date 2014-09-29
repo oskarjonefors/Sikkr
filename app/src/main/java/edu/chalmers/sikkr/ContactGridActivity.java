@@ -26,7 +26,7 @@ public class ContactGridActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ContactBook book = new ContactBook(this);
+        final ContactBook book = ContactBook.getSharedInstance();
         final Bundle bundle = getIntent().getExtras();
 
         if(bundle != null && bundle.containsKey("initial_letter")) {

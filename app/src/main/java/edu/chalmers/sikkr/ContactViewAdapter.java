@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,8 @@ public class ContactViewAdapter extends ArrayAdapter {
 
         final Contact contact = contacts.get(position);
         holder.contactName.setText(contact.getName());
-        // holder.image.setImageBitmap(contact.getImage());
+        holder.image.setImageBitmap(contact.getPhoto());
+        Log.d("ContactViewAdapter", "SETTING IMAGE " + contact.getPhoto() + "for " + contact.getName());
         return view;
     }
 

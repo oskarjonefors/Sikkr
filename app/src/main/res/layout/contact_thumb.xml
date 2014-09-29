@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="fill_parent"
     android:layout_height="fill_parent">
         <ImageView
             android:id="@+id/contact_thumb"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_width="100dp"
+            android:layout_height="100dp">
         </ImageView>
 
         <TextView
             android:id="@+id/contact_name"
-            android:layout_width="fill_parent"
+            android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
             />
+            <!-- android:layout_alignParentBottom="true" -->
 
-</RelativeLayout>
+</LinearLayout>

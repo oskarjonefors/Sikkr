@@ -1,11 +1,19 @@
 package edu.chalmers.sikkr.backend;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Set;
 import java.util.TreeSet;
 
+import android.content.ContentUris;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
+
 import static android.provider.ContactsContract.CommonDataKinds.*;
 
 /**
@@ -13,22 +21,49 @@ import static android.provider.ContactsContract.CommonDataKinds.*;
  */
 public class ContactBook {
 
-    private final Context context;
-    private final Set<Contact> contacts;
+    private Context context;
+    private final Set<Contact> contacts = new TreeSet<Contact>();;
+    private final static ContactBook singleton = new ContactBook();
 
-    public ContactBook(final Context context) {
+    private ContactBook() { }
+
+    public void setup(Context context) {
         this.context = context;
-        contacts = new TreeSet<Contact>();
+        contacts.clear();
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
-            final String name = cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME));
-            final String contact_id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-            final SikkrContact contact = new SikkrContact(name, contact_id);
-            final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
-                    Phone.CONTACT_ID + " = " + contact_id, null, null);
+            final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
-            contacts.add(contact);
-            addPhoneNumbers(contact, phoneNumbers);
+            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI,Uri.encode(name.toString().trim()));
+            Cursor mapContact = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup._ID}, null, null, null);
+            if(mapContact.moveToNext())
+            {
+                final String contact_id = mapContact.getString(mapContact.getColumnIndex(ContactsContract.Contacts._ID));
+                final long longID = Long.valueOf(contact_id);
+                final Uri contact_uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, longID);
+                final SikkrContact contact = new SikkrContact(name, contact_id, getPhoto(contact_uri));
+                final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
+                        Phone.CONTACT_ID + " = " + contact_id, null, null);
+                contacts.add(contact);
+                addPhoneNumbers(contact, phoneNumbers);
+            }
+        }
+        cursor.close();
+    }
+
+    public boolean hasContext() {
+        return context != null;
+    }
+
+    public static void setupSingleton(Context context) {
+        singleton.setup(context);
+    }
+
+    public static ContactBook getSharedInstance() {
+        if (singleton.hasContext()) {
+            return singleton;
+        } else {
+            throw new UnsupportedOperationException("This singleton requires a context");
         }
     }
 
@@ -47,8 +82,17 @@ public class ContactBook {
                 break;
             }
         }
+        phoneNumbers.close();
     }
 
+    private Bitmap getPhoto(Uri contactUri) {
+            final InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(), contactUri, true);
+            if (input == null) {
+                return null;
+            } else {
+                return BitmapFactory.decodeStream(input);
+            }
+    }
 
 
     /**
