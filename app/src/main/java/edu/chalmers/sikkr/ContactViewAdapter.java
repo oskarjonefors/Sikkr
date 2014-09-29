@@ -2,8 +2,6 @@ package edu.chalmers.sikkr;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 
 import edu.chalmers.sikkr.backend.Contact;
 
@@ -25,9 +20,9 @@ import edu.chalmers.sikkr.backend.Contact;
  */
 public class ContactViewAdapter extends ArrayAdapter {
 
-    private Context context;
-    private int layoutResourceId;
-    private List<Contact> contacts;
+    private final Context context;
+    private final int layoutResourceId;
+    private final List<Contact> contacts;
 
     public ContactViewAdapter(Context context, int layoutResourceId, List<Contact> contacts) {
         super(context, layoutResourceId, contacts);
@@ -38,7 +33,7 @@ public class ContactViewAdapter extends ArrayAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        ViewHolder holder = null;
+        final ViewHolder holder;
 
         if(view == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();

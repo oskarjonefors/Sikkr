@@ -16,10 +16,6 @@ import edu.chalmers.sikkr.backend.ContactBook;
 
 public class ContactGridActivity extends Activity {
 
-    private GridView gridView;
-    private ContactViewAdapter adapter;
-    private Set<Contact> contacts;
-
     public ContactGridActivity() {}
 
     @Override
@@ -28,6 +24,7 @@ public class ContactGridActivity extends Activity {
 
         final ContactBook book = ContactBook.getSharedInstance();
         final Bundle bundle = getIntent().getExtras();
+        final Set<Contact> contacts;
 
         if(bundle != null && bundle.containsKey("initial_letter")) {
             contacts = book.getContacts(bundle.getChar("initial_letter"));
@@ -42,9 +39,8 @@ public class ContactGridActivity extends Activity {
 
         setContentView(R.layout.activity_contact_grid);
 
-        adapter = new ContactViewAdapter(this, R.layout.contact_thumb, contactList);
-        gridView = (GridView) findViewById(R.id.contact_grid);
-        gridView.setAdapter(adapter);
+        ContactViewAdapter adapter = new ContactViewAdapter(this, R.layout.contact_thumb, contactList);
+        ((GridView) findViewById(R.id.contact_grid)).setAdapter(adapter);
     }
 
     @Override

@@ -21,14 +21,12 @@ import edu.chalmers.sikkr.backend.ContactBook;
  */
 public class ButtonAdapter extends BaseAdapter {
     private Context mContext;
-    private ContactBook cb;
     final private ArrayList<Character> al;
 
     public ButtonAdapter(Context c) {
         mContext = c;
-        cb = ContactBook.getSharedInstance();
         al = new ArrayList<Character>();
-        al.addAll(cb.getInitialLetters());
+        al.addAll(ContactBook.getSharedInstance().getInitialLetters());
 
     }
     /**
