@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import edu.chalmers.sikkr.backend.ContactBook;
+import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 
 
 public class StartActivity extends Activity {
@@ -17,6 +18,7 @@ public class StartActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         ContactBook.setupSingleton(this);
+        TextToSpeechUtility.setupTextToSpeech(this);
     }
 
 

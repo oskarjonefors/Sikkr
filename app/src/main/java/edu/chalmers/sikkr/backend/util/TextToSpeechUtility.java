@@ -30,10 +30,6 @@ public final class TextToSpeechUtility {
     }
 
     private final static class SetupListener implements TextToSpeech.OnInitListener {
-
-        private SetupListener() {
-            throw new UnsupportedOperationException("Cannot create instance");
-        }
         
         @Override
         public final void onInit(int status) {
