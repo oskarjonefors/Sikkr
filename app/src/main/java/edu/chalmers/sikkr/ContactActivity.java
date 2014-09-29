@@ -7,14 +7,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.net.Uri;
 import android.util.Log;
+
+import edu.chalmers.sikkr.backend.Contact;
+import edu.chalmers.sikkr.backend.ContactBook;
 
 
 public class ContactActivity extends Activity {
 
     private TextView contactName = (TextView)findViewById(R.id.contactName);
+    private ImageView contactPicture = (ImageView)findViewById(R.id.contactPicture);
 
     public void buttonClick(View view) {
         //Brings out the phone dialer
@@ -34,7 +39,13 @@ public class ContactActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
-        //contactName.setText(getIntent().getDataString());
+
+        final ContactBook book = ContactBook.getSharedInstance();
+        final Bundle bundle = getIntent().getExtras();
+        final Contact contact = book.getContact(bundle.getString("contact_id"));
+
+        contactName.setText(contact.getName());
+
     }
 
 
