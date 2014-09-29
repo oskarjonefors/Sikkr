@@ -101,7 +101,7 @@ public class ContactBook {
     public Set<Character> getInitialLetters() {
         final Set<Character> letters = new TreeSet<Character>();
         for (final Contact contact : contacts) {
-            letters.add(contact.getName().charAt(0));
+            letters.add(Character.toUpperCase(contact.getName().charAt(0)));
         }
         return letters;
     }
