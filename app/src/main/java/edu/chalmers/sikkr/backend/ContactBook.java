@@ -33,16 +33,20 @@ public class ContactBook {
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-            final String contact_id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-            final long longID = Long.valueOf(contact_id);
 
-            final Uri contact_uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, longID);
-            Log.d("Contacts", "Added contact with name: " + name + ", " + "id: " + contact_id + " and picture: " + getPhoto(contact_uri));
-            final SikkrContact contact = new SikkrContact(name, contact_id, getPhoto(contact_uri));
-            final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
-                    Phone.CONTACT_ID + " = " + contact_id, null, null);
-            contacts.add(contact);
-            addPhoneNumbers(contact, phoneNumbers);
+            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI,Uri.encode(name.toString().trim()));
+            Cursor mapContact = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup._ID}, null, null, null);
+            if(mapContact.moveToNext())
+            {
+                final String contact_id = mapContact.getString(mapContact.getColumnIndex(ContactsContract.Contacts._ID));
+                final long longID = Long.valueOf(contact_id);
+                final Uri contact_uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, longID);
+                final SikkrContact contact = new SikkrContact(name, contact_id, getPhoto(contact_uri));
+                final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
+                        Phone.CONTACT_ID + " = " + contact_id, null, null);
+                contacts.add(contact);
+                addPhoneNumbers(contact, phoneNumbers);
+            }
         }
         cursor.close();
     }
