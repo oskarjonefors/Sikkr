@@ -26,8 +26,10 @@ public class ContactActivity extends Activity {
         //Brings out the phone dialer
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
 
+        //contact.getMobilePhoneNumbers().get(0);
+        //contact.getPhoneNumbers().get(0)))
         //Sets the data for which number to call
-        phoneIntent.setData(Uri.parse("0736958002"));
+        phoneIntent.setData(Uri.parse(contact.getPhoneNumbers().get(0)))));
         try{
             startActivity(phoneIntent);
             finish();
