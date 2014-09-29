@@ -1,9 +1,6 @@
 package edu.chalmers.sikkr.backend;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -16,7 +13,6 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import static android.provider.ContactsContract.CommonDataKinds.*;
 
@@ -26,18 +22,18 @@ import static android.provider.ContactsContract.CommonDataKinds.*;
 public class ContactBook {
 
     private Context context;
-    private final Map<String, Contact> contacts = new TreeMap<String, Contact>();;
+    private final Map<String, Contact> contacts = new TreeMap<String, Contact>();
     private final static ContactBook singleton = new ContactBook();
 
     private ContactBook() { }
 
-    public void setup(Context context) {
+    private void setup(Context context) {
         this.context = context;
         contacts.clear();
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI,Uri.encode(name.toString().trim()));
+            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI,Uri.encode(name.trim()));
             Cursor mapContact = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup._ID}, null, null, null);
             if (mapContact.moveToNext()) {
                 final String contact_id = mapContact.getString(mapContact.getColumnIndex(ContactsContract.Contacts._ID));
@@ -53,7 +49,7 @@ public class ContactBook {
         cursor.close();
     }
 
-    public boolean hasContext() {
+    private boolean hasContext() {
         return context != null;
     }
 
@@ -78,10 +74,8 @@ public class ContactBook {
 
             if (PHONE_TYPE == Phone.TYPE_HOME) {
                 contact.addPhoneNumber(phNumber);
-                break;
             } else {
                 contact.addMobilePhoneNumber(phNumber);
-                break;
             }
         }
         phoneNumbers.close();
@@ -122,7 +116,7 @@ public class ContactBook {
     /**
      * Get all contacts starting with the given initial letter.
      * @param initialLetter a char ranging from 'a' to 'z' and also 'å' 'ä' or 'ö'
-     * @return
+     * @return a set of contacts in alphabetic order.
      */
     public Set<Contact> getContacts(char initialLetter) {
         final Set<Contact> c = new TreeSet<Contact>();
