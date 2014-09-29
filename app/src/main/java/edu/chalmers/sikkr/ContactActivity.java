@@ -18,9 +18,6 @@ import edu.chalmers.sikkr.backend.ContactBook;
 
 public class ContactActivity extends Activity {
 
-    private TextView contactName = (TextView)findViewById(R.id.contactName);
-    private ImageView contactPicture = (ImageView)findViewById(R.id.contactPicture);
-
     public void buttonClick(View view) {
         //Brings out the phone dialer
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
@@ -39,6 +36,9 @@ public class ContactActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
+
+        final TextView contactName = (TextView)findViewById(R.id.contactName);
+        final ImageView contactPicture = (ImageView)findViewById(R.id.contactPicture);
 
         final ContactBook book = ContactBook.getSharedInstance();
         final Bundle bundle = getIntent().getExtras();
