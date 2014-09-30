@@ -3,6 +3,8 @@ package edu.chalmers.sikkr.backend.util;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 
+import java.util.Locale;
+
 /**
  * Created by Eric on 2014-09-25.
  */
@@ -16,7 +18,8 @@ public final class TextToSpeechUtility {
     }
 
     public static void setupTextToSpeech(Context context) {
-        tts = new TextToSpeech(context, setupListener);
+        tts = new TextToSpeech(context.getApplicationContext(), setupListener);
+
     }
 
     public static void readAloud(String msg) {
@@ -35,6 +38,9 @@ public final class TextToSpeechUtility {
         public final void onInit(int status) {
             if (status == TextToSpeech.ERROR) {
                 removeTextToSpeech();
+            } else {
+                tts.setLanguage(Locale.UK);
+                tts.speak("Welcome to Sicker", TextToSpeech.QUEUE_FLUSH, null);
             }
         }
     }
