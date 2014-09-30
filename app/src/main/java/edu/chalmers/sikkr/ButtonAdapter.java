@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -51,13 +52,14 @@ public class ButtonAdapter extends BaseAdapter {
         Button btn;
         if(convertView == null) {
             btn = new Button(mContext);
-            btn.setLayoutParams(new GridView.LayoutParams(250,250 ));
+            btn.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.WRAP_CONTENT,500 ));
+
         }else{
             btn = (Button) convertView;
         }
         btn.setText(String.valueOf(Character.toUpperCase((al.get(position)))));
         btn.setTextColor(Color.BLACK);
-        btn.setTextSize(100);
+        btn.setTextSize(80);
         btn.setBackgroundResource(R.drawable.background_2);
         btn.setId(position);
 
