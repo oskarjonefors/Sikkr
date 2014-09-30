@@ -19,6 +19,7 @@ public class StartActivity extends Activity {
         setContentView(R.layout.activity_start);
         ContactBook.setupSingleton(this);
         TextToSpeechUtility.setupTextToSpeech(this);
+
     }
 
 
