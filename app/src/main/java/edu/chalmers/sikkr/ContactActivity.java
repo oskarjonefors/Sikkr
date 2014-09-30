@@ -29,7 +29,7 @@ public class ContactActivity extends Activity {
         //contact.getMobilePhoneNumbers().get(0);
         //contact.getPhoneNumbers().get(0)))
         //Sets the data for which number to call
-        phoneIntent.setData(Uri.parse(contact.getPhoneNumbers().get(0)));
+        phoneIntent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
         try{
             startActivity(phoneIntent);
             finish();
