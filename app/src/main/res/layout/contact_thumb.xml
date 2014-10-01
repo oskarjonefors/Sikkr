@@ -7,27 +7,28 @@
     android:onClick="clickedContact">
         <ImageView
             android:id="@+id/contact_thumb"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:scaleType="fitXY">
         </ImageView>
 
         <ImageView
             android:id="@+id/name_bar"
-            android:layout_width="100dp"
-            android:layout_height="20dp"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
             android:background="#C0000000"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="170dp"
             />
 
         <TextView
             android:id="@+id/contact_name"
-            android:layout_width="100dp"
+            android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="170dp"
             android:layout_marginLeft="5dp"
+            android:textSize="20dp"
             android:textColor="#FFFFFF"
             />
 
