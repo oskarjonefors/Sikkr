@@ -38,14 +38,12 @@ public class TheInbox {
         Log.e("print", (context == null) + "");
         Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
 
-        if(cursor.moveToFirst()) {
-            do {
-                OneSms sms = new OneSms();
-                sms.setMessage(cursor.getString(cursor.getColumnIndexOrThrow("body")));
-                sms.setSenderNbr(cursor.getInt((cursor.getColumnIndexOrThrow("address"))));
+        while (cursor.moveToNext()) {
+            OneSms sms = new OneSms();
+            sms.setMessage(cursor.getString(cursor.getColumnIndexOrThrow("body")));
+            sms.setSenderNbr(cursor.getInt((cursor.getColumnIndexOrThrow("address"))));
 
-                smsList.add(sms);
-            } while (cursor.moveToNext());
+            smsList.add(sms);
         }
     }
 
