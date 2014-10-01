@@ -4,6 +4,7 @@ package edu.chalmers.sikkr;
         import android.os.Bundle;
         import android.view.Menu;
         import android.view.MenuItem;
+        import android.view.Window;
         import android.widget.GridView;
 
 
@@ -12,6 +13,7 @@ public class ContactBookActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_contact_book);
 
 
