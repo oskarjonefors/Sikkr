@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr.backend.util;
+package edu.chalmers.sikkr.backend.sms;
 
 import android.content.Context;
 import android.database.Cursor;

@@ -1,7 +1,9 @@
-package edu.chalmers.sikkr;
+package edu.chalmers.sikkr.frontend;
 
 import android.content.Intent;
 import android.view.View;
+
+import edu.chalmers.sikkr.frontend.ContactGridActivity;
 
 /**
  * Created by Jesper on 2014-09-28.

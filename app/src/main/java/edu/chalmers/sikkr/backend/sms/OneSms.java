@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr.backend.util;
+package edu.chalmers.sikkr.backend.sms;
 
 /**
  * Created by Jingis on 2014-09-30.

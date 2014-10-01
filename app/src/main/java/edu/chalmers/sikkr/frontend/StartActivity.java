@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr;
+package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,9 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
-import edu.chalmers.sikkr.backend.ContactBook;
+import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
-import edu.chalmers.sikkr.backend.util.TheInbox;
+import edu.chalmers.sikkr.backend.sms.TheInbox;
 
 
 public class StartActivity extends Activity {

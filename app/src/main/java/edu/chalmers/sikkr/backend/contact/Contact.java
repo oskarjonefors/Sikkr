@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr.backend;
+package edu.chalmers.sikkr.backend.contact;
 
 import android.graphics.Bitmap;
 

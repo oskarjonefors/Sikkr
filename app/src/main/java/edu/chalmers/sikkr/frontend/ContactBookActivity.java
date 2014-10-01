@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr;
+package edu.chalmers.sikkr.frontend;
 
         import android.app.Activity;
         import android.os.Bundle;
@@ -6,6 +6,8 @@ package edu.chalmers.sikkr;
         import android.view.MenuItem;
         import android.view.Window;
         import android.widget.GridView;
+
+        import edu.chalmers.sikkr.R;
 
 
 public class ContactBookActivity extends Activity {

@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr.backend;
+package edu.chalmers.sikkr.backend.contact;
 
 import java.io.InputStream;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr;
+package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -13,10 +13,9 @@ import android.widget.TextView;
 import android.net.Uri;
 import android.util.Log;
 
-import java.util.List;
-
-import edu.chalmers.sikkr.backend.Contact;
-import edu.chalmers.sikkr.backend.ContactBook;
+import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.contact.Contact;
+import edu.chalmers.sikkr.backend.contact.ContactBook;
 
 
 public class ContactActivity extends Activity {

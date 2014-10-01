@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".StartActivity"
+            android:name=".frontend.StartActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,19 +27,19 @@
             android:label="SiKKr">
         </activity>
         <activity
-            android:name=".ContactActivity"
+            android:name=".frontend.ContactActivity"
             android:label="Sikkr" >
         </activity>
         <activity
-            android:name=".ContactBookActivity"
+            android:name=".frontend.ContactBookActivity"
             android:label="SiKKr" >
         </activity>
         <activity
-            android:name=".ContactGridActivity"
+            android:name=".frontend.ContactGridActivity"
             android:label="contact_grid_activity">
         </activity>
         <activity
-            android:name=".SMS_Activity"
+            android:name=".frontend.SMS_Activity"
             android:label="Sms">
         </activity>
     </application>

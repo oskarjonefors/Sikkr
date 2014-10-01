@@ -1,17 +1,17 @@
-package edu.chalmers.sikkr;
+package edu.chalmers.sikkr.frontend;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 
 import java.util.ArrayList;
 
-import edu.chalmers.sikkr.backend.ContactBook;
+import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.contact.ContactBook;
 
 /**
  * @author Jesper Olsson

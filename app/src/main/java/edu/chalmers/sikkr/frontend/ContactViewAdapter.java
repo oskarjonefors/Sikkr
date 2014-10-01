@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr;
+package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
-import edu.chalmers.sikkr.backend.Contact;
+import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.contact.Contact;
 
 /**
  * Created by ivaldi on 2014-09-24.

@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr;
+package edu.chalmers.sikkr.frontend;
 
 import android.graphics.Bitmap;
 import android.util.Log;

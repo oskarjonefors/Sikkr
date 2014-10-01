@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr;
+package edu.chalmers.sikkr.frontend;
 
         import android.app.Activity;
         import android.os.Bundle;
@@ -8,8 +8,9 @@ package edu.chalmers.sikkr;
         import android.widget.ListView;
         import java.util.List;
 
-        import edu.chalmers.sikkr.backend.util.OneSms;
-        import edu.chalmers.sikkr.backend.util.TheInbox;
+        import edu.chalmers.sikkr.R;
+        import edu.chalmers.sikkr.backend.sms.OneSms;
+        import edu.chalmers.sikkr.backend.sms.TheInbox;
 
 
 public class SMS_Activity extends Activity {

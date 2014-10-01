@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr;
+package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import edu.chalmers.sikkr.backend.Contact;
-import edu.chalmers.sikkr.backend.ContactBook;
+import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.contact.Contact;
+import edu.chalmers.sikkr.backend.contact.ContactBook;
 
 
 public class ContactGridActivity extends Activity {
