@@ -3,7 +3,7 @@
     android:id="@+id/contact_grid"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnWidth="100dp"
+    android:columnWidth="200dp"
     android:numColumns="2"
     android:verticalSpacing="0dp"
     android:horizontalSpacing="0dp"

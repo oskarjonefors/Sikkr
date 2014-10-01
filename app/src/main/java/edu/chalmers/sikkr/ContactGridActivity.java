@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ContactGridActivity extends Activity {
         for(final Contact c : contacts) {
             contactList.add(c);
         }
-
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_contact_grid);
 
         ContactViewAdapter adapter = new ContactViewAdapter(this, R.layout.contact_thumb, contactList);

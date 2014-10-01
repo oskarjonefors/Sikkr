@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 
 import edu.chalmers.sikkr.backend.ContactBook;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
+import edu.chalmers.sikkr.backend.util.TheInbox;
 
 
 public class StartActivity extends Activity {
@@ -16,9 +18,12 @@ public class StartActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_start);
         ContactBook.setupSingleton(this);
         TextToSpeechUtility.setupTextToSpeech(this);
+        TheInbox.setupInbox(this);
+
     }
 
 
@@ -42,8 +47,11 @@ public class StartActivity extends Activity {
         case R.id.contactBook:
             intent = new Intent(this, ContactBookActivity.class);
             startActivity(intent);
-        break;
+            break;
         case R.id.message:
+            intent = new Intent(this, SMS_Activity.class);
+            startActivity(intent);
+            break;
         case R.id.fav_contacts:
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);

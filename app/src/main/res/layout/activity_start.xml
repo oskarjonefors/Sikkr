@@ -46,7 +46,8 @@
                 android:layout_width="170dp"
                 android:layout_height="130dp"
                 android:text="@string/message"
-                android:id="@+id/message"/>
+                android:id="@+id/message"
+                android:onClick="clickedButton"/>
 
             <Button
                 android:layout_width="170dp"
