@@ -37,7 +37,7 @@
             android:label="contact_grid_activity">
         </activity>
         <activity
-            android:name=".sms_activity"
+            android:name=".SMS_Activity"
             android:label="Sms">
         </activity>
     </application>

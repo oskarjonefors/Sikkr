@@ -12,7 +12,7 @@ package edu.chalmers.sikkr;
         import edu.chalmers.sikkr.backend.util.TheInbox;
 
 
-public class sms_activity extends Activity {
+public class SMS_Activity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

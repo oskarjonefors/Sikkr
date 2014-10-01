@@ -49,7 +49,7 @@ public class StartActivity extends Activity {
             startActivity(intent);
             break;
         case R.id.message:
-            intent = new Intent(this, sms_activity.class);
+            intent = new Intent(this, SMS_Activity.class);
             startActivity(intent);
             break;
         case R.id.fav_contacts:
