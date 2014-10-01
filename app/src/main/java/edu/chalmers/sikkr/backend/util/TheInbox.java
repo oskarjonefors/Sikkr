@@ -3,6 +3,8 @@ package edu.chalmers.sikkr.backend.util;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
+
 import java.util.ArrayList;
 
 
@@ -18,7 +20,11 @@ public class TheInbox {
     private TheInbox() {}
 
     public static void setupInbox(Context context) {
-        context = context;
+        box.setUp(context);
+    }
+
+    private void setUp(Context context) {
+        this.context = context;
     }
 
     public static TheInbox getInstance() {
@@ -29,6 +35,7 @@ public class TheInbox {
 
         Uri uriToAndroidInbox = Uri.parse("content://sms/inbox");
         smsList = new ArrayList<OneSms>();
+        Log.e("print", (context == null) + "");
         Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
 
         if(cursor.moveToFirst()) {

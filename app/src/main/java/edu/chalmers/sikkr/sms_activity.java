@@ -1,15 +1,15 @@
 package edu.chalmers.sikkr;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import java.util.List;
+        import android.app.Activity;
+        import android.os.Bundle;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.widget.ArrayAdapter;
+        import android.widget.ListView;
+        import java.util.List;
 
-import edu.chalmers.sikkr.backend.util.OneSms;
-import edu.chalmers.sikkr.backend.util.TheInbox;
+        import edu.chalmers.sikkr.backend.util.OneSms;
+        import edu.chalmers.sikkr.backend.util.TheInbox;
 
 
 public class sms_activity extends Activity {

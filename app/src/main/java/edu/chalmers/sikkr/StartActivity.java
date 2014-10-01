@@ -9,6 +9,7 @@ import android.view.View;
 
 import edu.chalmers.sikkr.backend.ContactBook;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
+import edu.chalmers.sikkr.backend.util.TheInbox;
 
 
 public class StartActivity extends Activity {
@@ -19,6 +20,7 @@ public class StartActivity extends Activity {
         setContentView(R.layout.activity_start);
         ContactBook.setupSingleton(this);
         TextToSpeechUtility.setupTextToSpeech(this);
+        TheInbox.setupInbox(this);
 
     }
 
@@ -43,8 +45,11 @@ public class StartActivity extends Activity {
         case R.id.contactBook:
             intent = new Intent(this, ContactBookActivity.class);
             startActivity(intent);
-        break;
+            break;
         case R.id.message:
+            intent = new Intent(this, sms_activity.class);
+            startActivity(intent);
+            break;
         case R.id.fav_contacts:
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);
