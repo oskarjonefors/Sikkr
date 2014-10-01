@@ -39,8 +39,7 @@ public final class TextToSpeechUtility {
             if (status == TextToSpeech.ERROR) {
                 removeTextToSpeech();
             } else {
-                tts.setLanguage(Locale.UK);
-                tts.speak("Welcome to Sicker", TextToSpeech.QUEUE_FLUSH, null);
+                tts.setLanguage(Locale.ROOT);
             }
         }
     }
