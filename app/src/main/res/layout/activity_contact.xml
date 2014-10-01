@@ -22,19 +22,28 @@
         android:layout_gravity="center_horizontal" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:id="@+id/contactPicture"
         android:src="@drawable/ic_launcher"
-        android:layout_above="@+id/callButton"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ContactNumber"
+        android:id="@+id/contactNumber"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"></LinearLayout>
+
+
 
     <Button
         android:onClick="buttonClick"

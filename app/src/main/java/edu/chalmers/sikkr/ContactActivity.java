@@ -48,7 +48,9 @@ public class ContactActivity extends Activity {
 
         //This makes us able to use the TextView defined in the .xml and change it from here
         final TextView contactName = (TextView)findViewById(R.id.contactName);
+        final TextView contactNumber = (TextView)findViewById(R.id.contactNumber);
         final ImageView contactPicture = (ImageView)findViewById(R.id.contactPicture);
+
 
         //Gets the shared instance ContactBook
         final ContactBook book = ContactBook.getSharedInstance();
@@ -63,6 +65,12 @@ public class ContactActivity extends Activity {
         contactName.setText(contact.getName());
         //Set the picture of the contact in the ImageView
         contactPicture.setImageBitmap(contact.getPhoto());
+
+        //Set the first phonenumber of the contact in the ImageView
+        contactNumber.setText(contact.getMobilePhoneNumbers().get(0));
+
+
+
     }
 
 
