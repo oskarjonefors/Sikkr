@@ -33,7 +33,7 @@ public class VoiceMessagePlayer {
         this.context = context;
     }
 
-    public void setupSingleton(Context context) {
+    public static void setupSingleton(Context context) {
         if(context == null) {
             throw new IllegalArgumentException("Context cannot be null.");
         } else {

@@ -60,7 +60,7 @@ public class VoiceMessageRecorder {
         }
     }
 
-    public void setupSingleton(Context context) {
+    public static void setupSingleton(Context context) {
         if(context == null) {
             throw new IllegalArgumentException("Context cannot be null.");
         } else {
