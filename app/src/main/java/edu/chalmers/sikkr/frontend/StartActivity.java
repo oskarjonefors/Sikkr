@@ -3,18 +3,27 @@ package edu.chalmers.sikkr.frontend;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
+
+
+import java.util.ArrayList;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
+import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
+
 
 
 public class StartActivity extends Activity {
+    private ArrayList<String> matches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +33,7 @@ public class StartActivity extends Activity {
         ContactBook.setupSingleton(this);
         TextToSpeechUtility.setupTextToSpeech(this);
         TheInbox.setupInbox(this);
-
+        SpeechRecognitionHelper.run(this);
     }
 
 
@@ -62,6 +71,28 @@ public class StartActivity extends Activity {
 
 
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK){
+            matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if(matches.size() >0){
+                String text = matches.get(0);
+                //Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+                Intent intent;
+                if (text.equals("2")) {
+                    intent = new Intent(this, ContactGridActivity.class);
+                    startActivity(intent);
+                } else if (text.equals("3")) {
+                    intent = new Intent(this, SMS_Activity.class);
+                    startActivity(intent);
+                } else if (text.equals("4")) {
+                    intent = new Intent(this, ContactBookActivity.class);
+                    startActivity(intent);
+                }
+            }
+        }
+    }
+
 
 
 
