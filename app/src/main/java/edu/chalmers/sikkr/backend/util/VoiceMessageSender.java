@@ -1,10 +1,9 @@
 package edu.chalmers.sikkr.backend.util;
 
 import android.content.Context;
-
-import edu.chalmers.sikkr.backend.Contact;
 import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.VoiceMessage;
+import edu.chalmers.sikkr.backend.contact.Contact;
 
 /**
  * Created by ivaldi on 2014-10-01.
