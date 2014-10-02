@@ -7,9 +7,11 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
+import edu.chalmers.sikkr.backend.mms.MMS;
 
 /**
  * Created by ivaldi on 2014-10-01.
@@ -109,7 +111,9 @@ public class VoiceMessageRecorder {
      */
     public VoiceMessage getVoiceMessage() throws IllegalArgumentException {
         if(state == RecordingState.STOPPED) {
-
+            final Calendar c = Calendar.getInstance();
+            final Calendar timeStamp = new Calendar(c.getTime());
+            return new MMS(timeStamp, 0, currentFilePath);
         } else {
             throw new IllegalArgumentException(state == RecordingState.RECORDING ? "Cannot get voice message," +
                     "recording has not been stopped." : "Cannot get voice message since one has not been recorded.");

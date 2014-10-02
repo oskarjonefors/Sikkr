@@ -1,6 +1,6 @@
 package edu.chalmers.sikkr.backend.mms;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
 
@@ -10,24 +10,24 @@ import edu.chalmers.sikkr.backend.VoiceMessage;
 public class MMS implements VoiceMessage, Comparable<MMS> {
 
 
-    private final Date date;
+    private final Calendar timestamp;
     private final String sender;
-    private final int filePath;
+    private final String filePath;
 
-    public MMS(final Date date, final String sender, final int filePath) {
-        this.date = date;
+    public MMS(final Calendar timestamp, final String sender, final String filePath) {
+        this.timestamp = timestamp;
         this.sender = sender;
         this.filePath = filePath;
     }
 
 
     @Override
-    public Date getDate() {
-        return date;
+    public Calendar getTimestamp() {
+        return timestamp;
     }
 
     @Override
-    public int getFilePath() {
+    public String getFilePath() {
         return filePath;
     }
 

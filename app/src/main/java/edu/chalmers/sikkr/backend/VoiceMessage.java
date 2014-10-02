@@ -1,6 +1,6 @@
 package edu.chalmers.sikkr.backend;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Created by ivaldi on 2014-10-01.
@@ -8,10 +8,10 @@ import java.util.Date;
 public interface VoiceMessage {
 
     /**
-     * Return the date the message was created.
+     * Return the Calendar timestamp for when the message was created.
      * @return
      */
-    Date getDate();
+    Calendar getTimestamp();
 
     /**
      * Return the phone number of the sender of the message.
@@ -26,5 +26,5 @@ public interface VoiceMessage {
      * Return the absolute file path of the voice message.
      * @return
      */
-    int getFilePath();
+    String getFilePath();
 }
