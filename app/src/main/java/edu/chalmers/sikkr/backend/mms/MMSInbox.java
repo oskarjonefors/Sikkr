@@ -9,7 +9,7 @@ import static android.provider.Telephony.Mms.Addr.*;
 import static android.provider.Telephony.Mms.Sent.*;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
@@ -46,9 +46,9 @@ public class MMSInbox {
         while (cursor.moveToNext()) {
             String sender = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS));
             int filePath = cursor.getInt(cursor.getColumnIndexOrThrow(_DATA));
-            Date date = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DATE)));
+            Calendar timestamp = dateFromLong(cursor.getLong(cursor.getColumnIndexOrThrow(DATE)));
 
-            MMS mms = new MMS(date, sender, filePath);
+            MMS mms = new MMS(timestamp, sender, filePath);
             getInboxContents().add(mms);
         }
     }
@@ -56,5 +56,4 @@ public class MMSInbox {
     public List<VoiceMessage> getInboxContents() {
         return voiceMessages;
     }
-
 }
