@@ -49,7 +49,7 @@ public class VoiceMessagePlayer {
         player = new MediaPlayer();
 
         try {
-            player.setDataSource(msg.getFilePath());
+            player.setDataSource(context, msg.getFileUri());
             player.prepare();
             player.start();
         } catch (IOException e) {

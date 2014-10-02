@@ -2,6 +2,7 @@ package edu.chalmers.sikkr.backend.mms;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import static android.provider.Telephony.Mms.Inbox.CONTENT_URI;
 import static android.provider.Telephony.Mms.Part.*;
@@ -10,6 +11,7 @@ import static android.provider.Telephony.Mms.Sent.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
@@ -45,10 +47,13 @@ public class MMSInbox {
         Cursor cursor = context.getContentResolver().query(CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             String sender = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS));
-            int filePath = cursor.getInt(cursor.getColumnIndexOrThrow(_DATA));
-            Calendar timestamp = dateFromLong(cursor.getLong(cursor.getColumnIndexOrThrow(DATE)));
+            int partID = cursor.getInt(cursor.getColumnIndexOrThrow(CONTENT_ID));
+            Uri partURI = Uri.parse("content://mms/part/" + partID );
 
-            MMS mms = new MMS(timestamp, sender, filePath);
+            Calendar timestamp = new GregorianCalendar();
+            timestamp.setTimeInMillis(cursor.getLong(cursor.getColumnIndexOrThrow(DATE)));
+
+            MMS mms = new MMS(timestamp, sender, partURI);
             getInboxContents().add(mms);
         }
     }
