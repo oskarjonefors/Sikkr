@@ -16,7 +16,13 @@ import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.mms.MMSInbox;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
+
 import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
+
+import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
+import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
+import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
+
 
 
 public class StartActivity extends Activity {
@@ -34,6 +40,10 @@ public class StartActivity extends Activity {
 
         MMSInbox.setContext(this);
         MMSInbox.getSharedInstance().loadInbox();
+
+        VoiceMessagePlayer.setupSingleton(this);
+        VoiceMessageRecorder.setupSingleton(this);
+        VoiceMessageSender.setupSingleton(this);
 
     }
 
