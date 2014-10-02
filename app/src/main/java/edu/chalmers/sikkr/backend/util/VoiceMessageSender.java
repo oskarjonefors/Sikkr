@@ -34,7 +34,7 @@ public class VoiceMessageSender {
         if(context == null) {
             throw new IllegalArgumentException("Context cannot be null.");
         } else {
-            this.context = context;
+            singleton.setup(context);
         }
     }
 

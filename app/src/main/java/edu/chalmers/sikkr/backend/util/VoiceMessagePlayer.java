@@ -20,7 +20,7 @@ public class VoiceMessagePlayer {
 
     private VoiceMessagePlayer() {}
 
-    public VoiceMessagePlayer getSharedInstance() {
+    public static VoiceMessagePlayer getSharedInstance() {
         if(context == null) {
             throw new UnsupportedOperationException("Context must be supplied through the method" +
                     "setupSingleton(Context context) before an instance can be returned.");
@@ -37,7 +37,7 @@ public class VoiceMessagePlayer {
         if(context == null) {
             throw new IllegalArgumentException("Context cannot be null.");
         } else {
-            this.context = context;
+            singleton.setup(context);
         }
     }
 
