@@ -10,6 +10,7 @@ import android.view.Window;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.mms.MMSInbox;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
 
@@ -24,7 +25,8 @@ public class StartActivity extends Activity {
         ContactBook.setupSingleton(this);
         TextToSpeechUtility.setupTextToSpeech(this);
         TheInbox.setupInbox(this);
-
+        MMSInbox.setContext(this);
+        MMSInbox.getSharedInstance().loadInbox();
     }
 
 
