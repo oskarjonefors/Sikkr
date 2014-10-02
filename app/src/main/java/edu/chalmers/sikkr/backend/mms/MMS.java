@@ -1,5 +1,7 @@
 package edu.chalmers.sikkr.backend.mms;
 
+import android.net.Uri;
+
 import java.util.Calendar;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
@@ -12,12 +14,12 @@ public class MMS implements VoiceMessage, Comparable<MMS> {
 
     private final Calendar timestamp;
     private final String sender;
-    private final String filePath;
+    private final Uri part;
 
-    public MMS(final Calendar timestamp, final String sender, final String filePath) {
+    public MMS(final Calendar timestamp, final String sender, final Uri part) {
         this.timestamp = timestamp;
         this.sender = sender;
-        this.filePath = filePath;
+        this.part = part;
     }
 
 
@@ -27,8 +29,8 @@ public class MMS implements VoiceMessage, Comparable<MMS> {
     }
 
     @Override
-    public String getFilePath() {
-        return filePath;
+    public Uri getFileUri() {
+        return part;
     }
 
     @Override

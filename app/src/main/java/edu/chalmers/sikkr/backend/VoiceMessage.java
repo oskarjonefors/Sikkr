@@ -1,5 +1,7 @@
 package edu.chalmers.sikkr.backend;
 
+import android.net.Uri;
+
 import java.util.Calendar;
 
 /**
@@ -26,5 +28,5 @@ public interface VoiceMessage {
      * Return the absolute file path of the voice message.
      * @return
      */
-    String getFilePath();
+    Uri getFileUri();
 }
