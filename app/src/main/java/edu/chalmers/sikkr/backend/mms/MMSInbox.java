@@ -1,11 +1,19 @@
 package edu.chalmers.sikkr.backend.mms;
 
 import android.content.Context;
+import android.database.Cursor;
+
+import static android.provider.Telephony.Mms.Inbox.CONTENT_URI;
+import static android.provider.Telephony.Mms.Part.*;
+import static android.provider.Telephony.Mms.Addr.*;
+import static android.provider.Telephony.Mms.Sent.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
+import edu.chalmers.sikkr.backend.sms.OneSms;
 
 /**
  * Created by Eric on 2014-10-02.
@@ -34,11 +42,23 @@ public class MMSInbox {
     }
 
     public void loadInbox() {
+        Cursor cursor = context.getContentResolver().query(CONTENT_URI, null, null, null, null);
+        while (cursor.moveToNext()) {
+            String sender = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS));
+            int filePath = cursor.getInt(cursor.getColumnIndexOrThrow(_DATA));
+            Date date = dateFromLong(cursor.getLong(cursor.getColumnIndexOrThrow(DATE)));
 
+            MMS mms = new MMS(date, sender, filePath);
+            getInboxContents().add(mms);
+        }
     }
 
     public List<VoiceMessage> getInboxContents() {
         return voiceMessages;
+    }
+
+    public Date dateFromLong(long date) {
+        return null;
     }
 
 }
