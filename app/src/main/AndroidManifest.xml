@@ -32,11 +32,15 @@
         </activity>
         <activity
             android:name=".frontend.ContactGridActivity"
-            android:label="contact_grid_activity">
+            android:label="contact_grid_activity" >
         </activity>
         <activity
             android:name=".frontend.SMS_Activity"
-            android:label="Sms">
+            android:label="Sms" >
+        </activity>
+        <activity
+            android:name=".frontend.ConversationActivity"
+            android:label="@string/title_activity_conversation" >
         </activity>
     </application>
 
