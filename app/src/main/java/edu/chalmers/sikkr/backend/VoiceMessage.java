@@ -21,4 +21,10 @@ public interface VoiceMessage {
      * @return A string representing a phone number, alternatively "0" or "-1" for two special cases.
      */
     String getSender();
+
+    /**
+     * Return the absolute file path of the voice message.
+     * @return
+     */
+    String getFilePath()
 }
