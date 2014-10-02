@@ -14,6 +14,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
+import edu.chalmers.sikkr.backend.sms.OneSms;
 
 /**
  * Created by Eric on 2014-10-02.
