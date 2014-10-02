@@ -1,7 +1,13 @@
 package edu.chalmers.sikkr.backend.util;
 
 import android.content.Context;
+import android.media.MediaRecorder;
 import android.os.Environment;
+import android.util.Log;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.UUID;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
 
@@ -18,6 +24,7 @@ public class VoiceMessageRecorder {
     private Context context;
     private RecordingState state = RecordingState.RESET;
     private String targetPath;
+    private MediaRecorder recorder;
 
     private VoiceMessageRecorder() {
         if(Environment.getExternalStorageState().equals("mounted")) {
@@ -30,6 +37,12 @@ public class VoiceMessageRecorder {
 
     private void setup(Context context) {
         this.context = context;
+    }
+
+    private String generateFileName() {
+        Calendar time = Calendar.getInstance();
+        return time.get(Calendar.YEAR) + "-" time.get(Calendar.MONTH) + "-" +
+                time.get(Calendar.DAY_OF_MONTH) + "-" + UUID.randomUUID().getMostSignificantBits();
     }
 
     public VoiceMessageRecorder getSharedInstance() {
@@ -50,12 +63,29 @@ public class VoiceMessageRecorder {
     }
 
     public void startRecording() {
-
+        if(state == RecordingState.RESET) {
+            recorder = new MediaRecorder();
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            recorder.setOutputFile(targetPath + "/" + generateFileName());
+            try {
+                recorder.prepare();
+            } catch (IOException e) {
+                Log.e("VoiceMessageRecorder", "Failed to prepare recorder.");
+            }
+            recorder.start();
+            state = RecordingState.RECORDING;
+        }
 
     }
 
     public void stopRecording() {
+        if(state == RecordingState.RECORDING) {
 
+        } else {
+            throw new IllegalArgumentException("Cannot stop recording since no recording is running.");
+        }
     }
 
     public RecordingState getRecordingState() {
@@ -73,7 +103,7 @@ public class VoiceMessageRecorder {
 
         } else {
             throw new IllegalArgumentException(state == RecordingState.RECORDING ? "Cannot get voice message," +
-                    "recording has not been stopped." : "Cannot get voice message since one has not been recorded.")
+                    "recording has not been stopped." : "Cannot get voice message since one has not been recorded.");
         }
     }
 }
