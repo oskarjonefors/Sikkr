@@ -26,5 +26,5 @@ public interface VoiceMessage {
      * Return the absolute file path of the voice message.
      * @return
      */
-    String getFilePath()
+    int getFilePath();
 }
