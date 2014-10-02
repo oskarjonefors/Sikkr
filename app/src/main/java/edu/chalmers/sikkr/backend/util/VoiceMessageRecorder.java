@@ -52,7 +52,7 @@ public class VoiceMessageRecorder {
     }
 
     public VoiceMessageRecorder getSharedInstance() {
-        if(context == null) {
+        if(singleton.context == null) {
             throw new UnsupportedOperationException("Context must be supplied through the method" +
                     "setupSingleton(Context context) before an instance can be returned.");
         } else {
