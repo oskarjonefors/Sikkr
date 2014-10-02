@@ -8,19 +8,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
-
-
 import java.util.ArrayList;
-
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.SystemData;
+import edu.chalmers.sikkr.backend.mms.MMSInbox;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
-
 
 
 public class StartActivity extends Activity {
@@ -35,6 +31,10 @@ public class StartActivity extends Activity {
         TextToSpeechUtility.setupTextToSpeech(this);
         TheInbox.setupInbox(this);
         CallLog.setUpCallLog(this);
+
+        MMSInbox.setContext(this);
+        MMSInbox.getSharedInstance().loadInbox();
+
     }
 
 
