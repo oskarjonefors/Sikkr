@@ -46,7 +46,7 @@ public class MMSInbox {
         while (cursor.moveToNext()) {
             String sender = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS));
             int filePath = cursor.getInt(cursor.getColumnIndexOrThrow(_DATA));
-            Date date = dateFromLong(cursor.getLong(cursor.getColumnIndexOrThrow(DATE)));
+            Date date = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DATE)));
 
             MMS mms = new MMS(date, sender, filePath);
             getInboxContents().add(mms);
@@ -55,10 +55,6 @@ public class MMSInbox {
 
     public List<VoiceMessage> getInboxContents() {
         return voiceMessages;
-    }
-
-    public Date dateFromLong(long date) {
-        return null;
     }
 
 }
