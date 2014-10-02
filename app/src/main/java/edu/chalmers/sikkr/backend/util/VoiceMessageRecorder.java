@@ -24,6 +24,7 @@ public class VoiceMessageRecorder {
     private Context context;
     private RecordingState state = RecordingState.RESET;
     private String targetPath;
+    private String currentFilePath;
     private MediaRecorder recorder;
 
     private VoiceMessageRecorder() {
@@ -68,7 +69,8 @@ public class VoiceMessageRecorder {
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            recorder.setOutputFile(targetPath + "/" + generateFileName());
+            currentFilePath = targetPath + "/" + generateFileName();
+            recorder.setOutputFile(currentFilePath);
             try {
                 recorder.prepare();
             } catch (IOException e) {
@@ -80,9 +82,16 @@ public class VoiceMessageRecorder {
 
     }
 
-    public void stopRecording() {
+    /**
+     * Stop recording. If recording is not running, an exception will be thrown.
+     * @throws IllegalArgumentException - If no recording is currently running.
+     */
+    public void stopRecording() throws IllegalArgumentException {
         if(state == RecordingState.RECORDING) {
-
+            recorder.stop();
+            recorder.release();
+            recorder = null;
+            state = RecordingState.STOPPED;
         } else {
             throw new IllegalArgumentException("Cannot stop recording since no recording is running.");
         }
