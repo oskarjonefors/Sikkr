@@ -13,12 +13,16 @@ import edu.chalmers.sikkr.backend.VoiceMessage;
  */
 public class VoiceMessagePlayer {
 
-    private String TAG = "VoiceMessagePlayer";
+    private final String TAG = "VoiceMessagePlayer";
     private final static VoiceMessagePlayer singleton = new VoiceMessagePlayer();
     private Context context;
     private MediaPlayer player;
 
     private VoiceMessagePlayer() {}
+
+    private void setup(Context context) {
+        this.context = context;
+    }
 
     public static VoiceMessagePlayer getSharedInstance() {
         if(singleton.context == null) {
@@ -29,16 +33,11 @@ public class VoiceMessagePlayer {
         }
     }
 
-    private void setup(Context context) {
-        this.context = context;
-    }
-
     public static void setupSingleton(Context context) {
         if(context == null) {
             throw new IllegalArgumentException("Context cannot be null.");
-        } else {
-            singleton.setup(context);
         }
+        singleton.setup(context);
     }
 
     public void playMessage(VoiceMessage msg) {

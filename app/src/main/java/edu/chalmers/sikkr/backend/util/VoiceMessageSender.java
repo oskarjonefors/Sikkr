@@ -25,17 +25,15 @@ public class VoiceMessageSender {
         if(singleton.context == null) {
             throw new UnsupportedOperationException("Context must be supplied through the method" +
                     "setupSingleton(Context context) before an instance can be returned.");
-        } else {
-            return singleton;
         }
+        return singleton;
     }
 
     public static void setupSingleton(Context context) {
         if(context == null) {
             throw new IllegalArgumentException("Context cannot be null.");
-        } else {
-            singleton.setup(context);
         }
+        singleton.setup(context);
     }
 
     /**
