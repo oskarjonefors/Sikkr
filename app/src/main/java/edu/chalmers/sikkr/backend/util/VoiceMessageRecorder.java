@@ -2,12 +2,15 @@ package edu.chalmers.sikkr.backend.util;
 
 import android.content.Context;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
@@ -112,8 +115,8 @@ public class VoiceMessageRecorder {
     public VoiceMessage getVoiceMessage() throws IllegalArgumentException {
         if(state == RecordingState.STOPPED) {
             final Calendar c = Calendar.getInstance();
-            final Calendar timeStamp = new Calendar(c.getTime());
-            return new MMS(timeStamp, 0, currentFilePath);
+            final Calendar timeStamp = new GregorianCalendar(c.getTime());
+            return new MMS(timeStamp, "0", Uri.fromFile(new File(currentFilePath)));
         } else {
             throw new IllegalArgumentException(state == RecordingState.RECORDING ? "Cannot get voice message," +
                     "recording has not been stopped." : "Cannot get voice message since one has not been recorded.");
