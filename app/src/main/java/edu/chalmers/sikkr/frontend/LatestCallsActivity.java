@@ -12,6 +12,7 @@ import java.util.List;
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.calls.OneCall;
+import edu.chalmers.sikkr.backend.contact.Contact;
 
 public class LatestCallsActivity extends Activity {
 
@@ -43,17 +44,20 @@ public class LatestCallsActivity extends Activity {
     }
 
     private void createCallLogLayout() {
-        List<OneCall> callList = CallLog.getInstance().getCallList();
-        String[] nbr = new String[callList.size()];
+        if(!(CallLog.getInstance().getCallList() == null)) {
+            List<OneCall> callList = CallLog.getInstance().getCallList();
+            String[] nbr = new String[callList.size()];
+            Contact contact;
 
-        int index = 0;
-        for(OneCall call: callList) {
-            nbr[index] = call.getCallNumber();
-            index++;
+            int index = 0;
+            for (OneCall call : callList) {
+                nbr[index] = call.getCallNumber();
+                index++;
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.sms_element, nbr);
+            ListView list = (ListView) findViewById(R.id.listView);
+            list.setAdapter(adapter);
         }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.sms_element, nbr);
-        ListView list = (ListView)findViewById(R.id.listView);
-        list.setAdapter(adapter);
     }
 }

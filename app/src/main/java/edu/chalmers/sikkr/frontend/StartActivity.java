@@ -61,7 +61,6 @@ public class StartActivity extends Activity {
         case R.id.lastCall:
             intent = new Intent(this, LatestCallsActivity.class);
             startActivity(intent);
-            break;
     }
 
 

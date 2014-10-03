@@ -4,7 +4,7 @@ package edu.chalmers.sikkr.backend.calls;
  * Created by Mia on 02/10/14.
  */
 public class OneCall {
-    String callNumber, callName, callDate, isCallNew, callType;
+    String callNumber, callName, callDate, isCallNew, callType, contactID;
 
     public void setCallNumber(String callNumber) {
         this.callNumber = callNumber;
@@ -26,6 +26,8 @@ public class OneCall {
         this.callType = callType;
     }
 
+    public void setContactID(String contactID) { this.contactID = contactID; }
+
     public String getCallNumber() {
         return callNumber;
     }
@@ -45,4 +47,6 @@ public class OneCall {
     public String getCallType() {
         return callType;
     }
+
+    public String getContactID() { return contactID; }
 }

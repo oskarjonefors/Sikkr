@@ -1,9 +1,9 @@
 package edu.chalmers.sikkr.backend.calls;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 
@@ -31,6 +31,7 @@ public class CallLog {
 
     private void collectCallLog(){
 
+        callList = new ArrayList<OneCall>();
         String strOrder = android.provider.CallLog.Calls.DATE + " DESC";
         Uri callUri = Uri.parse("content://call_log/calls");
         Cursor cursor = context.getContentResolver().query(callUri, null, null, null, strOrder);
@@ -42,9 +43,11 @@ public class CallLog {
             call.setCallDate(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.DATE)));
             call.setCallType(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.TYPE)));
             call.setIsCallNew(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.NEW)));
+            call.setContactID(cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID)));
 
             callList.add(call);
         }
+        cursor.close();
     }
 
     public ArrayList getCallList() {
