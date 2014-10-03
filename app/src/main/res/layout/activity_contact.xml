@@ -44,7 +44,14 @@
         android:layout_gravity="center_horizontal"></LinearLayout>
 
 
-
+    <Button
+        android:onClick="voiceInteraction"
+        android:layout_width="170dp"
+        android:layout_height="80dp"
+        android:text="Rec"
+        android:id="@+id/recButton"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"/>
     <Button
         android:onClick="buttonClick"
         android:layout_width="wrap_content"
