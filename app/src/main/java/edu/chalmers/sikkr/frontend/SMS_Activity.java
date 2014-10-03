@@ -1,11 +1,17 @@
 package edu.chalmers.sikkr.frontend;
 
         import android.app.Activity;
+        import android.content.Context;
         import android.os.Bundle;
+        import android.view.LayoutInflater;
         import android.view.Menu;
         import android.view.MenuItem;
+        import android.view.View;
+        import android.view.ViewGroup;
         import android.widget.ArrayAdapter;
         import android.widget.ListView;
+
+        import java.util.ArrayList;
         import java.util.List;
 
         import edu.chalmers.sikkr.R;
@@ -23,17 +29,21 @@ public class SMS_Activity extends Activity {
     }
 
     private void createSmsLayout() {
+        /*
         List<OneSms> smsList = TheInbox.getInstance().getSmsInbox();
         String[] msg = new String[smsList.size()];
+
         int index = 0;
         for(OneSms sms: smsList ) {
             msg[index] = sms.getMessage();
             index += 1;
         }
+        */
+        List list = new ArrayList();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.sms_element, msg );
-        ListView list = (ListView)findViewById(R.id.listView);
-        list.setAdapter(adapter);
+        ArrayAdapter adapter = new SmsViewAdapter(this, R.layout.sms_element, list );
+        ListView listV = (ListView)findViewById(R.id.listView);
+        listV.setAdapter(adapter);
 
     }
 
@@ -56,4 +66,32 @@ public class SMS_Activity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    //Inner adapterclass
+    public class SmsViewAdapter extends ArrayAdapter {
+
+        private final Context context;
+        private final List<Object> list;
+        private final int layoutId;
+
+        private SmsViewAdapter(Context context, int layoutId, List list) {
+            super(SMS_Activity.this, layoutId, list);
+            this.context = context;
+            this.list = list;
+            this.layoutId = layoutId;
+        }
+
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            if (view == null) {
+                LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+                view = inflater.inflate(layoutId, viewGroup, false);
+            }
+            return null;
+        }
+    }
+
+
 }
+

@@ -45,6 +45,7 @@ public class TheInbox {
 
             smsList.add(sms);
         }
+        cursor.close();
     }
 
     public ArrayList<OneSms> getSmsInbox() {
