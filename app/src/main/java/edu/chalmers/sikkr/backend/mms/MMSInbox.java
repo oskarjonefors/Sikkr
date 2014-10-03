@@ -46,7 +46,7 @@ public class MMSInbox {
         Cursor cursor = context.getContentResolver().query(CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             String sender = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS));
-            long partID = cursor.getLong(cursor.getColumnIndexOrThrow(_ID));
+            String partID = cursor.getString(cursor.getColumnIndexOrThrow(_ID));
 
             Cursor curPart = context.getContentResolver().query(Uri.parse ("content://mms/" + partID + "/part"), null, null, null, null);
             curPart.moveToFirst();
