@@ -27,10 +27,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SikkrActivity"
-            android:label="SiKKr" >
-        </activity>
-        <activity
             android:name=".frontend.ContactActivity"
             android:label="Sikkr" >
         </activity>
