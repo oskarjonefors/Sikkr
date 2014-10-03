@@ -82,14 +82,22 @@ public class SMS_Activity extends Activity {
             if (view == null) {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 view = inflater.inflate(layoutId, viewGroup, false);
+
+                //get the current sms conversation
+                SmsConversation currentConv = list.get(i);
+
+                //view for the contact
                 TextView sender = (TextView)view.findViewById(R.id.sender);
-                SmsConversation conversation = list.get(i);
-                sender.setText(conversation.getAddress());
+                sender.setText(currentConv.getAddress());
+/*
+                //view for date
+                TextView dateView = (TextView)view.findViewById(R.id.date);
+                dateView.setText(currentConv.getSmsList().get(0).getDate());
+*/
+
             }
-            return null;
+            return view;
         }
     }
-
-
 }
 

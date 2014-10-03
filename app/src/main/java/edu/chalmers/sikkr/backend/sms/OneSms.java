@@ -8,16 +8,12 @@ public class OneSms {
     private String senderNbr;
     private String date;
 
-
-    public void setMessage(String message) {
+    public OneSms(String msg, String senderNbr, String date) {
         this.message = message;
-    }
-    public void setSenderNbr(String nbr) {
-        senderNbr = nbr;
-    }
-    public void setDate(String date) {
+        this.senderNbr = senderNbr;
         this.date = date;
     }
+
     public String getMessage() {
         return message;
     }
