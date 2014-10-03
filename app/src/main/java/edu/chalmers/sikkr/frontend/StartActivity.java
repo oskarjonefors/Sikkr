@@ -75,9 +75,7 @@ public class StartActivity extends Activity {
             SpeechRecognitionHelper.run(this);
             break;
 
-    }
-
-
+        }
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){

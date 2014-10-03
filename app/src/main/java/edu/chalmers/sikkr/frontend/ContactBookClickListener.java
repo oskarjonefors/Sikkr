@@ -11,7 +11,7 @@ import edu.chalmers.sikkr.frontend.ContactGridActivity;
 class ContactBookClickListener implements View.OnClickListener {
 
     final private int position;
-    private Character initialLetter;
+    private final Character initialLetter;
     public ContactBookClickListener(int position, Character initialLetter){
 
         this.position = position;
