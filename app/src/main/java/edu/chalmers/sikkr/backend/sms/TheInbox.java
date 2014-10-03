@@ -40,17 +40,7 @@ public class TheInbox {
 
         cursor.moveToNext();
         String msg = cursor.getString(cursor.getColumnIndexOrThrow("person"));
-        //Log.i("INFO", cursor.isNull(0) + "");
-        //Log.i("First comlumn", cursor.getString(0) + "");
-        /*
-        while (cursor.moveToNext()) {
-            OneSms sms = new OneSms();
-            sms.setMessage(cursor.getString(cursor.getColumnIndexOrThrow("body")));
-            sms.setSenderNbr(cursor.getInt((cursor.getColumnIndexOrThrow("address"))));
 
-            smsList.add(sms);
-        }
-        */
         cursor.close();
     }
 
