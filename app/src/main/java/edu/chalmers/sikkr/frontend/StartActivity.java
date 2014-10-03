@@ -257,6 +257,22 @@ public class StartActivity extends Activity {
                     LogUtility.writeLogFile("tjenare", "Kontaktnamn: " +contact.getName());
                     LogUtility.writeLogFile("tjenare", "Default Number: " +contact.getDefaultNumber());
                     LogUtility.writeLogFile("tjenare", "Phone Number: " +contact.getPhoneNumbers().get(0));
+=======
+                String text = matches.get(0);
+                //Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+                Intent intent;
+                if (text.equals("1")) {
+                    intent = new Intent(this, LatestCallsActivity.class);
+                    startActivity(intent);
+                } else  if (text.equals("2")) {
+                    intent = new Intent(this, ContactGridActivity.class);
+                    startActivity(intent);
+                } else if (text.equals("3")) {
+                    intent = new Intent(this, SMS_Activity.class);
+                    startActivity(intent);
+                } else if (text.equals("4")) {
+                    intent = new Intent(this, ContactBookActivity.class);
+>>>>>>> Voice recognition now works for contact book as well.
                     startActivity(intent);
                     finish();
 
