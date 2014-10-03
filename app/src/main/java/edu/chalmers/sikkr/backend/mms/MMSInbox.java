@@ -46,8 +46,11 @@ public class MMSInbox {
         Cursor cursor = context.getContentResolver().query(CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             String sender = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS));
-            int partID = cursor.getInt(cursor.getColumnIndexOrThrow(CONTENT_ID));
-            Uri partURI = Uri.parse("content://mms/part/" + partID );
+            int partID = cursor.getInt(cursor.getColumnIndexOrThrow(_ID));
+
+            Cursor curPart = context.getContentResolver().query(Uri.parse ("content://mms/" + partID + "/part"), null, null, null, null);
+            curPart.moveToFirst();
+            Uri partURI = Uri.parse("content://mms/part/" + curPart.getString(0));
 
             Calendar timestamp = new GregorianCalendar();
             timestamp.setTimeInMillis(cursor.getLong(cursor.getColumnIndexOrThrow(DATE)));
