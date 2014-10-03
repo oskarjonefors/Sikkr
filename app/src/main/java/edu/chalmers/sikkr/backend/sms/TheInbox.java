@@ -6,6 +6,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -15,7 +18,8 @@ import java.util.ArrayList;
 public class TheInbox {
     private Context context;
     final private static TheInbox box = new TheInbox();
-    private static ArrayList<OneSms> smsList;
+    private static ArrayList<SmsConversation> smsList;
+    final private Map<String, SmsConversation> map = new HashMap<String, SmsConversation>();
 
     private TheInbox() {}
 
@@ -34,18 +38,34 @@ public class TheInbox {
     private void collectSms() {
 
         Uri uriToAndroidInbox = Uri.parse("content://sms/inbox");
-        smsList = new ArrayList<OneSms>();
-
+        smsList = new ArrayList<SmsConversation>();
         Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
 
-        cursor.moveToNext();
-        String msg = cursor.getString(cursor.getColumnIndexOrThrow("person"));
+        while(cursor.moveToNext()) {
+            SmsConversation conversation;
+            OneSms sms = new OneSms();
 
+            //If a sms conversation form this contact does not exist, create a new SmsConversation
+            String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+
+            if(!(map.containsKey(address))) {
+
+                String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
+                conversation = new SmsConversation(address, person);
+                smsList.add(conversation);
+                map.put(address, conversation);
+            } else {
+
+                conversation = map.get(address);
+                sms.setMessage(cursor.getString(cursor.getColumnIndexOrThrow("body")));
+                conversation.addSms(sms);
+            }
+        }
         cursor.close();
     }
 
-    public ArrayList<OneSms> getSmsInbox() {
+    public ArrayList<SmsConversation> getSmsInbox() {
         collectSms();
-        return null;
+        return smsList;
     }
 }
