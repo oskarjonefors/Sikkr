@@ -47,7 +47,8 @@ public class VoiceMessageRecorder {
     private String generateFileName() {
         Calendar time = Calendar.getInstance();
         return time.get(Calendar.YEAR) + "-" + time.get(Calendar.MONTH) + "-" +
-                time.get(Calendar.DAY_OF_MONTH) + "-" + UUID.randomUUID().getMostSignificantBits();
+                time.get(Calendar.DAY_OF_MONTH) + "-" + UUID.randomUUID().getMostSignificantBits() +
+                ".3gp";
     }
 
     public VoiceMessageRecorder getSharedInstance() {
