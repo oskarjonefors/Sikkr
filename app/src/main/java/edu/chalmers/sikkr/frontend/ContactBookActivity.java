@@ -17,7 +17,6 @@ package edu.chalmers.sikkr.frontend;
 
 
 public class ContactBookActivity extends Activity {
-    private ArrayList<String> matches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
