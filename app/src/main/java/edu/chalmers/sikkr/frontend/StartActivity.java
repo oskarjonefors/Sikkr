@@ -89,7 +89,9 @@ public class StartActivity extends Activity {
             break;
 
         }
+
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK){
