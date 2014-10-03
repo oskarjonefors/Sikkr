@@ -115,6 +115,12 @@ public class StartActivity extends Activity {
         case R.id.microphone:
             SpeechRecognitionHelper.run(this);
             break;
+<<<<<<< HEAD
+=======
+
+    }
+
+>>>>>>> Voice recognition now works for contact book as well.
 
         }
 
@@ -134,6 +140,7 @@ public class StartActivity extends Activity {
         if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK){
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if(matches.size() >0){
+<<<<<<< HEAD
                 text = matches.get(0);
                 callContactByName();
                 selectFunctionality();
@@ -191,6 +198,22 @@ public class StartActivity extends Activity {
                     LogUtility.writeLogFile("tjenare", "Kontaktnamn: " +contact.getName());
                     LogUtility.writeLogFile("tjenare", "Default Number: " +contact.getDefaultNumber());
                     LogUtility.writeLogFile("tjenare", "Phone Number: " +contact.getPhoneNumbers().get(0));
+=======
+                String text = matches.get(0);
+                //Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+                Intent intent;
+                if (text.equals("1")) {
+                    intent = new Intent(this, LatestCallsActivity.class);
+                    startActivity(intent);
+                } else  if (text.equals("2")) {
+                    intent = new Intent(this, ContactGridActivity.class);
+                    startActivity(intent);
+                } else if (text.equals("3")) {
+                    intent = new Intent(this, SMS_Activity.class);
+                    startActivity(intent);
+                } else if (text.equals("4")) {
+                    intent = new Intent(this, ContactBookActivity.class);
+>>>>>>> Voice recognition now works for contact book as well.
                     startActivity(intent);
                     finish();
 

@@ -94,5 +94,4 @@
         android:layout_centerHorizontal="true"
         android:onClick="clickedButton"/>
 
-
 </RelativeLayout>
