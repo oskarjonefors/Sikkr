@@ -17,8 +17,7 @@ package edu.chalmers.sikkr.frontend;
 
 
 public class ContactBookActivity extends Activity {
-
-    //TODO - Implement voice control for this activity as well
+    private ArrayList<String> matches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
