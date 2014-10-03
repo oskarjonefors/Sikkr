@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import static android.provider.Telephony.Mms.Inbox.CONTENT_URI;
-import static android.provider.Telephony.Mms.Part.*;
 import static android.provider.Telephony.Mms.Addr.*;
 import static android.provider.Telephony.Mms.Sent.*;
 
