@@ -41,6 +41,9 @@ public class StartActivity extends Activity {
         MMSInbox.setContext(this);
         MMSInbox.getSharedInstance().loadInbox();
 
+
+        /*MMSInbox.setContext(this);
+        MMSInbox.getSharedInstance().loadInbox();*/
         VoiceMessagePlayer.setupSingleton(this);
         VoiceMessageRecorder.setupSingleton(this);
         VoiceMessageSender.setupSingleton(this);

@@ -33,13 +33,15 @@ public class VoiceMessageRecorder {
     private MediaRecorder recorder;
 
     private VoiceMessageRecorder() {
-        if(Environment.getExternalStorageState().equals("mounted")) {
+        if(Environment.getExternalStorageState().equals("mounted")){
             targetPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            Log.d(TAG, "Target path set to " + targetPath);
         } else {
-            throw new UnsupportedOperationException("No external storage is present." +
-                    " Cannot make audio recordings.");
+            targetPath = Environment.getDataDirectory().getAbsolutePath();
         }
+        targetPath += "/sikkr/";
+        File dir = new File(targetPath);
+        Log.d(TAG, "Target path is " + targetPath);
+        dir.mkdirs();
     }
 
     private void setup(Context context) {
