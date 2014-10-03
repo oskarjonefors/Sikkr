@@ -49,7 +49,6 @@ public class VoiceMessagePlayer {
         try {
             Log.d(TAG, "Trying to play message " + msg.getFileUri());
             player.setDataSource(context, msg.getFileUri());
-            Log.d(TAG, )
             player.prepare();
             player.start();
         } catch (IOException e) {
@@ -60,7 +59,7 @@ public class VoiceMessagePlayer {
     public void stop() {
         if(player != null) {
             player.stop();
-            Log.d(TAG, "Stopping playback.")
+            Log.d(TAG, "Stopping playback.");
         }
     }
 }
