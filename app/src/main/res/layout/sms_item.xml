@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/sms_item">
+
+    <ImageButton
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/imageButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/play_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:Text="Recived:"
+        android:textSize="20dp"
+        android:text="Recived:"
+        android:layout_toStartOf="@+id/date"
+        android:layout_alignTop="@+id/date"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:31"
+        android:id="@+id/date"
+        android:textSize="20dp"
+        android:layout_above="@+id/divider"
+        android:layout_alignEnd="@+id/sender" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="073 695 8002"
+        android:id="@+id/sender"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/imageButton"
+        android:textSize="35dp" />
+
+     <View
+         android:layout_width="fill_parent"
+         android:layout_height="5dp"
+         android:background="@android:color/darker_gray"
+         android:layout_below="@+id/imageButton"
+         android:layout_alignParentStart="true"
+         android:id="@+id/divider" />
+
+
+</RelativeLayout>
