@@ -30,24 +30,6 @@ public class SMS_Activity extends Activity {
 
     private void createSmsLayout() {
 
-        List<OneSms> smsList = TheInbox.getInstance().getSmsInbox();
-        /*
-        String[] msg = new String[smsList.size()];
-
-        int index = 0;
-        for(OneSms sms: smsList ) {
-            msg[index] = sms.getMessage();
-            index += 1;
-        }
-        */
-        List list = new ArrayList();
-
-
-        ArrayAdapter adapter = new SmsViewAdapter(this, R.layout.sms_element, list );
-        ListView listV = (ListView)findViewById(R.id.listView);
-        listV.setAdapter(adapter);
-
-
     }
 
 
