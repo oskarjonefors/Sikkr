@@ -124,6 +124,7 @@ public class VoiceMessageRecorder {
                     c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.SECOND));
 
             Log.d(TAG, "MMS timestamp set to " + timeStamp);
+            state = RecordingState.RESET;
             return new MMS(timeStamp, "0", Uri.fromFile(new File(currentFilePath)));
         } else {
             throw new IllegalArgumentException(state == RecordingState.RECORDING ? "Cannot get voice message," +
