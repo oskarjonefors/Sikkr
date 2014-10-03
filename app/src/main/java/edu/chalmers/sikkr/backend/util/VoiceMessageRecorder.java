@@ -38,7 +38,6 @@ public class VoiceMessageRecorder {
     private VoiceMessageRecorder() {
         if(Environment.getExternalStorageState().equals("mounted")){
             targetPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            Log.d(TAG, "Target path set to " + targetPath);
         } else {
             targetPath = Environment.getDataDirectory().getAbsolutePath();
         }
