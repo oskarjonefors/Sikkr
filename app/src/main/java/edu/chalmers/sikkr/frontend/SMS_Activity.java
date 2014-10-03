@@ -3,7 +3,6 @@ package edu.chalmers.sikkr.frontend;
         import android.app.Activity;
         import android.content.Context;
         import android.os.Bundle;
-        import android.provider.Telephony;
         import android.view.LayoutInflater;
         import android.view.Menu;
         import android.view.MenuItem;
@@ -12,7 +11,6 @@ package edu.chalmers.sikkr.frontend;
         import android.widget.ArrayAdapter;
         import android.widget.ListView;
         import android.widget.TextView;
-
         import java.util.ArrayList;
         import java.util.List;
 
@@ -33,7 +31,16 @@ public class SMS_Activity extends Activity {
     }
 
     private void createSmsLayout() {
+        /*
+        List<OneSms> smsList = TheInbox.getInstance().getSmsInbox();
+        String[] msg = new String[smsList.size()];
 
+        int index = 0;
+        for(OneSms sms: smsList ) {
+            msg[index] = sms.getMessage();
+            index += 1;
+        }
+        */
 
         ArrayList<SmsConversation> smsList = TheInbox.getInstance().getSmsInbox();
 
@@ -106,5 +113,6 @@ public class SMS_Activity extends Activity {
             return view;
         }
     }
+
 }
 
