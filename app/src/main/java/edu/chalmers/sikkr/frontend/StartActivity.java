@@ -9,6 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import java.util.ArrayList;
+
+import android.widget.EditText;
+
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
@@ -30,24 +33,28 @@ public class StartActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_start);
-        ContactBook.setupSingleton(this);
-        TextToSpeechUtility.setupTextToSpeech(this);
-        TheInbox.setupInbox(this);
-        CallLog.setUpCallLog(this);
 
-        MMSInbox.setContext(this);
-        MMSInbox.getSharedInstance().loadInbox();
+        try {
+            super.onCreate(savedInstanceState);
+            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.activity_start);
+            ContactBook.setupSingleton(this);
+            TextToSpeechUtility.setupTextToSpeech(this);
+            TheInbox.setupInbox(this);
+            VoiceMessagePlayer.setupSingleton(this);
+            VoiceMessageRecorder.setupSingleton(this);
+            VoiceMessageSender.setupSingleton(this);
 
+            MMSInbox.setContext(this);
+            MMSInbox.getSharedInstance().loadInbox();
+        } catch (Throwable t) {
 
-        /*MMSInbox.setContext(this);
-        MMSInbox.getSharedInstance().loadInbox();*/
-        VoiceMessagePlayer.setupSingleton(this);
-        VoiceMessageRecorder.setupSingleton(this);
-        VoiceMessageSender.setupSingleton(this);
+            String s = "";
+            for (StackTraceElement e : t.getStackTrace()) {
+                s += e + "\n";
+            }
 
+        }
     }
 
 
