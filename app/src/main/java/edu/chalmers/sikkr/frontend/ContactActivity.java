@@ -15,10 +15,12 @@ import android.net.Uri;
 import android.util.Log;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
+import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 
 public class ContactActivity extends Activity {
@@ -52,11 +54,15 @@ public class ContactActivity extends Activity {
                 break;
             case RECORDING:
                 recorder.stopRecording();
-                btn.setText("Play message");
+                btn.setText("Send");
                 break;
             case STOPPED:
-                VoiceMessagePlayer player = VoiceMessagePlayer.getSharedInstance();
-                player.playMessage(recorder.getVoiceMessage());
+                VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
+                try {
+                    sender.sendMessage(recorder.getVoiceMessage(), contact.getMobilePhoneNumbers().get(0));
+                } catch (MessageNotSentException e) {
+                    Log.e("ContactActivity", "Message not sent");
+                }
                 btn.setText("Record");
                 break;
         }
