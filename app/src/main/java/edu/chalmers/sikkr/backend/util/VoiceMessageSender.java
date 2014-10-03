@@ -22,7 +22,7 @@ public class VoiceMessageSender {
         this.context = context;
     }
 
-    public VoiceMessageSender getSharedInstance() {
+    public static VoiceMessageSender getSharedInstance() {
         if(singleton.context == null) {
             throw new UnsupportedOperationException("Context must be supplied through the method" +
                     "setupSingleton(Context context) before an instance can be returned.");
