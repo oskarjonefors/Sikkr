@@ -5,18 +5,29 @@ package edu.chalmers.sikkr.backend.sms;
  */
 public class OneSms {
     private String message;
-    private int senderNbr;
+    private String senderNbr;
+    private String date;
+
 
     public void setMessage(String message) {
         this.message = message;
     }
-    public int getNbr() {
-        return senderNbr;
+    public void setSenderNbr(String nbr) {
+        senderNbr = nbr;
+    }
+    public void setDate(String date) {
+        this.date = date;
     }
     public String getMessage() {
         return message;
     }
-    public void setSenderNbr(int nbr) {
-        senderNbr = nbr;
+    public String getDate() {
+        return date;
     }
+    public String getNbr() {
+        return senderNbr;
+    }
+
+
+
 }

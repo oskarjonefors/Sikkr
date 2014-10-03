@@ -3,6 +3,7 @@ package edu.chalmers.sikkr.frontend;
         import android.app.Activity;
         import android.content.Context;
         import android.os.Bundle;
+        import android.provider.Telephony;
         import android.view.LayoutInflater;
         import android.view.Menu;
         import android.view.MenuItem;
@@ -10,12 +11,14 @@ package edu.chalmers.sikkr.frontend;
         import android.view.ViewGroup;
         import android.widget.ArrayAdapter;
         import android.widget.ListView;
+        import android.widget.TextView;
 
         import java.util.ArrayList;
         import java.util.List;
 
         import edu.chalmers.sikkr.R;
         import edu.chalmers.sikkr.backend.sms.OneSms;
+        import edu.chalmers.sikkr.backend.sms.SmsConversation;
         import edu.chalmers.sikkr.backend.sms.TheInbox;
 
 
@@ -30,6 +33,12 @@ public class SMS_Activity extends Activity {
 
     private void createSmsLayout() {
 
+
+        ArrayList<SmsConversation> smsList = TheInbox.getInstance().getSmsInbox();
+
+        ArrayAdapter adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
+        ListView listV = (ListView)findViewById(R.id.listView);
+        listV.setAdapter(adapter);
     }
 
 
@@ -57,7 +66,7 @@ public class SMS_Activity extends Activity {
     public class SmsViewAdapter extends ArrayAdapter {
 
         private final Context context;
-        private final List<Object> list;
+        private final List<SmsConversation> list;
         private final int layoutId;
 
         private SmsViewAdapter(Context context, int layoutId, List list) {
@@ -73,6 +82,9 @@ public class SMS_Activity extends Activity {
             if (view == null) {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 view = inflater.inflate(layoutId, viewGroup, false);
+                TextView sender = (TextView)view.findViewById(R.id.sender);
+                SmsConversation conversation = list.get(i);
+                sender.setText(conversation.getAddress());
             }
             return null;
         }
