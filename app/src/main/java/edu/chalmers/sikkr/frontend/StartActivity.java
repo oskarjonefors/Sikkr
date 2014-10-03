@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
@@ -34,6 +35,7 @@ public class StartActivity extends Activity {
         TextToSpeechUtility.setupTextToSpeech(this);
         TheInbox.setupInbox(this);
         SpeechRecognitionHelper.run(this);
+        CallLog.setUpCallLog(this);
     }
 
 
@@ -67,6 +69,8 @@ public class StartActivity extends Activity {
             startActivity(intent);
             break;
         case R.id.lastCall:
+            intent = new Intent(this, LatestCallsActivity.class);
+            startActivity(intent);
     }
 
 
