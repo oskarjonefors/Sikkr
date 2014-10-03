@@ -58,6 +58,8 @@
                 android:onClick="clickedButton"
                 />
 
+
+
         </LinearLayout>
 
     </LinearLayout>
@@ -80,5 +82,15 @@
         android:layout_above="@+id/linearLayout"
         android:layout_alignStart="@+id/linearLayout"
         android:textSize="35dp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/microphone"
+        android:src="@drawable/microphone"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="clickedButton"/>
+
 
 </RelativeLayout>

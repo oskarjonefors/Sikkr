@@ -34,7 +34,6 @@ public class StartActivity extends Activity {
         ContactBook.setupSingleton(this);
         TextToSpeechUtility.setupTextToSpeech(this);
         TheInbox.setupInbox(this);
-        SpeechRecognitionHelper.run(this);
         CallLog.setUpCallLog(this);
     }
 
@@ -71,6 +70,11 @@ public class StartActivity extends Activity {
         case R.id.lastCall:
             intent = new Intent(this, LatestCallsActivity.class);
             startActivity(intent);
+            break;
+        case R.id.microphone:
+            SpeechRecognitionHelper.run(this);
+            break;
+
     }
 
 
@@ -83,7 +87,10 @@ public class StartActivity extends Activity {
                 String text = matches.get(0);
                 //Toast.makeText(this, text, Toast.LENGTH_LONG).show();
                 Intent intent;
-                if (text.equals("2")) {
+                if (text.equals("1")) {
+                    intent = new Intent(this, LatestCallsActivity.class);
+                    startActivity(intent);
+                } else  if (text.equals("2")) {
                     intent = new Intent(this, ContactGridActivity.class);
                     startActivity(intent);
                 } else if (text.equals("3")) {
