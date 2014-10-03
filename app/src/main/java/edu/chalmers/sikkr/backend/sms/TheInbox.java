@@ -43,21 +43,22 @@ public class TheInbox {
 
         while(cursor.moveToNext()) {
             SmsConversation conversation;
-            OneSms sms = new OneSms();
+            OneSms sms;
+
+            String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+            String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
+            String msg = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+            String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
 
             //If a sms conversation form this contact does not exist, create a new SmsConversation
-            String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-
             if(!(map.containsKey(address))) {
-
-                String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
                 conversation = new SmsConversation(address, person);
                 smsList.add(conversation);
+                
                 map.put(address, conversation);
             } else {
-
                 conversation = map.get(address);
-                sms.setMessage(cursor.getString(cursor.getColumnIndexOrThrow("body")));
+                sms = new OneSms(msg, person, date);
                 conversation.addSms(sms);
             }
         }

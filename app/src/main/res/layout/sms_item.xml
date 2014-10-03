@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:text="Recived:"
         android:layout_toStartOf="@+id/date"
         android:layout_alignTop="@+id/date"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:text="12:31"
         android:id="@+id/date"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_above="@+id/divider"
         android:layout_alignEnd="@+id/sender" />
 
@@ -37,7 +37,7 @@
         android:id="@+id/sender"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/imageButton"
-        android:textSize="35dp" />
+        android:textSize="35sp" />
 
      <View
          android:layout_width="fill_parent"
