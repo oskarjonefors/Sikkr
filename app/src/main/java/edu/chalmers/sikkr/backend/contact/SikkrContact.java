@@ -47,13 +47,11 @@ public class SikkrContact implements Contact {
 
     public void addPhoneNumber(String number) {
         phoneNumbers.add(number);
-        Log.d("SikkrContact ", "Added phone number " + number + " for " + name);
     }
 
     public void addMobilePhoneNumber(String number) {
         addPhoneNumber(number);
         mobilePhoneNumbers.add(number);
-        Log.d("SikkrContact ", "Added phone number " + number + " for " + name);
     }
 
     @Override
