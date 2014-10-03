@@ -11,6 +11,7 @@ import edu.chalmers.sikkr.backend.contact.Contact;
 
 public class VoiceMessageSender {
 
+    private final String TAG = "VoiceMessageSender";
     private final static VoiceMessageSender singleton = new VoiceMessageSender();
     private Context context;
     private Contact receiver;

@@ -24,6 +24,7 @@ public class VoiceMessageRecorder {
         RECORDING, STOPPED, RESET
     }
 
+    private final String TAG = "VoiceMessageRecorder";
     private final static VoiceMessageRecorder singleton = new VoiceMessageRecorder();
     private Context context;
     private RecordingState state = RecordingState.RESET;
@@ -34,6 +35,7 @@ public class VoiceMessageRecorder {
     private VoiceMessageRecorder() {
         if(Environment.getExternalStorageState().equals("mounted")) {
             targetPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            Log.d(TAG, "Target path set to " + targetPath);
         } else {
             throw new UnsupportedOperationException("No external storage is present." +
                     " Cannot make audio recordings.");
@@ -75,6 +77,7 @@ public class VoiceMessageRecorder {
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             currentFilePath = targetPath + "/" + generateFileName();
             recorder.setOutputFile(currentFilePath);
+            Log.d(TAG, "Output file set to " + currentFilePath);
             try {
                 recorder.prepare();
             } catch (IOException e) {
@@ -96,6 +99,7 @@ public class VoiceMessageRecorder {
             recorder.release();
             recorder = null;
             state = RecordingState.STOPPED;
+            Log.d(TAG, "Stopped recording.");
         } else {
             throw new IllegalArgumentException("Cannot stop recording since no recording is running.");
         }
@@ -117,6 +121,7 @@ public class VoiceMessageRecorder {
             final Calendar timeStamp = new GregorianCalendar(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
                     c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.SECOND));
 
+            Log.d(TAG, "MMS timestamp set to " + timeStamp);
             return new MMS(timeStamp, "0", Uri.fromFile(new File(currentFilePath)));
         } else {
             throw new IllegalArgumentException(state == RecordingState.RECORDING ? "Cannot get voice message," +
