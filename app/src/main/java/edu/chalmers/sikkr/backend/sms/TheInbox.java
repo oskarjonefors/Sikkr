@@ -35,9 +35,14 @@ public class TheInbox {
 
         Uri uriToAndroidInbox = Uri.parse("content://sms/inbox");
         smsList = new ArrayList<OneSms>();
-        Log.e("print", (context == null) + "");
+
         Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
 
+        cursor.moveToNext();
+        String msg = cursor.getString(cursor.getColumnIndexOrThrow("person"));
+        //Log.i("INFO", cursor.isNull(0) + "");
+        //Log.i("First comlumn", cursor.getString(0) + "");
+        /*
         while (cursor.moveToNext()) {
             OneSms sms = new OneSms();
             sms.setMessage(cursor.getString(cursor.getColumnIndexOrThrow("body")));
@@ -45,11 +50,12 @@ public class TheInbox {
 
             smsList.add(sms);
         }
+        */
         cursor.close();
     }
 
     public ArrayList<OneSms> getSmsInbox() {
         collectSms();
-        return smsList;
+        return null;
     }
 }

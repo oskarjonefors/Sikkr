@@ -29,8 +29,9 @@ public class SMS_Activity extends Activity {
     }
 
     private void createSmsLayout() {
-        /*
+
         List<OneSms> smsList = TheInbox.getInstance().getSmsInbox();
+        /*
         String[] msg = new String[smsList.size()];
 
         int index = 0;
@@ -41,16 +42,19 @@ public class SMS_Activity extends Activity {
         */
         List list = new ArrayList();
 
+
         ArrayAdapter adapter = new SmsViewAdapter(this, R.layout.sms_element, list );
         ListView listV = (ListView)findViewById(R.id.listView);
         listV.setAdapter(adapter);
+
 
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items t
+        // o the action bar if it is present.
         getMenuInflater().inflate(R.menu.sms_activity, menu);
         return true;
     }
