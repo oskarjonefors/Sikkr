@@ -28,8 +28,8 @@ public class StartActivity extends Activity {
         ContactBook.setupSingleton(this);
         TextToSpeechUtility.setupTextToSpeech(this);
         TheInbox.setupInbox(this);
-        MMSInbox.setContext(this);
-        MMSInbox.getSharedInstance().loadInbox();
+        /*MMSInbox.setContext(this);
+        MMSInbox.getSharedInstance().loadInbox();*/
         VoiceMessagePlayer.setupSingleton(this);
         VoiceMessageRecorder.setupSingleton(this);
         VoiceMessageSender.setupSingleton(this);
