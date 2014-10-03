@@ -27,7 +27,8 @@
                 android:layout_width="170dp"
                 android:layout_height="130dp"
                 android:text="@string/lastCall"
-                android:id="@+id/lastCall"/>
+                android:id="@+id/lastCall"
+                android:onClick="clickedButton"/>
 
             <Button
                 android:layout_width="170dp"
