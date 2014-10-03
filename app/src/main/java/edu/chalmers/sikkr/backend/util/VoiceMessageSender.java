@@ -1,6 +1,8 @@
 package edu.chalmers.sikkr.backend.util;
 
 import android.content.Context;
+import android.content.Intent;
+
 import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.VoiceMessage;
 import edu.chalmers.sikkr.backend.contact.Contact;
@@ -45,6 +47,10 @@ public class VoiceMessageSender {
      * @throws IllegalArgumentException - If the receiver is not a valid one.
      */
     public void sendMessage(VoiceMessage msg, String receiverNbr) throws MessageNotSentException, IllegalArgumentException {
-
+        Intent send = new Intent(Intent.ACTION_SEND);
+        send.putExtra("address", receiverNbr);
+        send.putExtra(Intent.EXTRA_STREAM, msg.getFileUri());
+        send.setType("audio/3gp");
+        context.startActivity(send);
     }
 }
