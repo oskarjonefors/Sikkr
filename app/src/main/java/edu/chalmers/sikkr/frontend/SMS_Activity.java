@@ -20,6 +20,7 @@ package edu.chalmers.sikkr.frontend;
         import edu.chalmers.sikkr.backend.sms.OneSms;
         import edu.chalmers.sikkr.backend.sms.SmsConversation;
         import edu.chalmers.sikkr.backend.sms.TheInbox;
+        import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 
 
 public class SMS_Activity extends Activity {
@@ -62,6 +63,11 @@ public class SMS_Activity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    
+    public void readMsg(View view) {
+        TextToSpeechUtility.readAloud((String) (view.getTag()));
+    }
+
     //Inner adapterclass
     public class SmsViewAdapter extends ArrayAdapter {
 
@@ -85,6 +91,7 @@ public class SMS_Activity extends Activity {
 
                 //get the current sms conversation
                 SmsConversation currentConv = list.get(i);
+                view.findViewById(R.id.imageButton).setTag(currentConv.getSmsList().get(0));
 
                 //view for the contact
                 TextView sender = (TextView)view.findViewById(R.id.sender);

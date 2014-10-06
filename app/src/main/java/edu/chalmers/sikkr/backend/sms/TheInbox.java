@@ -42,6 +42,7 @@ public class TheInbox {
         Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
 
         while(cursor.moveToNext()) {
+
             SmsConversation conversation;
             OneSms sms;
 
@@ -51,16 +52,17 @@ public class TheInbox {
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
 
             //If a sms conversation form this contact does not exist, create a new SmsConversation
-            if(!(map.containsKey(address))) {
-                conversation = new SmsConversation(address, person);
+            conversation = map.get(address);
+            if(conversation == null) {
+
+                conversation = new SmsConversation(address, person, date);
                 smsList.add(conversation);
-                
                 map.put(address, conversation);
-            } else {
-                conversation = map.get(address);
-                sms = new OneSms(msg, person, date);
-                conversation.addSms(sms);
             }
+
+            sms = new OneSms(msg, person, date);
+            conversation.addSms(sms);
+
         }
         cursor.close();
     }
