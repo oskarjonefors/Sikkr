@@ -9,11 +9,13 @@ import java.util.List;
 public class SmsConversation {
     final private String phoneNbr;
     final private String contactName;
+    final private String latestDate;
     final private List<OneSms> smsConversation = new ArrayList<OneSms>();
 
-    public SmsConversation(String phoneNbr, String name) {
-        this.phoneNbr = phoneNbr;
-        contactName = name;
+    public SmsConversation(String adress, String person, String latestDate) {
+        this.phoneNbr = adress;
+        contactName = person;
+        this.latestDate = latestDate;
     }
 
     public void addSms(OneSms sms) {

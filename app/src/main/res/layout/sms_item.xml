@@ -10,7 +10,8 @@
         android:id="@+id/imageButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/play_button" />
+        android:background="@drawable/play_button"
+        android:onClick="readMsg"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,7 +34,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="073 695 8002"
+        android:text="Nbr goes here"
         android:id="@+id/sender"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/imageButton"
