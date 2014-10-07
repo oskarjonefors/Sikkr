@@ -8,19 +8,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.net.Uri;
 import android.util.Log;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
+import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
+import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 
 public class ContactActivity extends Activity {
 
     private Contact contact;
+    private VoiceMessageRecorder recorder;
 
     public void buttonClick(View view) {
         //Brings out the phone dialer
@@ -36,6 +42,29 @@ public class ContactActivity extends Activity {
             Log.i("Finished making a call","");
         }catch(ActivityNotFoundException e){
             Log.v("Exception ocurred, could not make a call","");
+        }
+    }
+
+    public void voiceInteraction(View view) {
+        final Button btn = (Button)findViewById(R.id.recButton);
+        switch (recorder.getRecordingState()) {
+            case RESET:
+                recorder.startRecording();
+                btn.setText("Stop recording...");
+                break;
+            case RECORDING:
+                recorder.stopRecording();
+                btn.setText("Send");
+                break;
+            case STOPPED:
+                VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
+                try {
+                    sender.sendMessage(recorder.getVoiceMessage(), contact.getMobilePhoneNumbers().get(0));
+                } catch (MessageNotSentException e) {
+                    Log.e("ContactActivity", "Message not sent");
+                }
+                btn.setText("Record");
+                break;
         }
     }
 
@@ -68,7 +97,7 @@ public class ContactActivity extends Activity {
         //Set the first phonenumber of the contact in the ImageView
         contactNumber.setText(contact.getMobilePhoneNumbers().get(0));
 
-
+        recorder = VoiceMessageRecorder.getSharedInstance();
 
     }
 

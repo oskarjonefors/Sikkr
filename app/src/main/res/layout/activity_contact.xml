@@ -17,8 +17,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="ContactName"
         android:id="@+id/contactName"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal" />
 
     <ImageView
@@ -26,7 +24,6 @@
         android:layout_height="170dp"
         android:id="@+id/contactPicture"
         android:src="@drawable/ic_launcher"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal" />
 
     <TextView
@@ -37,28 +34,20 @@
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
-
     <Button
         android:onClick="buttonClick"
         android:layout_width="150dp"
         android:layout_height="120dp"
         android:text="Call"
         android:id="@+id/callButton"
-        android:layout_alignParentBottom="true"
         android:layout_gravity="center" />
 
     <Button
         android:layout_width="150dp"
         android:layout_height="120dp"
         android:text="Voice Message"
-        android:id="@+id/recordButton"
-        android:layout_gravity="center"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/callButton" />
-    </RelativeLayout>
+        android:onClick="voiceInteraction"
+        android:id="@+id/recButton"
+        android:layout_gravity="center" />
 
 </LinearLayout>

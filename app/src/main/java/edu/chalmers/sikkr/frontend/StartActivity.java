@@ -9,9 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
-
-
 import java.util.ArrayList;
+import android.widget.EditText;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
@@ -20,7 +19,10 @@ import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
-
+import edu.chalmers.sikkr.backend.mms.MMSInbox;
+import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
+import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
+import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 
 public class StartActivity extends Activity {
@@ -28,13 +30,29 @@ public class StartActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_start);
-        ContactBook.setupSingleton(this);
-        TextToSpeechUtility.setupTextToSpeech(this);
-        TheInbox.setupInbox(this);
-        CallLog.setUpCallLog(this);
+
+        try {
+            super.onCreate(savedInstanceState);
+            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.activity_start);
+            ContactBook.setupSingleton(this);
+            TextToSpeechUtility.setupTextToSpeech(this);
+            TheInbox.setupInbox(this);
+            CallLog.setUpCallLog(this);
+            VoiceMessagePlayer.setupSingleton(this);
+            VoiceMessageRecorder.setupSingleton(this);
+            VoiceMessageSender.setupSingleton(this);
+
+            MMSInbox.setContext(this);
+            MMSInbox.getSharedInstance().loadInbox();
+        } catch (Throwable t) {
+            EditText text = (EditText) findViewById(R.id.editText);
+            String s = "";
+            for (StackTraceElement e : t.getStackTrace()) {
+                s += e + "\n";
+            }
+            text.setText(s);
+        }
     }
 
 
