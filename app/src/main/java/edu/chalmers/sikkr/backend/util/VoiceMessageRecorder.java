@@ -16,7 +16,8 @@ import edu.chalmers.sikkr.backend.VoiceMessage;
 import edu.chalmers.sikkr.backend.mms.MMS;
 
 /**
- * Created by ivaldi on 2014-10-01.
+ * A simple class for recording voice messages.
+ * @author Oskar Jönefors
  */
 public class VoiceMessageRecorder {
 
@@ -77,7 +78,7 @@ public class VoiceMessageRecorder {
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            currentFilePath = targetPath + "/" + generateFileName();
+            currentFilePath = targetPath + generateFileName();
             recorder.setOutputFile(currentFilePath);
             Log.d(TAG, "Output file set to " + currentFilePath);
             try {
