@@ -11,7 +11,8 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by ivaldi on 2014-10-07.
+ * A simple class to write messages to a log file on the Android device.
+ * @author Oskar Jönefors
  */
 public class LogUtility {
 
