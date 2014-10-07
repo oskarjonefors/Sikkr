@@ -50,4 +50,14 @@
         android:id="@+id/recButton"
         android:layout_gravity="center" />
 
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="120dp"
+        android:text="Voice Message"
+        android:id="@+id/recordButton"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/callButton" />
+    </RelativeLayout>
+
 </LinearLayout>
