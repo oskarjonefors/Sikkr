@@ -80,10 +80,15 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
     <orderEntry type="library" exported="" name="slf4j-android-1.7.7" level="project" />
     <orderEntry type="library" exported="" name="Automotive-API-1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="logger-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="androidasync-1.1.6" level="project" />
     <orderEntry type="library" exported="" name="VIL-1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="ion-1.1.7" level="project" />
     <orderEntry type="library" exported="" name="SDP-1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="android-smsmms-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="slf4j-api-1.7.7" level="project" />
   </component>
 </module>
