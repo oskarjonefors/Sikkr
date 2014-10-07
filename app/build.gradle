@@ -23,6 +23,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.slf4j:slf4j-android:1.7.7'
+    compile 'com.klinkerapps:android-smsmms:+'
 }
 
 task downloadSDP(type: MyDownload) {
