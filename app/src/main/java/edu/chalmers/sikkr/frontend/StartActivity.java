@@ -1,19 +1,24 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import java.util.ArrayList;
 
+
 import android.widget.EditText;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
+import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.mms.MMSInbox;
@@ -33,7 +38,7 @@ public class StartActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        SpeechRecognitionHelper.run(this);
         try {
             super.onCreate(savedInstanceState);
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -118,23 +123,44 @@ public class StartActivity extends Activity {
         if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK){
             matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if(matches.size() >0){
-                String text = matches.get(0);
-                //Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-                Intent intent;
-                if (text.equals("1")) {
-                    intent = new Intent(this, LatestCallsActivity.class);
-                    startActivity(intent);
-                } else  if (text.equals("2")) {
-                    intent = new Intent(this, ContactGridActivity.class);
-                    startActivity(intent);
-                } else if (text.equals("3")) {
-                    intent = new Intent(this, SMS_Activity.class);
-                    startActivity(intent);
-                } else if (text.equals("4")) {
-                    intent = new Intent(this, ContactBookActivity.class);
-                    startActivity(intent);
-                }
+            selectFunctionality();
             }
+        }
+    }
+
+    private void selectFunctionality(){
+        ContactBook cb = ContactBook.getSharedInstance();
+        String text = matches.get(0);
+        String words[] = text.split(" ");
+        Intent intent;
+        Contact contact;
+        if(words[0].contains("ing")) {
+            intent = new Intent(Intent.ACTION_CALL);
+            if(words.length >2) {
+                contact = cb.getClosestMatch(words[1] + " " + words[2]);
+            }else{
+                contact = cb.getClosestMatch(words[1]);
+            }
+            intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
+            try {
+                startActivity(intent);
+                finish();
+            } catch (ActivityNotFoundException e) {
+                Log.v("Exception ocurred, could not make a call", "");
+            }
+        }
+        if (text.equals("1")) {
+            intent = new Intent(this, LatestCallsActivity.class);
+            startActivity(intent);
+        } else  if (text.equals("2")) {
+            intent = new Intent(this, ContactGridActivity.class);
+            startActivity(intent);
+        } else if (text.equals("3")) {
+            intent = new Intent(this, SMS_Activity.class);
+            startActivity(intent);
+        } else if (text.equals("4")) {
+            intent = new Intent(this, ContactBookActivity.class);
+            startActivity(intent);
         }
     }
 
