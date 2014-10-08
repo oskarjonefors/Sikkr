@@ -6,7 +6,8 @@ import android.view.View;
 import edu.chalmers.sikkr.frontend.ContactGridActivity;
 
 /**
- * Created by Jesper on 2014-09-28.
+ * A simple class to handle buttons clicked in ContactBookActivity.
+ * @author Jesper Olsson
  */
 class ContactBookClickListener implements View.OnClickListener {
 
@@ -18,6 +19,10 @@ class ContactBookClickListener implements View.OnClickListener {
         this.initialLetter = initialLetter;
     }
 
+    /**
+     * A method that will perform certain actions when button is clicked.
+     * @param view
+     */
     public void onClick(View view){
         Intent intent = new Intent(view.getContext(), ContactGridActivity.class);
         intent.putExtra("initial_letter", initialLetter);
