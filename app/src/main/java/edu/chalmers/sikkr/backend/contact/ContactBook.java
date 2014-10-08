@@ -1,6 +1,8 @@
 package edu.chalmers.sikkr.backend.contact;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -14,6 +16,8 @@ import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
 
+import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
+
 import static android.provider.ContactsContract.CommonDataKinds.*;
 
 /**
@@ -23,6 +27,10 @@ public class ContactBook {
 
     private Context context;
     private final Map<String, Contact> contacts = new TreeMap<String, Contact>();
+
+    /* This map uses contact name as key and contact id as value */
+    private final Map<String, String> contactNameMap = new TreeMap<String, String>();
+
     private final static ContactBook singleton = new ContactBook();
 
     private ContactBook() { }
@@ -44,6 +52,8 @@ public class ContactBook {
                         Phone.CONTACT_ID + " = " + contact_id, null, null);
                 contacts.put(contact_id, contact);
                 addPhoneNumbers(contact, phoneNumbers);
+
+                contactNameMap.put(name, contact_id);
             }
         }
         cursor.close();
@@ -130,5 +140,45 @@ public class ContactBook {
 
     public Contact getContact(String id) {
         return contacts.get(id);
+    }
+
+    /**
+     * Return the contact who's name best matches the given pattern.
+     * If no suitable contacts can be found, null will be returned.
+     * @param searchPattern
+     * @return
+     */
+    public Contact getClosestMatch(String searchPattern) {
+        return getClosestMatches(searchPattern, 1).get(0);
+    }
+
+    /**
+     * Return the contacts whos' names best matches the given pattern,
+     * limited to the given number of hits.
+     * @param searchPattern
+     * @param maxHits - Max number of hits. Cannot be zero or negative.
+     * @return
+     */
+    public List<Contact> getClosestMatches(String searchPattern, int maxHits) {
+        if(maxHits <= 0) {
+            throw new IllegalArgumentException("Max hits cannot be zero or negative!");
+        }
+
+        List<String> matches = FuzzySearchUtility.getSearchResults(searchPattern, contactNameMap.keySet());
+
+        if (matches == null) {
+            return null;
+        }
+
+        if (matches.size() < maxHits) {
+            maxHits = matches.size();
+        }
+
+        List<Contact> results = new ArrayList<Contact>();
+        for (int i=0; i < maxHits; i++) {
+            results.add(getContact(contactNameMap.get(matches.get(i))));
+        }
+
+        return results;
     }
 }
