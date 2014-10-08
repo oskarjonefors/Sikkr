@@ -45,12 +45,6 @@ public class MessageUtils {
     }
 
     public static String fixNumber(String number) {
-        String fixedNumber = number.replaceAll("[^0-9]", "");
-        if(fixedNumber.substring(0,2).equals("46")) {
-            return fixedNumber;
-        } else {
-            /* Add the country code and remove the leading zero */
-            return "46" + fixedNumber.substring(1);
-        }
+        return number.replaceAll("[^0-9]", "");
     }
 }
