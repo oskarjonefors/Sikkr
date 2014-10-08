@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * A simple class to write messages to a log file on the Android device.
