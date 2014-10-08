@@ -27,8 +27,17 @@ public class FuzzySearchUtility {
         Set<SearchResult> matches = new TreeSet<SearchResult>();
 
         for (String str : searchElements) {
-            int match = StringUtils.getLevenshteinDistance(pattern, str, 10);
-            Log.d(TAG, "Match between " + pattern + " and " + str + " is " + match);
+            String element;
+
+            /* Check if the search is only one word. If so, only compare with the first name of the contact. */
+            if (pattern.split("\\s+").length == 1) {
+                element = str.split("\\s+")[0];
+            } else {
+                element = str;
+            }
+
+            int match = StringUtils.getLevenshteinDistance(pattern.toLowerCase(), element.toLowerCase(), 10);
+            Log.d(TAG, "Match between " + pattern + " and " + element + " is " + match);
             if (match >= 0) {
                 SearchResult res = new SearchResult();
                 res.name = str;
@@ -53,7 +62,7 @@ public class FuzzySearchUtility {
 
         @Override
         public int compareTo(SearchResult another) {
-            return Integer.compare(another.match, match);
+            return Integer.compare(match, another.match);
         }
     }
 }
