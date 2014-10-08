@@ -79,16 +79,23 @@ public class VoiceMessageSender {
         final Transaction sendTransaction = new Transaction(context, mmsSettings);
         final Message msg = new Message("Sikkr message", MessageUtils.fixNumber(receiverNbr));
 
+        if(MessageUtils.fixNumber(receiverNbr).length() < 3) {
+            throw new IllegalArgumentException("Message receiver number " + receiverNbr + " is invalid.");
+        }
+
         try {
             final InputStream stream = context.getContentResolver().openInputStream(vmsg.getFileUri());
             msg.setMedia(getBytes(stream), "audio/3gp");
             msg.setType(Message.TYPE_SMSMMS);
         } catch (FileNotFoundException e) {
             Log.e(TAG, "Audio file " + vmsg.getFileUri() + " not found.");
+            throw new MessageNotSentException("Audio file not found.");
         } catch (IOException e) {
             Log.e(TAG, "Couldn't read audio file for sending mms.");
+            throw new MessageNotSentException("Audio file could not be read.");
         }
-        Log.d(TAG, "Sending message to " + msg.getAddresses()[0] + " with thread id " + MessageUtils.getMessageThreadIdByContactId(context, receiverNbr));
+        Log.d(TAG, "Sending message to " + msg.getAddresses()[0] + " with thread id " +
+                MessageUtils.getMessageThreadIdByContactId(context, receiverNbr));
         sendTransaction.sendNewMessage(msg, MessageUtils.getMessageThreadIdByContactId(context, receiverNbr));
     }
 }
