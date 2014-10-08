@@ -24,8 +24,12 @@ public class FuzzySearchUtility {
      * @return
      */
     public static List<String> getSearchResults(String pattern, Set<String> searchElements) {
-        Set<SearchResult> matches = new TreeSet<SearchResult>();
 
+        if (pattern == null || pattern.trim().isEmpty()) {
+            return null;
+        }
+
+        Set<SearchResult> matches = new TreeSet<SearchResult>();
         for (String str : searchElements) {
             String element;
 
