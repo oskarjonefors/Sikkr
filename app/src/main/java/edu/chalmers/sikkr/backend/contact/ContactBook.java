@@ -20,6 +20,8 @@ import android.util.Log;
 import edu.chalmers.sikkr.backend.util.ClipartUtility;
 import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
 
+import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
+
 import static android.provider.ContactsContract.CommonDataKinds.*;
 
 /**
