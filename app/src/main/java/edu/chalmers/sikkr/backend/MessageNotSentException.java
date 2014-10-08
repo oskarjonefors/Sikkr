@@ -5,4 +5,7 @@ package edu.chalmers.sikkr.backend;
  */
 public class MessageNotSentException extends Exception {
 
+    public MessageNotSentException(String s) {
+        super(s);
+    }
 }
