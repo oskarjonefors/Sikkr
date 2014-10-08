@@ -11,7 +11,7 @@ public class FuzzySearchUtility {
 
     /**
      * Return a sorted list of the search elements that best match the given pattern,
-     * with the best match first.
+     * with the best match first. If no suitable results are found, return results;null is returned.
      * @param pattern
      * @param searchElements
      * @return
@@ -28,7 +28,10 @@ public class FuzzySearchUtility {
                 results.add(res);
             }
         }
-        return results;
+        if(results.size() > 0) {
+            return results;
+        }
+        return null;
     }
 
     static class SearchResult implements Comparable<SearchResult> {
