@@ -26,10 +26,10 @@ public class LogUtility {
      * @param fileName
      * @param logRows
      */
-    public static void writeLogFile(String fileName, List<String> logRows) {
+    public static void writeLogFile(String fileName, String... logRows) {
         final String fName = fixFilename(fileName);
 
-        if(fName.length() > 0 && logRows.size() > 0) {
+        if(fName.length() > 0 && logRows.length > 0) {
             String logPath = getLogDirectory();
             File dir = new File(logPath);
 
