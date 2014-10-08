@@ -70,6 +70,11 @@ public class StartActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         return item.getItemId() == R.id.action_settings || super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Actionhandler for this activity
+     * @param view
+     */
     public void clickedButton(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -95,6 +100,14 @@ public class StartActivity extends Activity {
 
         }
     }
+
+    /**
+     * A method to retrieve results from finished speech recognition.
+     * Will also match the results against certain keywords.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK){

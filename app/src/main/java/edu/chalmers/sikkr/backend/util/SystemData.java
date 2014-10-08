@@ -1,7 +1,8 @@
 package edu.chalmers.sikkr.backend.util;
 
 /**
- * Created by Jesper on 2014-10-02.
+ * A class to hold constants.
+ * @author Jesper Olsson
  */
 public class SystemData{
     public final static int VOICE_RECOGNITION_REQUEST_CODE = 1;

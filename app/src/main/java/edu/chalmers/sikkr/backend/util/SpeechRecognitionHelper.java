@@ -12,8 +12,18 @@ import android.widget.Toast;
 
 import java.util.List;
 
+/**
+ * A class to handle the speech recognition feature.
+ * @author Jesper Olsson
+ */
+
 public class SpeechRecognitionHelper{
 
+    /**
+     * A method that a class that wants to use speech recognition can call upon.
+     * The method will run startRecognitionActivity if such speech recognition utility is installed
+     * @param callingActivity - the activity calling this method
+     */
     public static void run( Activity callingActivity){
         if( isSpeechRecognitionActivityPresented(callingActivity)){
             startRecognitionActivity(callingActivity);
@@ -23,6 +33,10 @@ public class SpeechRecognitionHelper{
         }
     }
 
+    /**
+     * A method that will ask to install google voice search if no speech recognition utility is found.
+     * @param ownerActivity - the activity calling this method.
+     */
     private static void installGoogleVoiceSearch(final Activity ownerActivity) {
         AlertDialog dialog  = new AlertDialog.Builder(ownerActivity).setMessage("It's necessary to install Google Voice Search").setTitle(
                 "Install Google Voice Search from Google Play?")
@@ -43,8 +57,10 @@ public class SpeechRecognitionHelper{
         dialog.show();
         }
 
-
-
+    /**
+     * A method to start the speech recognition.
+     * @param callingActivity - the activity calling this method
+     */
     private static void startRecognitionActivity(Activity callingActivity) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Select an application");
@@ -54,6 +70,11 @@ public class SpeechRecognitionHelper{
         callingActivity.startActivityForResult(intent, SystemData.VOICE_RECOGNITION_REQUEST_CODE);
     }
 
+    /**
+     * A method to check wether a speech recognition utility is installed
+     * @param callerActivity - the activity calling this method
+     * @return true if speech recognition utility is installed, false otherwise.
+     */
     private static boolean isSpeechRecognitionActivityPresented(Activity callerActivity) {
         try {
             PackageManager pm = callerActivity.getPackageManager();

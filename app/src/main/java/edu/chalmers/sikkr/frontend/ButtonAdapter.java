@@ -14,6 +14,7 @@ import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 
 /**
+ * A class to create the Button Grid in ContactBookActivity.
  * @author Jesper Olsson
  */
 public class ButtonAdapter extends BaseAdapter {
