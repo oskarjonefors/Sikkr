@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import android.widget.EditText;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -207,6 +208,42 @@ public class StartActivity extends Activity {
     }
 }
 
+
+    private void selectFunctionality(){
+        ContactBook cb = ContactBook.getSharedInstance();
+        String text = matches.get(0);
+        String words[] = text.split(" ");
+        Intent intent;
+        Contact contact;
+        if(words[0].contains("ing")) {
+            intent = new Intent(Intent.ACTION_CALL);
+            if(words.length >2) {
+                contact = cb.getClosestMatch(words[1] + " " + words[2]);
+            }else{
+                contact = cb.getClosestMatch(words[1]);
+            }
+            intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
+            try {
+                startActivity(intent);
+                finish();
+            } catch (ActivityNotFoundException e) {
+                Log.v("Exception ocurred, could not make a call", "");
+            }
+        }
+        if (text.equals("1")) {
+            intent = new Intent(this, LatestCallsActivity.class);
+            startActivity(intent);
+        } else  if (text.equals("2")) {
+            intent = new Intent(this, ContactGridActivity.class);
+            startActivity(intent);
+        } else if (text.equals("3")) {
+            intent = new Intent(this, SMS_Activity.class);
+            startActivity(intent);
+        } else if (text.equals("4")) {
+            intent = new Intent(this, ContactBookActivity.class);
+            startActivity(intent);
+        }
+    }
 
 
 
