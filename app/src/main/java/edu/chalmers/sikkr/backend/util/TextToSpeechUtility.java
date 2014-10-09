@@ -22,6 +22,10 @@ public final class TextToSpeechUtility {
 
     }
 
+    public static void isSpeaking() {
+        return tts != null && tts.isSpeaking();
+    }
+
     public static void readAloud(String msg) {
         if (tts != null) {
             tts.speak(msg, TextToSpeech.QUEUE_FLUSH, null);
