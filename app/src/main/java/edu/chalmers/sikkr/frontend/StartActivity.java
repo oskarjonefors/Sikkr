@@ -210,36 +210,36 @@ public class StartActivity extends Activity {
 
 
     private void selectFunctionality(){
-        ContactBook cb = ContactBook.getSharedInstance();
+        final ContactBook cb = ContactBook.getSharedInstance();
         String text = matches.get(0);
         String words[] = text.split(" ");
         Intent intent;
         Contact contact;
-        if(words[0].contains("ing")) {
-            intent = new Intent(Intent.ACTION_CALL);
-            if(words.length >2) {
-                contact = cb.getClosestMatch(words[1] + " " + words[2]);
-            }else{
-                contact = cb.getClosestMatch(words[1]);
+        try {
+            if (words[0].contains("ing")) {
+                intent = new Intent(Intent.ACTION_CALL);
+                if (words.length > 2) {
+                    contact = cb.getClosestMatch(words[1] + " " + words[2]);
+                } else {
+                    contact = cb.getClosestMatch(words[1]);
+                }
+                intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
             }
-            intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
-            try {
-                startActivity(intent);
-                finish();
-            } catch (ActivityNotFoundException e) {
-                Log.v("Exception ocurred, could not make a call", "");
-            }
+        }catch(ActivityNotFoundException ex){
+            Log.d("FEL", "FEL");
+        }catch(NullPointerException exe){
+            Log.d("FEL", "INGEN KONTAKT FUNNEN");
         }
-        if (text.equals("1")) {
+        if (text.equals("1") || text.contains("senaste")) {
             intent = new Intent(this, LatestCallsActivity.class);
             startActivity(intent);
-        } else  if (text.equals("2")) {
+        } else  if (text.equals("2") || text.contains("favorit")) {
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);
-        } else if (text.equals("3")) {
+        } else if (text.equals("3") || text.contains("med") || text.contains("sms")) {
             intent = new Intent(this, SMS_Activity.class);
             startActivity(intent);
-        } else if (text.equals("4")) {
+        } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
             intent = new Intent(this, ContactBookActivity.class);
             startActivity(intent);
         }
