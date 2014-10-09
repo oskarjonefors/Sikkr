@@ -51,8 +51,8 @@ public class ContactBook {
                 final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
                         Phone.CONTACT_ID + " = " + contact_id, null, null);
                 addPhoneNumbers(contact, phoneNumbers);
-                
-                if (contact.getDefaultNumber != null) {
+
+                if (contact.getDefaultNumber() != null) {
                     contacts.put(contact_id, contact);
                     contactNameMap.put(name, contact_id);
                 }
