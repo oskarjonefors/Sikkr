@@ -50,10 +50,12 @@ public class ContactBook {
                 final SikkrContact contact = new SikkrContact(name, contact_id, getPhoto(contact_uri));
                 final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
                         Phone.CONTACT_ID + " = " + contact_id, null, null);
-                contacts.put(contact_id, contact);
                 addPhoneNumbers(contact, phoneNumbers);
-
-                contactNameMap.put(name, contact_id);
+                
+                if (contact.getDefaultNumber != null) {
+                    contacts.put(contact_id, contact);
+                    contactNameMap.put(name, contact_id);
+                }
             }
         }
         cursor.close();
