@@ -149,20 +149,15 @@ public class ContactBook {
      * @return
      */
     public Contact getClosestMatch(String searchPattern) {
-        return getClosestMatches(searchPattern, 1).get(0);
+        return getClosestMatches(searchPattern).get(0);
     }
 
     /**
-     * Return the contacts whos' names best matches the given pattern,
-     * limited to the given number of hits.
+     * Return the contacts whos' names best matches the given pattern.
      * @param searchPattern
-     * @param maxHits - Max number of hits. Cannot be zero or negative.
      * @return
      */
-    public List<Contact> getClosestMatches(String searchPattern, int maxHits) {
-        if(maxHits <= 0) {
-            throw new IllegalArgumentException("Max hits cannot be zero or negative!");
-        }
+    public List<Contact> getClosestMatches(String searchPattern) {
 
         List<String> matches = FuzzySearchUtility.getSearchResults(searchPattern, contactNameMap.keySet());
 
@@ -170,13 +165,10 @@ public class ContactBook {
             return null;
         }
 
-        if (matches.size() < maxHits) {
-            maxHits = matches.size();
-        }
-
         List<Contact> results = new ArrayList<Contact>();
-        for (int i=0; i < maxHits; i++) {
-            results.add(getContact(contactNameMap.get(matches.get(i))));
+
+        for (String str : matches) {
+            results.add(getContact(contactNameMap.get(str)));
         }
 
         return results;
