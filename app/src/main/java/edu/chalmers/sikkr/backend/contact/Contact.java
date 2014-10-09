@@ -34,4 +34,8 @@ public interface Contact extends Comparable<Contact> {
      */
     List<String> getMobilePhoneNumbers();
 
+    /**
+     * Return the contact's default number.
+     */
+    String getDefaultNumber();
 }
