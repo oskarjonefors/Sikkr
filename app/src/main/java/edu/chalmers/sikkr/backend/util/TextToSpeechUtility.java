@@ -22,7 +22,7 @@ public final class TextToSpeechUtility {
 
     }
 
-    public static void isSpeaking() {
+    public static boolean isSpeaking() {
         return tts != null && tts.isSpeaking();
     }
 
