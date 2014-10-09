@@ -17,8 +17,8 @@ import java.util.List;
 
 
 import android.widget.EditText;
+import android.widget.Toast;
 
-import org.apache.commons.lang3.ObjectUtils;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
@@ -225,7 +225,7 @@ public class StartActivity extends Activity {
         } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
             words = text.split(" ");
             if(words.length >1){
-                Toast.makeText(this, words[0] +" "+ words[1], Toast.LENGTH_LONG).show();
+                Toast.makeText(this, words[0] + " " + words[1], Toast.LENGTH_LONG).show();
                 intent = new Intent(this, ContactGridActivity.class);
                 intent.putExtra("initial_letter",words[1].charAt(0));
                 startActivity(intent);
