@@ -49,7 +49,6 @@ public class StartActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SpeechRecognitionHelper.run(this);
 
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -61,7 +60,6 @@ public class StartActivity extends Activity {
         VoiceMessagePlayer.setupSingleton(this);
         VoiceMessageRecorder.setupSingleton(this);
         VoiceMessageSender.setupSingleton(this);
-
 
         try {
             MMSInbox.setContext(this);
@@ -137,8 +135,9 @@ public class StartActivity extends Activity {
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if(matches.size() >0){
                 text = matches.get(0);
-                selectFunctionality();
                 callContactByName();
+                selectFunctionality();
+
             }
         }
     }
@@ -187,7 +186,13 @@ public class StartActivity extends Activity {
                 } else {
                     contact = cb.getClosestMatch(words[1]);
                 }
-                intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
+                if(contact != null) {
+                    intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
+                    startActivity(intent);
+                    finish();
+                }else{
+                    throw new NullPointerException();
+                }
             }
         }catch(ActivityNotFoundException ex){
             Log.d("Error", "Could not make a call");
