@@ -23,6 +23,7 @@ import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
@@ -35,6 +36,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 public class StartActivity extends Activity {
     private ArrayList<String> matches;
+    public static final String TAG = "StartActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,16 @@ public class StartActivity extends Activity {
         VoiceMessageRecorder.setupSingleton(this);
         VoiceMessageSender.setupSingleton(this);
 
-        MMSInbox.setContext(this);
-        MMSInbox.getSharedInstance().loadInbox();
+        try {
+            MMSInbox.setContext(this);
+            MMSInbox.getSharedInstance().loadInbox();
+        } catch (Throwable t) {
+            final List<String> trace = new ArrayList<String>();
+            for (StackTraceElement el : t.getStackTrace()) {
+                trace.add("" + el);
+            }
+            LogUtility.writeLogFile(TAG, trace.toArray(new String[trace.size()]));
+        }
     }
 
 
