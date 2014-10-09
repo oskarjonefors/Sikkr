@@ -63,7 +63,6 @@ public class StartActivity extends Activity {
         VoiceMessageRecorder.setupSingleton(this);
         VoiceMessageSender.setupSingleton(this);
 
-
         try {
             MMSInbox.setContext(this);
             MMSInbox.getSharedInstance().loadInbox();
@@ -253,7 +252,13 @@ public class StartActivity extends Activity {
                 } else {
                     contact = cb.getClosestMatch(words[1]);
                 }
-                intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
+                if(contact != null) {
+                    intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
+                    startActivity(intent);
+                    finish();
+                }else{
+                    throw new NullPointerException();
+                }
             }
         }catch(ActivityNotFoundException ex){
             Log.d("Error", "Could not make a call");
