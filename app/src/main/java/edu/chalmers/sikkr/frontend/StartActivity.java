@@ -39,28 +39,19 @@ public class StartActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SpeechRecognitionHelper.run(this);
-        try {
-            super.onCreate(savedInstanceState);
-            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.activity_start);
-            ContactBook.setupSingleton(this);
-            TextToSpeechUtility.setupTextToSpeech(this);
-            TheInbox.setupInbox(this);
-            CallLog.setUpCallLog(this);
-            VoiceMessagePlayer.setupSingleton(this);
-            VoiceMessageRecorder.setupSingleton(this);
-            VoiceMessageSender.setupSingleton(this);
+        super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_start);
+        ContactBook.setupSingleton(this);
+        TextToSpeechUtility.setupTextToSpeech(this);
+        TheInbox.setupInbox(this);
+        CallLog.setUpCallLog(this);
+        VoiceMessagePlayer.setupSingleton(this);
+        VoiceMessageRecorder.setupSingleton(this);
+        VoiceMessageSender.setupSingleton(this);
 
-            MMSInbox.setContext(this);
-            MMSInbox.getSharedInstance().loadInbox();
-        } catch (Throwable t) {
-            EditText text = (EditText) findViewById(R.id.editText);
-            String s = "";
-            for (StackTraceElement e : t.getStackTrace()) {
-                s += e + "\n";
-            }
-            text.setText(s);
-        }
+        MMSInbox.setContext(this);
+        MMSInbox.getSharedInstance().loadInbox();
     }
 
 
