@@ -243,27 +243,28 @@ public class StartActivity extends Activity {
     private void callContactByName(){
         final ContactBook cb = ContactBook.getSharedInstance();
         words = text.split(" ");
-        Contact contact;
         try {
             if (words[0].contains("ing")) {
                 intent = new Intent(Intent.ACTION_CALL);
                 if (words.length > 2) {
                     contact = cb.getClosestMatch(words[1] + " " + words[2]);
-                } else {
+                }else {
                     contact = cb.getClosestMatch(words[1]);
                 }
                 if(contact != null) {
                     intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
-                    startActivity(intent);
-                    finish();
-                }else{
-                    throw new NullPointerException();
+                    TextToSpeechUtility.readAloud("Ringer " + contact.getName());
+                    //startActivity(intent);
+                    //finish();
                 }
             }
-        }catch(ActivityNotFoundException ex){
-            Log.d("Error", "Could not make a call");
-        }catch(NullPointerException exe){
-            Log.d("Error", "No contact found");
+        }catch(Throwable t) {
+            final List<String> trace = new ArrayList<String>();
+            for (StackTraceElement el : t.getStackTrace()) {
+                trace.add("" + el);
+            }
+            LogUtility.writeLogFile("tjenare", "Kontaktnamn " + contact.getName());
+            LogUtility.writeLogFile("tjenare", trace.toArray(new String[trace.size()]));
         }
     }
 
