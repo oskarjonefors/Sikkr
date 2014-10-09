@@ -37,6 +37,9 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 public class StartActivity extends Activity {
     private ArrayList<String> matches;
+    private String text;
+    private Intent intent;
+    private String[] words;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +88,7 @@ public class StartActivity extends Activity {
      * @param view
      */
     public void clickedButton(View view) {
-        Intent intent;
+
         switch (view.getId()) {
         case R.id.contactBook:
             intent = new Intent(this, ContactBookActivity.class);
@@ -114,7 +117,7 @@ public class StartActivity extends Activity {
 
     /**
      * A method to retrieve results from finished speech recognition.
-     * Will also match the results against certain keywords.
+     * Will trigger methods to match certain keywords
      * @param requestCode
      * @param resultCode
      * @param data
@@ -123,18 +126,50 @@ public class StartActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK){
-            matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if(matches.size() >0){
-            selectFunctionality();
+                text = matches.get(0);
+                selectFunctionality();
+                callContactByName();
             }
         }
     }
 
+    /**
+     * Method to check if voice recognition was used to select functionality
+     * Will redirect user to the selected activity
+     */
     private void selectFunctionality(){
+        if (text.equals("1") || text.contains("senaste")) {
+            intent = new Intent(this, LatestCallsActivity.class);
+            startActivity(intent);
+        } else  if (text.equals("2") || text.contains("favorit")) {
+            intent = new Intent(this, ContactGridActivity.class);
+            startActivity(intent);
+        } else if (text.equals("3") || text.contains("med") || text.contains("sms")) {
+            intent = new Intent(this, SMS_Activity.class);
+            startActivity(intent);
+        } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
+            words = text.split(" ");
+            if(words.length >1){
+                Toast.makeText(this, words[0] +" "+ words[1], Toast.LENGTH_LONG).show();
+                intent = new Intent(this, ContactGridActivity.class);
+                intent.putExtra("initial_letter",words[1].charAt(0));
+                startActivity(intent);
+            }else {
+                intent = new Intent(this, ContactBookActivity.class);
+                startActivity(intent);
+            }
+        }
+    }
+
+    /**
+     * Method to check if voice recognition was used to make a call
+     * Will try to call contact that best matches the input.
+     */
+    private void callContactByName(){
         final ContactBook cb = ContactBook.getSharedInstance();
-        String text = matches.get(0);
-        String words[] = text.split(" ");
-        Intent intent;
+        words = text.split(" ");
         Contact contact;
         try {
             if (words[0].contains("ing")) {
@@ -147,22 +182,9 @@ public class StartActivity extends Activity {
                 intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
             }
         }catch(ActivityNotFoundException ex){
-            Log.d("FEL", "FEL");
+            Log.d("Error", "Could not make a call");
         }catch(NullPointerException exe){
-            Log.d("FEL", "INGEN KONTAKT FUNNEN");
-        }
-        if (text.equals("1") || text.contains("senaste")) {
-            intent = new Intent(this, LatestCallsActivity.class);
-            startActivity(intent);
-        } else  if (text.equals("2") || text.contains("favorit")) {
-            intent = new Intent(this, ContactGridActivity.class);
-            startActivity(intent);
-        } else if (text.equals("3") || text.contains("med") || text.contains("sms")) {
-            intent = new Intent(this, SMS_Activity.class);
-            startActivity(intent);
-        } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
-            intent = new Intent(this, ContactBookActivity.class);
-            startActivity(intent);
+            Log.d("Error", "No contact found");
         }
     }
 
