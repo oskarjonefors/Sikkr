@@ -180,16 +180,20 @@ public class StartActivity extends Activity {
         try {
             if (words[0].contains("ing")) {
                 intent = new Intent(Intent.ACTION_CALL);
-                if (words.length > 2) {
-                    contact = cb.getClosestMatch(words[1] + " " + words[2]);
-                }else {
-                    contact = cb.getClosestMatch(words[1]);
+                String searchString ="";
+                for(int i = 1; i<words.length;i++){
+                    searchString += words[i] +" ";
                 }
-                if(contact != null) {
-                    intent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
+                contact = cb.getClosestMatch(searchString);
+                if(contact.getDefaultNumber() != null ) {
+                    intent.setData(Uri.parse("tel:" + contact.getDefaultNumber()));
                     TextToSpeechUtility.readAloud("Ringer " + contact.getName());
-                    //startActivity(intent);
-                    //finish();
+                    LogUtility.writeLogFile("tjenare", "Kontaktnamn: " +contact.getName());
+                    LogUtility.writeLogFile("tjenare", "Default Number: " +contact.getDefaultNumber());
+                    LogUtility.writeLogFile("tjenare", "Phone Number: " +contact.getPhoneNumbers().get(0));
+                    startActivity(intent);
+                    finish();
+
                 }
             }
         }catch(Throwable t) {
