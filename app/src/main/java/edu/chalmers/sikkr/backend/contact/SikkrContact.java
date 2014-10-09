@@ -65,6 +65,17 @@ public class SikkrContact implements Contact {
     }
 
     @Override
+    public String getDefaultNumber() {
+        if (mobilePhoneNumbers.size() > 0) {
+            return mobilePhoneNumbers.get(0);
+        } else if (phoneNumbers.size() > 0) {
+            return phoneNumbers.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public int compareTo(Contact another) {
         int compare = name.compareTo(another.getName());
         return compare == 0 ? id.compareTo(another.getID()) : compare;
