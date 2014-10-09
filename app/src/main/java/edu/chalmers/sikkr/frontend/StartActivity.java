@@ -38,6 +38,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 public class StartActivity extends Activity {
     private ArrayList<String> matches;
+
     private String text;
     private Intent intent;
     private String[] words;
