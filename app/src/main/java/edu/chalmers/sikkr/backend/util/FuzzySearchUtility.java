@@ -5,6 +5,7 @@ import android.util.Log;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -30,6 +31,9 @@ public class FuzzySearchUtility {
         }
 
         Set<SearchResult> matches = new TreeSet<SearchResult>();
+        Set<SearchResult> discards = new TreeSet<SearchResult>();
+        int topMatch = 1000;
+
         for (String str : searchElements) {
             String element;
 
@@ -42,13 +46,22 @@ public class FuzzySearchUtility {
 
             int match = StringUtils.getLevenshteinDistance(pattern.toLowerCase(), element.toLowerCase(), 10);
             Log.d(TAG, "Match between " + pattern + " and " + element + " is " + match);
-            if (match >= 0) {
+
+            if (match >= 0 && match <= topMatch) {
+                if (match < topMatch) {
+                    discards.addAll(matches);
+                }
+
+                topMatch = match;
                 SearchResult res = new SearchResult();
                 res.name = str;
                 res.match = match;
                 matches.add(res);
             }
         }
+
+        matches.removeAll(discards);
+
         if (matches.size() <= 0) {
             return null;
         }
