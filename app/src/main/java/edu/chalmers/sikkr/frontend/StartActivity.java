@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 
 import android.widget.EditText;
+import android.widget.Toast;
 
-import org.apache.commons.lang3.ObjectUtils;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
@@ -44,27 +44,21 @@ public class StartActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SpeechRecognitionHelper.run(this);
-        try {
-            super.onCreate(savedInstanceState);
-            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.activity_start);
-            ContactBook.setupSingleton(this);
-            TextToSpeechUtility.setupTextToSpeech(this);
-            TheInbox.setupInbox(this);
-            VoiceMessagePlayer.setupSingleton(this);
-            VoiceMessageRecorder.setupSingleton(this);
-            VoiceMessageSender.setupSingleton(this);
 
-            MMSInbox.setContext(this);
-            MMSInbox.getSharedInstance().loadInbox();
-        } catch (Throwable t) {
+        super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_start);
+        ContactBook.setupSingleton(this);
+        TextToSpeechUtility.setupTextToSpeech(this);
+        TheInbox.setupInbox(this);
+        CallLog.setUpCallLog(this);
+        VoiceMessagePlayer.setupSingleton(this);
+        VoiceMessageRecorder.setupSingleton(this);
+        VoiceMessageSender.setupSingleton(this);
 
-            String s = "";
-            for (StackTraceElement e : t.getStackTrace()) {
-                s += e + "\n";
-            }
+        MMSInbox.setContext(this);
+        MMSInbox.getSharedInstance().loadInbox();
 
-        }
     }
 
 
@@ -152,7 +146,7 @@ public class StartActivity extends Activity {
         } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
             words = text.split(" ");
             if(words.length >1){
-                Toast.makeText(this, words[0] +" "+ words[1], Toast.LENGTH_LONG).show();
+                Toast.makeText(this, words[0] + " " + words[1], Toast.LENGTH_LONG).show();
                 intent = new Intent(this, ContactGridActivity.class);
                 intent.putExtra("initial_letter",words[1].charAt(0));
                 startActivity(intent);
