@@ -15,7 +15,9 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
+import edu.chalmers.sikkr.backend.util.ClipartUtility;
 import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
 
 import static android.provider.ContactsContract.CommonDataKinds.*;
@@ -31,6 +33,8 @@ public class ContactBook {
     /* This map uses contact name as key and contact id as value */
     private final Map<String, String> contactNameMap = new TreeMap<String, String>();
 
+    private ClipartUtility cu;
+
     private final static ContactBook singleton = new ContactBook();
 
     private ContactBook() { }
@@ -38,6 +42,7 @@ public class ContactBook {
     private void setup(Context context) {
         this.context = context;
         contacts.clear();
+        cu = new ClipartUtility(context);
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
@@ -47,7 +52,7 @@ public class ContactBook {
                 final String contact_id = mapContact.getString(mapContact.getColumnIndex(ContactsContract.Contacts._ID));
                 final long longID = Long.valueOf(contact_id);
                 final Uri contact_uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, longID);
-                final SikkrContact contact = new SikkrContact(name, contact_id, getPhoto(contact_uri));
+                final SikkrContact contact = new SikkrContact(name, contact_id, getPhoto(contact_uri, longID));
                 final Cursor phoneNumbers = context.getContentResolver().query(Phone.CONTENT_URI, null,
                         Phone.CONTACT_ID + " = " + contact_id, null, null);
                 addPhoneNumbers(contact, phoneNumbers);
@@ -59,6 +64,7 @@ public class ContactBook {
             }
         }
         cursor.close();
+        cu.saveChanges();
     }
 
     private boolean hasContext() {
@@ -93,10 +99,10 @@ public class ContactBook {
         phoneNumbers.close();
     }
 
-    private Bitmap getPhoto(Uri contactUri) {
+    private Bitmap getPhoto(Uri contactUri, long id) {
             final InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(), contactUri, true);
             if (input == null) {
-                return null;
+                return cu.getContactImage("" + id);
             } else {
                 return BitmapFactory.decodeStream(input);
             }
