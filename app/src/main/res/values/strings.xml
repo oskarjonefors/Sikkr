@@ -10,7 +10,7 @@
     <string name="message">Message</string>
     <string name="title_activity_conversation">ConversationActivity</string>
     <string name="title_activity_latest_calls">LatestCallsActivity</string>
-    <string-array name="clipart-list">
+    <string-array name="clipart_list">
         <item>clpa01.png</item>
         <item>clpa02.png</item>
         <item>clpa03.png</item>
