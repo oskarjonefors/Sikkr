@@ -58,6 +58,5 @@
         android:layout_gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/callButton" />
-    </RelativeLayout>
 
 </LinearLayout>

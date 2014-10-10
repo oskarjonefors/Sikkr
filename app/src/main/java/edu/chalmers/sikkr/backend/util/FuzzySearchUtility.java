@@ -37,8 +37,7 @@ public class FuzzySearchUtility {
         if (pattern == null || pattern.trim().isEmpty()) {
             return null;
         }
-
-        Set<SearchResult> matches = new TreeSet<SearchResult>();
+        
         for (String str : searchElements) {
             String element;
 

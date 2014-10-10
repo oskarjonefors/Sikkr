@@ -46,10 +46,6 @@ public class StartActivity extends Activity {
     private String text;
     private Intent intent;
     private String[] words;
-
-    private String text;
-    private Intent intent;
-    private String[] words;
     private Contact contact;
     public static final String TAG = "StartActivity";
 
@@ -225,86 +221,3 @@ public class StartActivity extends Activity {
         }
     }
 }
-
-
-    private void selectFunctionality(){
-        if (text.equals("1") || text.contains("senaste")) {
-            intent = new Intent(this, LatestCallsActivity.class);
-            startActivity(intent);
-        } else  if (text.equals("2") || text.contains("favorit")) {
-            intent = new Intent(this, ContactGridActivity.class);
-            startActivity(intent);
-        } else if (text.equals("3") || text.contains("med") || text.contains("sms")) {
-            intent = new Intent(this, SMS_Activity.class);
-            startActivity(intent);
-        } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
-            words = text.split(" ");
-            if(words.length >1){
-                Toast.makeText(this, words[0] + " " + words[1], Toast.LENGTH_LONG).show();
-                intent = new Intent(this, ContactGridActivity.class);
-                intent.putExtra("initial_letter",words[1].charAt(0));
-                startActivity(intent);
-            }else {
-                intent = new Intent(this, ContactBookActivity.class);
-                startActivity(intent);
-            }
-        }
-    }
-
-    /**
-     * Method to check if voice recognition was used to make a call
-     * Will try to call contact that best matches the input.
-     */
-    private void callContactByName(){
-        final ContactBook cb = ContactBook.getSharedInstance();
-        words = text.split(" ");
-        try {
-            if (words[0].contains("ing")) {
-                intent = new Intent(Intent.ACTION_CALL);
-                String searchString = "";
-                for (int i = 1; i < words.length; i++) {
-                    searchString += words[i] + " ";
-                }
-                contact = cb.getClosestMatch(searchString);
-                if (contact.getDefaultNumber() != null) {
-                    intent.setData(Uri.parse("tel:" + contact.getDefaultNumber()));
-                    TextToSpeechUtility.readAloud("Ringer " + contact.getName());
-                    LogUtility.writeLogFile("tjenare", "Kontaktnamn: " + contact.getName());
-                    LogUtility.writeLogFile("tjenare", "Default Number: " + contact.getDefaultNumber());
-                    LogUtility.writeLogFile("tjenare", "Phone Number: " + contact.getPhoneNumbers().get(0));
-
-                    String text = matches.get(0);
-                    //Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-                    Intent intent;
-                    if (text.equals("1")) {
-                        intent = new Intent(this, LatestCallsActivity.class);
-                        startActivity(intent);
-                    } else if (text.equals("2")) {
-                        intent = new Intent(this, ContactGridActivity.class);
-                        startActivity(intent);
-                    } else if (text.equals("3")) {
-                        intent = new Intent(this, SMS_Activity.class);
-                        startActivity(intent);
-                    } else if (text.equals("4")) {
-                        intent = new Intent(this, ContactBookActivity.class);
-
-                        startActivity(intent);
-                        finish();
-                    }
-                }
-            }
-
-        }catch(Throwable t) {
-            final List<String> trace = new ArrayList<String>();
-            for (StackTraceElement el : t.getStackTrace()) {
-                trace.add("" + el);
-            }
-            LogUtility.writeLogFile("tjenare", "Kontaktnamn " + contact.getName());
-            LogUtility.writeLogFile("tjenare", trace.toArray(new String[trace.size()]));
-        }
-    }
-
-
-
-
-
