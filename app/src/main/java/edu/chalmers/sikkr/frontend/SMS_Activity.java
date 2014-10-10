@@ -3,6 +3,8 @@ package edu.chalmers.sikkr.frontend;
         import android.app.Activity;
         import android.content.ContentResolver;
         import android.content.Context;
+        import android.content.DialogInterface;
+        import android.content.Intent;
         import android.database.Cursor;
         import android.net.Uri;
         import android.os.Bundle;
@@ -15,6 +17,7 @@ package edu.chalmers.sikkr.frontend;
         import android.view.MenuItem;
         import android.view.View;
         import android.view.ViewGroup;
+        import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
         import android.widget.ImageView;
         import android.widget.ListView;
@@ -31,6 +34,7 @@ package edu.chalmers.sikkr.frontend;
 
 
 public class SMS_Activity extends Activity {
+    ArrayList<SmsConversation> smsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,7 @@ public class SMS_Activity extends Activity {
     }
 
     private void createSmsLayout() {
-        ArrayList<SmsConversation> smsList = TheInbox.getInstance().getSmsInbox();
+        smsList = TheInbox.getInstance().getSmsInbox();
         ArrayAdapter adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
         ListView listV = (ListView)findViewById(R.id.listView);
         listV.setAdapter(adapter);
@@ -72,9 +76,22 @@ public class SMS_Activity extends Activity {
     public void readMsg(View view) {
         //Toast.makeText(this, ((OneSms) view.getTag()).getMessage(), Toast.LENGTH_LONG ).show();
         ((OneSms) view.getTag()).play();
-
     }
 
+    public void clickedText(View view) {
+        Toast.makeText(view.getContext(), "trycker på text", Toast.LENGTH_SHORT).show();
+        int position = (Integer)view.getTag();
+        Intent intent = new Intent(view.getContext(), ConversationActivity.class);
+        intent.putExtra("phoneNumber", smsList.get(position).getAddress());
+        startActivity(intent);
+    }
+/*
+    public void clickedText(View view) {
+
+    }
+*/
+
+/*
     public String getContactByNbr(String number) {
         String name = "?";
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
@@ -96,6 +113,7 @@ public class SMS_Activity extends Activity {
         }
         return name;
     }
+*/
 
     //Inner adapterclass
     public class SmsViewAdapter extends ArrayAdapter {
@@ -111,32 +129,31 @@ public class SMS_Activity extends Activity {
             this.layoutId = layoutId;
         }
 
+
         @Override
-        public View getView(int i, View v, ViewGroup viewGroup) {
+        public View getView(int i, final View v, ViewGroup viewGroup) {
             View view = v;
             final ViewHolder holder;
 
             if (view == null) {
-                Toast.makeText(context, "first run", Toast.LENGTH_SHORT).show();
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 view = inflater.inflate(layoutId, viewGroup, false);
                 holder = new ViewHolder();
                 holder.contactName = (TextView)view.findViewById(R.id.sender);
                 view.setTag(holder);
             } else {
-                Toast.makeText(context, "second run", Toast.LENGTH_SHORT).show();
                 holder = (ViewHolder)view.getTag();
             }
 
             //get the current sms conversation
             SmsConversation currentConv = list.get(i);
 
-
             //Link an sms to the playbutton
             view.findViewById(R.id.imageButton).setTag(currentConv.getSmsList().get(0));
 
             //set the info of the element
             holder.contactName.setText((currentConv.getAddress()));
+            holder.contactName.setTag(i);
 /*
                 //view for date
                 TextView dateView = (TextView)view.findViewById(R.id.date);
