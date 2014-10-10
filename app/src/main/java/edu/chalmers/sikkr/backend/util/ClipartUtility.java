@@ -70,7 +70,7 @@ public class ClipartUtility {
         }
     }
 
-    private void saveChanges() {
+    public void saveChanges() {
         try {
             FileOutputStream fileOut = new FileOutputStream(mapFilePath);
             ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
