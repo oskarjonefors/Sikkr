@@ -31,4 +31,7 @@ public class SmsConversation {
     public List<OneSms> getSmsList() {
         return smsConversation;
     }
+    public String getLatestDate() {
+        return latestDate;
+    }
 }

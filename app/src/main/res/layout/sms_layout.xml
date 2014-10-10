@@ -13,6 +13,13 @@
         android:layout_gravity="center_horizontal"
         android:textSize="36dp"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/divider"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/div" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -19,7 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.chalmers.sikkr.R;
@@ -99,7 +102,7 @@ public class SMS_Activity extends Activity {
                 cursor.moveToNext();
                 contact = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
             } catch(Exception e) {
-                Toast.makeText(this, "EXCEPTION. tryed to move cursor to first", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "EXCEPTION. tried to move cursor to first", Toast.LENGTH_SHORT).show();
             }
             finally {
                 cursor.close();
@@ -108,6 +111,14 @@ public class SMS_Activity extends Activity {
         if(contact.length() == 0)
             return number;
         return contact;
+    }
+
+    public String getPropperDate(String s) {
+        Long dateNbr = Long.parseLong(s);
+        Date date = new Date(dateNbr);
+        String formattedDate = new SimpleDateFormat("EEE, MMM d, ''yy").format(date);
+        return formattedDate;
+
     }
 
 
@@ -136,6 +147,7 @@ public class SMS_Activity extends Activity {
                 view = inflater.inflate(layoutId, viewGroup, false);
                 holder = new ViewHolder();
                 holder.contactName = (TextView) view.findViewById(R.id.sender);
+                holder.date = (TextView) view.findViewById(R.id.date);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
@@ -147,20 +159,19 @@ public class SMS_Activity extends Activity {
             //Link an sms to the playbutton
             view.findViewById(R.id.imageButton).setTag(currentConv.getSmsList().get(0));
 
-            //set the info of the element
+            //set the correct data of the element
             holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
+            holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             holder.contactName.setTag(i);
-/*
-                //view for date
-                TextView dateView = (TextView)view.findViewById(R.id.date);
-                dateView.setText(currentConv.getSmsList().get(0).getDate());
-*/
+            holder.date.setText(getPropperDate(list.get(i).getLatestDate()));
+
             return view;
         }
     }
 
     static class ViewHolder {
         TextView contactName;
+        TextView date;
     }
 }
 
