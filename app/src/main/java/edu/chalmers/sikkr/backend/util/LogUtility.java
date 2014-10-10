@@ -19,13 +19,28 @@ public class LogUtility {
 
     /**
      * Write the given log rows to a log file with the given name. The file name will be stripped of
-     * all non-alphanumerical characters, and the log will be placed in the 'sikkr' directory in
+     * all non-alphanumerical characters, and the log will be placed in the 'sikkr/log' directory in
      * the android data directory.
      *
-     * @param fileName
-     * @param logRows
+     * @param fileName - The file name without path.
+     * @param logRows - The rows to write to the log.
      */
+
     public static void writeLogFile(String fileName, String... logRows) {
+        writeLogFile(fileName, false, logRows);
+    }
+
+    /**
+     *
+     * Write the given log rows to a log file with the given name. The file name will be stripped of
+     * all non-alphanumerical characters, and the log will be placed in the 'sikkr/log' directory in
+     * the android data directory.
+     *
+     * @param fileName - The file name without path.
+     * @param timeStamp - Whether or not a time stamp should be written in the beginning of every line.
+     * @param logRows - The rows to write to the log.
+     */
+    public static void writeLogFile(String fileName, boolean timeStamp, String... logRows) {
         final String fName = fixFilename(fileName);
 
         if(fName.length() > 0 && logRows.length > 0) {
@@ -48,7 +63,11 @@ public class LogUtility {
             try {
                 BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
                 for(String logLine : logRows) {
-                    buf.append(logLine);
+                    if (timeStamp) {
+                        buf.append(getTimeStamp() + " " + logLine);
+                    } else {
+                        buf.append(logLine);
+                    }
                     buf.newLine();
                 }
                 buf.close();
@@ -86,13 +105,13 @@ public class LogUtility {
     }
 
     /**
-     * Returns a timestamp of the current file in the format YYYY-MM-DD_HH-MM-SS
+     * Returns a timestamp of the current time in the format YYYY-MM-DD HH:MM:SS
      * @return - A string timestamp
      */
     public static String getTimeStamp() {
         final Calendar cal = Calendar.getInstance();
         return cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" +
-                cal.get(Calendar.DAY_OF_MONTH) + "_" + cal.get(Calendar.HOUR_OF_DAY) + "-" +
-                cal.get(Calendar.MINUTE) + "-" + cal.get(Calendar.SECOND);
+                cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" +
+                cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND);
     }
 }
