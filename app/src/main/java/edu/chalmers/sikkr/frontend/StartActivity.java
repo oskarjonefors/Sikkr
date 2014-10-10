@@ -43,7 +43,6 @@ public class StartActivity extends Activity {
     private Contact contact;
     public static final String TAG = "StartActivity";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -71,7 +70,6 @@ public class StartActivity extends Activity {
         Intent checkIntent = new Intent();
         checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkIntent, MY_TTS_CHECK_CODE);
-
     }
 
 
@@ -117,11 +115,8 @@ public class StartActivity extends Activity {
             SpeechRecognitionHelper.run(this);
             break;
 
-    }
-
-
-
         }
+    }
 
 
 
@@ -235,12 +230,8 @@ public class StartActivity extends Activity {
             }
             LogUtility.writeLogFile("tjenare", "Kontaktnamn " + contact.getName());
             LogUtility.writeLogFile("tjenare", trace.toArray(new String[trace.size()]));
-
         }
     }
-
-
-
 
 }
 
