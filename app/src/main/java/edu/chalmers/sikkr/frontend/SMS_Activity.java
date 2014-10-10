@@ -1,25 +1,15 @@
 package edu.chalmers.sikkr.frontend;
 
         import android.app.Activity;
-        import android.content.ContentResolver;
         import android.content.Context;
-        import android.content.DialogInterface;
         import android.content.Intent;
-        import android.database.Cursor;
-        import android.net.Uri;
         import android.os.Bundle;
-
-        import android.provider.BaseColumns;
-        import android.provider.ContactsContract;
-        import android.provider.Telephony;
         import android.view.LayoutInflater;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
         import android.view.ViewGroup;
-        import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
-        import android.widget.ImageView;
         import android.widget.ListView;
         import android.widget.TextView;
         import android.widget.Toast;
@@ -30,8 +20,6 @@ package edu.chalmers.sikkr.frontend;
         import edu.chalmers.sikkr.backend.sms.OneSms;
         import edu.chalmers.sikkr.backend.sms.SmsConversation;
         import edu.chalmers.sikkr.backend.sms.TheInbox;
-        import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
-
 
 public class SMS_Activity extends Activity {
     ArrayList<SmsConversation> smsList;
@@ -85,11 +73,6 @@ public class SMS_Activity extends Activity {
         intent.putExtra("phoneNumber", smsList.get(position).getAddress());
         startActivity(intent);
     }
-/*
-    public void clickedText(View view) {
-
-    }
-*/
 
 /*
     public String getContactByNbr(String number) {
