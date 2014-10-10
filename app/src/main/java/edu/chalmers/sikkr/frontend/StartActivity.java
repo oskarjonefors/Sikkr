@@ -58,7 +58,6 @@ public class StartActivity extends Activity {
         VoiceMessageSender.setupSingleton(this);
 
 
-
         try {
             MMSInbox.setContext(this);
             MMSInbox.getSharedInstance().loadInbox();
@@ -89,30 +88,31 @@ public class StartActivity extends Activity {
 
     /**
      * Actionhandler for this activity
+     *
      * @param view
      */
     public void clickedButton(View view) {
 
         switch (view.getId()) {
-        case R.id.contactBook:
-            intent = new Intent(this, ContactBookActivity.class);
-            startActivity(intent);
-            break;
-        case R.id.message:
-            intent = new Intent(this, SMS_Activity.class);
-            startActivity(intent);
-            break;
-        case R.id.fav_contacts:
-            intent = new Intent(this, ContactGridActivity.class);
-            startActivity(intent);
-            break;
-        case R.id.lastCall:
-            intent = new Intent(this, LatestCallsActivity.class);
-            startActivity(intent);
-            break;
-        case R.id.microphone:
-            SpeechRecognitionHelper.run(this);
-            break;
+            case R.id.contactBook:
+                intent = new Intent(this, ContactBookActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.message:
+                intent = new Intent(this, SMS_Activity.class);
+                startActivity(intent);
+                break;
+            case R.id.fav_contacts:
+                intent = new Intent(this, ContactGridActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.lastCall:
+                intent = new Intent(this, LatestCallsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.microphone:
+                SpeechRecognitionHelper.run(this);
+                break;
 
         }
     }
@@ -120,19 +120,19 @@ public class StartActivity extends Activity {
     /**
      * A method to retrieve results from finished speech recognition.
      * Will trigger methods to match certain keywords
+     *
      * @param requestCode
      * @param resultCode
      * @param data
      */
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            if(matches.size() >0){
+            if (matches.size() > 0) {
                 text = matches.get(0);
                 callContactByName();
                 selectFunctionality();
-
             }
         }
     }
@@ -141,24 +141,23 @@ public class StartActivity extends Activity {
      * Method to check if voice recognition was used to select functionality
      * Will redirect user to the selected activity
      */
-    private void selectFunctionality(){
-        if (text.equals("1") || text.contains("senaste")) {
+    private void selectFunctionality() {
+        if (text.equals("1") || text.contains("senast")) {
             intent = new Intent(this, LatestCallsActivity.class);
             startActivity(intent);
-        } else  if (text.equals("2") || text.contains("favorit")) {
+        } else if (text.equals("2") || text.contains("favor")) {
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);
-        } else if (text.equals("3") || text.contains("med") || text.contains("sms")) {
+        } else if (text.equals("3") || text.contains("med") || text.contains("inkorg")) {
             intent = new Intent(this, SMS_Activity.class);
             startActivity(intent);
         } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
             words = text.split(" ");
-            if(words.length >1){
-                Toast.makeText(this, words[0] +" "+ words[1], Toast.LENGTH_LONG).show();
+            if (words.length > 1) {
                 intent = new Intent(this, ContactGridActivity.class);
-                intent.putExtra("initial_letter",words[1].charAt(0));
+                intent.putExtra("initial_letter", words[1].charAt(0));
                 startActivity(intent);
-            }else {
+            } else {
                 intent = new Intent(this, ContactBookActivity.class);
                 startActivity(intent);
             }
@@ -169,40 +168,45 @@ public class StartActivity extends Activity {
      * Method to check if voice recognition was used to make a call
      * Will try to call contact that best matches the input.
      */
-    private void callContactByName(){
+    private void callContactByName() {
         final ContactBook cb = ContactBook.getSharedInstance();
         words = text.split(" ");
         try {
             if (words[0].contains("ing")) {
                 intent = new Intent(Intent.ACTION_CALL);
-                String searchString ="";
-                for(int i = 1; i<words.length;i++){
-                    searchString += words[i] +" ";
+                String searchString = "";
+                for (int i = 1; i < words.length; i++) {
+                    searchString += words[i] + " ";
                 }
+                LogUtility.writeLogFile("tjenare", "SökSträng: " + searchString);
                 contact = cb.getClosestMatch(searchString);
-                if(contact.getDefaultNumber() != null ) {
+                LogUtility.writeLogFile("tjenare","Kontaktnamn: " + contact);
+            }
+            if (contact != null) {
+                if (contact.getDefaultNumber() != null && contact.getName() != null) {
                     intent.setData(Uri.parse("tel:" + contact.getDefaultNumber()));
-                    TextToSpeechUtility.readAloud("Ringer " + contact.getName());
-                    LogUtility.writeLogFile("tjenare", "Kontaktnamn: " +contact.getName());
-                    LogUtility.writeLogFile("tjenare", "Default Number: " +contact.getDefaultNumber());
-                    LogUtility.writeLogFile("tjenare", "Phone Number: " +contact.getPhoneNumbers().get(0));
+                    TextToSpeechUtility.readAloud("ringer " + contact.getName());
+                    while (TextToSpeechUtility.isSpeaking()) {
+                        Thread.sleep(100);
+                    }
                     startActivity(intent);
                     finish();
-
+                    LogUtility.writeLogFile("tjenare", "Kontaktnamn: " + contact.getName());
+                    LogUtility.writeLogFile("tjenare", "Default Number: " + contact.getDefaultNumber());
                 }
             }
-        }catch(Throwable t) {
+        }catch (Throwable t) {
             final List<String> trace = new ArrayList<String>();
             for (StackTraceElement el : t.getStackTrace()) {
                 trace.add("" + el);
             }
-            LogUtility.writeLogFile("tjenare", "Kontaktnamn " + contact.getName());
             LogUtility.writeLogFile("tjenare", trace.toArray(new String[trace.size()]));
         }
     }
-
-
-
-
 }
+
+
+
+
+
 
