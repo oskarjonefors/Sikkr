@@ -125,7 +125,6 @@ public class SMS_Activity extends Activity {
                 view.setTag(holder);
             } else {
                 Toast.makeText(context, "second run", Toast.LENGTH_SHORT).show();
-
                 holder = (ViewHolder)view.getTag();
             }
 
