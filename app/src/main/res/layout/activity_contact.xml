@@ -17,8 +17,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="ContactName"
         android:id="@+id/contactName"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal" />
 
     <ImageView
@@ -26,7 +24,6 @@
         android:layout_height="170dp"
         android:id="@+id/contactPicture"
         android:src="@drawable/ic_launcher"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal" />
 
     <TextView

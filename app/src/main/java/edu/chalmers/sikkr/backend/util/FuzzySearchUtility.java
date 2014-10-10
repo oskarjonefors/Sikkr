@@ -45,7 +45,11 @@ public class FuzzySearchUtility {
             }
 
             int match = StringUtils.getLevenshteinDistance(pattern.toLowerCase(), element.toLowerCase(), element.length()/3);
+<<<<<<< HEAD
             Log.d(TAG, "Match between " + pattern + " and " + element + " is " + match);
+=======
+            LogUtility.writeLogFile(TAG, "Match between " + pattern + " and " + element + " is " + match);
+>>>>>>> 7f3d1da3a02cb0356ef8d3cf16c976fa978237b7
 
             if (match >= 0 && match <= topMatch) {
                 if (match < topMatch) {

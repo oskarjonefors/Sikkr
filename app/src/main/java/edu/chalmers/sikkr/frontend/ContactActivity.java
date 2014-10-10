@@ -47,6 +47,7 @@ public class ContactActivity extends Activity {
 
     public void voiceInteraction(View view) {
         final Button btn = (Button)findViewById(R.id.recordButton);
+
         switch (recorder.getRecordingState()) {
             case RESET:
                 recorder.startRecording();
