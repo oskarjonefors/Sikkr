@@ -35,11 +35,10 @@ public class ContactBook {
     /* This map uses contact name as key and contact id as value */
     private final Map<String, String> contactNameMap = new TreeMap<String, String>();
 
-<<<<<<< HEAD
-=======
+
     private ClipartUtility cu;
 
->>>>>>> 7f3d1da3a02cb0356ef8d3cf16c976fa978237b7
+
     private final static ContactBook singleton = new ContactBook();
 
     private ContactBook() { }
