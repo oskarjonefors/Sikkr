@@ -72,6 +72,14 @@ public class ClipartUtility {
 
     public void saveChanges() {
         try {
+
+            File mapFile = new File("mapFilePath");
+            if (!mapFile.exists()) {
+                File dir = new File(getDataDirectory());
+                dir.mkdirs();
+                dir.createNewFile();
+            }
+
             FileOutputStream fileOut = new FileOutputStream(mapFilePath);
             ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
             objOut.writeObject(regMap);
@@ -91,10 +99,10 @@ public class ClipartUtility {
 
             /* If contact previously has an image assigned, return it */
 
-            int picID = res.getIdentifier(regMap.get(id), null, null);
+            int picID = res.getIdentifier(regMap.get(id), "drawable", context.getPackageName());
             return BitmapFactory.decodeResource(res, picID);
-        } else {
 
+        } else {
             /* If not, find one that's not been taken */
 
             String[] pics = res.getStringArray(R.array.clipart_list);
@@ -102,6 +110,7 @@ public class ClipartUtility {
             String newPic = null;
 
             for(String str : pics) {
+                Log.d("CU", "ARRAY ELEMENT: " + str);
                 if (!regMap.containsValue(str)) {
                     newPic = str;
                     break;
@@ -112,7 +121,7 @@ public class ClipartUtility {
                 return null;
             } else {
                 regMap.put(id, newPic);
-                int picID = res.getIdentifier(newPic, null, null);
+                int picID = res.getIdentifier(regMap.get(id), "drawable", context.getPackageName());
                 return BitmapFactory.decodeResource(res, picID);
             }
         }
@@ -123,14 +132,14 @@ public class ClipartUtility {
     }
 
     public static String getDataDirectory() {
-        String logPath;
+        String dataPath;
         if(Environment.getExternalStorageState().equals("mounted")){
-            logPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            dataPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         } else {
-            logPath = Environment.getDataDirectory().getAbsolutePath();
+            dataPath = Environment.getDataDirectory().getAbsolutePath();
         }
-        logPath += "/sikkr/data/";
-        Log.d(TAG, "Target data path is " + logPath);
-        return logPath;
+        dataPath += "/sikkr/data/";
+        Log.d(TAG, "Target data path is " + dataPath);
+        return dataPath;
     }
 }
