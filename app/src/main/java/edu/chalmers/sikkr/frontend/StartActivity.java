@@ -1,36 +1,32 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.util.Log;
+import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import java.util.ArrayList;
-import java.util.List;
 
-
-import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.mms.MMSInbox;
+import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
 import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.mms.MMSInbox;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
-import edu.chalmers.sikkr.backend.sms.TheInbox;
-
-import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
-
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
@@ -39,6 +35,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 public class StartActivity extends Activity {
     private ArrayList<String> matches;
+    private final static int MY_TTS_CHECK_CODE = 1337;
 
     private String text;
     private Intent intent;
@@ -54,7 +51,6 @@ public class StartActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_start);
         ContactBook.setupSingleton(this);
-        TextToSpeechUtility.setupTextToSpeech(this);
         TheInbox.setupInbox(this);
         CallLog.setUpCallLog(this);
         VoiceMessagePlayer.setupSingleton(this);
@@ -71,6 +67,11 @@ public class StartActivity extends Activity {
             }
             LogUtility.writeLogFile(TAG, trace.toArray(new String[trace.size()]));
         }
+
+        Intent checkIntent = new Intent();
+        checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkIntent, MY_TTS_CHECK_CODE);
+
     }
 
 
@@ -115,16 +116,14 @@ public class StartActivity extends Activity {
         case R.id.microphone:
             SpeechRecognitionHelper.run(this);
             break;
-<<<<<<< HEAD
-=======
 
     }
 
->>>>>>> Voice recognition now works for contact book as well.
+
 
         }
 
-    }
+
 
 
     /**
@@ -140,12 +139,21 @@ public class StartActivity extends Activity {
         if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK){
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if(matches.size() >0){
-<<<<<<< HEAD
+
                 text = matches.get(0);
                 callContactByName();
                 selectFunctionality();
 
             }
+        } else if (requestCode == MY_TTS_CHECK_CODE ) {
+            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                TextToSpeechUtility.setupTextToSpeech(this);
+            } else {
+                Intent installIntent = new Intent();
+                installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(installIntent);
+            }
+
         }
     }
 
@@ -187,38 +195,39 @@ public class StartActivity extends Activity {
         try {
             if (words[0].contains("ing")) {
                 intent = new Intent(Intent.ACTION_CALL);
-                String searchString ="";
-                for(int i = 1; i<words.length;i++){
-                    searchString += words[i] +" ";
+                String searchString = "";
+                for (int i = 1; i < words.length; i++) {
+                    searchString += words[i] + " ";
                 }
                 contact = cb.getClosestMatch(searchString);
-                if(contact.getDefaultNumber() != null ) {
+                if (contact.getDefaultNumber() != null) {
                     intent.setData(Uri.parse("tel:" + contact.getDefaultNumber()));
                     TextToSpeechUtility.readAloud("Ringer " + contact.getName());
-                    LogUtility.writeLogFile("tjenare", "Kontaktnamn: " +contact.getName());
-                    LogUtility.writeLogFile("tjenare", "Default Number: " +contact.getDefaultNumber());
-                    LogUtility.writeLogFile("tjenare", "Phone Number: " +contact.getPhoneNumbers().get(0));
-=======
-                String text = matches.get(0);
-                //Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-                Intent intent;
-                if (text.equals("1")) {
-                    intent = new Intent(this, LatestCallsActivity.class);
-                    startActivity(intent);
-                } else  if (text.equals("2")) {
-                    intent = new Intent(this, ContactGridActivity.class);
-                    startActivity(intent);
-                } else if (text.equals("3")) {
-                    intent = new Intent(this, SMS_Activity.class);
-                    startActivity(intent);
-                } else if (text.equals("4")) {
-                    intent = new Intent(this, ContactBookActivity.class);
->>>>>>> Voice recognition now works for contact book as well.
-                    startActivity(intent);
-                    finish();
+                    LogUtility.writeLogFile("tjenare", "Kontaktnamn: " + contact.getName());
+                    LogUtility.writeLogFile("tjenare", "Default Number: " + contact.getDefaultNumber());
+                    LogUtility.writeLogFile("tjenare", "Phone Number: " + contact.getPhoneNumbers().get(0));
 
+                    String text = matches.get(0);
+                    //Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+                    Intent intent;
+                    if (text.equals("1")) {
+                        intent = new Intent(this, LatestCallsActivity.class);
+                        startActivity(intent);
+                    } else if (text.equals("2")) {
+                        intent = new Intent(this, ContactGridActivity.class);
+                        startActivity(intent);
+                    } else if (text.equals("3")) {
+                        intent = new Intent(this, SMS_Activity.class);
+                        startActivity(intent);
+                    } else if (text.equals("4")) {
+                        intent = new Intent(this, ContactBookActivity.class);
+
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
+
         }catch(Throwable t) {
             final List<String> trace = new ArrayList<String>();
             for (StackTraceElement el : t.getStackTrace()) {
@@ -226,6 +235,7 @@ public class StartActivity extends Activity {
             }
             LogUtility.writeLogFile("tjenare", "Kontaktnamn " + contact.getName());
             LogUtility.writeLogFile("tjenare", trace.toArray(new String[trace.size()]));
+
         }
     }
 

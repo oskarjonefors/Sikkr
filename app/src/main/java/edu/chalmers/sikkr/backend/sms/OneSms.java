@@ -1,5 +1,7 @@
 package edu.chalmers.sikkr.backend.sms;
 
+import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
+
 /**
  * Created by Jingis on 2014-09-30.
  */
@@ -9,7 +11,7 @@ public class OneSms {
     private String date;
 
     public OneSms(String msg, String senderNbr, String date) {
-        this.message = message;
+        this.message = msg;
         this.senderNbr = senderNbr;
         this.date = date;
     }
@@ -24,6 +26,8 @@ public class OneSms {
         return senderNbr;
     }
 
-
+    public void play() {
+        TextToSpeechUtility.readAloud(message);
+    }
 
 }
