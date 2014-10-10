@@ -1,25 +1,31 @@
 package edu.chalmers.sikkr.frontend;
 
-        import android.app.Activity;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.view.LayoutInflater;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.ArrayAdapter;
-        import android.widget.ListView;
-        import android.widget.TextView;
-        import android.widget.Toast;
-        import java.util.ArrayList;
-        import java.util.List;
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.BaseColumns;
+import android.provider.ContactsContract;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import edu.chalmers.sikkr.R;
-        import edu.chalmers.sikkr.backend.sms.OneSms;
-        import edu.chalmers.sikkr.backend.sms.SmsConversation;
-        import edu.chalmers.sikkr.backend.sms.TheInbox;
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.sms.OneSms;
+import edu.chalmers.sikkr.backend.sms.SmsConversation;
+import edu.chalmers.sikkr.backend.sms.TheInbox;
 
 public class SMS_Activity extends Activity {
     ArrayList<SmsConversation> smsList;
@@ -35,7 +41,7 @@ public class SMS_Activity extends Activity {
     private void createSmsLayout() {
         smsList = TheInbox.getInstance().getSmsInbox();
         ArrayAdapter adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
-        ListView listV = (ListView)findViewById(R.id.listView);
+        ListView listV = (ListView) findViewById(R.id.listView);
         listV.setAdapter(adapter);
     }
 
@@ -66,37 +72,44 @@ public class SMS_Activity extends Activity {
         ((OneSms) view.getTag()).play();
     }
 
+    /*
+    Open the clicked contacts sms history view
+     */
     public void clickedText(View view) {
-        Toast.makeText(view.getContext(), "trycker på text", Toast.LENGTH_SHORT).show();
-        int position = (Integer)view.getTag();
+        int position = (Integer) view.getTag();
+        Toast.makeText(view.getContext(), "trycker på text med address:" + smsList.get(position).getAddress(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(view.getContext(), ConversationActivity.class);
         intent.putExtra("phoneNumber", smsList.get(position).getAddress());
+        intent.putExtra("contactName", getContactByNbr(smsList.get(position).getAddress()));
         startActivity(intent);
     }
 
-/*
+
     public String getContactByNbr(String number) {
-        String name = "?";
+        String contact = "";
+
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(number));
         ContentResolver contentResolver = getContentResolver();
         Cursor cursor = contentResolver.query(uri, new String[]{ BaseColumns._ID,
                     ContactsContract.PhoneLookup.DISPLAY_NAME}, null, null, null);
+
         if (cursor != null) {
             try {
                 cursor.moveToNext();
-                name = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-
+                contact = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
             } catch(Exception e) {
-
+                Toast.makeText(this, "EXCEPTION. tryed to move cursor to first", Toast.LENGTH_SHORT).show();
             }
             finally {
                 cursor.close();
             }
         }
-        return name;
+        if(contact.length() == 0)
+            return number;
+        return contact;
     }
-*/
+
 
     //Inner adapterclass
     public class SmsViewAdapter extends ArrayAdapter {
@@ -122,10 +135,10 @@ public class SMS_Activity extends Activity {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 view = inflater.inflate(layoutId, viewGroup, false);
                 holder = new ViewHolder();
-                holder.contactName = (TextView)view.findViewById(R.id.sender);
+                holder.contactName = (TextView) view.findViewById(R.id.sender);
                 view.setTag(holder);
             } else {
-                holder = (ViewHolder)view.getTag();
+                holder = (ViewHolder) view.getTag();
             }
 
             //get the current sms conversation
@@ -135,7 +148,7 @@ public class SMS_Activity extends Activity {
             view.findViewById(R.id.imageButton).setTag(currentConv.getSmsList().get(0));
 
             //set the info of the element
-            holder.contactName.setText((currentConv.getAddress()));
+            holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
             holder.contactName.setTag(i);
 /*
                 //view for date
