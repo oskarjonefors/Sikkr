@@ -48,8 +48,8 @@ public final class TextToSpeechUtility {
                 Toast.makeText(context, "Error setting up text to speech", Toast.LENGTH_LONG).show();
             } else {
                 tts.setLanguage(Locale.ROOT);
-                Toast.makeText(context, "Successfully set up text to speech", Toast.LENGTH_LONG).show();
-                readAloud("Successfully set up text to speech");
+                //Toast.makeText(context, "Successfully set up text to speech", Toast.LENGTH_LONG).show();
+                //readAloud("Successfully set up text to speech");
             }
         }
     }
