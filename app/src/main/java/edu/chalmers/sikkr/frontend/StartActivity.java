@@ -1,24 +1,19 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.widget.EditText;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
@@ -37,13 +32,12 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 
 public class StartActivity extends Activity {
-    private ArrayList<String> matches;
 
     private String text;
     private Intent intent;
     private String[] words;
     private Contact contact;
-    public static final String TAG = "StartActivity";
+    private static final String TAG = "StartActivity";
 
 
     @Override
@@ -188,7 +182,7 @@ public class StartActivity extends Activity {
         }
     }
 
-    public void updateProgress(double progress, String senderTag, String taskMsg) {
+    void updateProgress(double progress, String taskMsg) {
 
         ProgressBar initBar = (ProgressBar) findViewById(R.id.initProgressBar);
         TextView initText = (TextView) findViewById(R.id.initTextView);
@@ -197,7 +191,7 @@ public class StartActivity extends Activity {
 
     }
 
-    public class Initializer extends AsyncTask<StartActivity, String, Boolean> implements ProgressListener {
+    private class Initializer extends AsyncTask<StartActivity, String, Boolean> implements ProgressListener {
 
         @Override
         protected void onPreExecute() {
