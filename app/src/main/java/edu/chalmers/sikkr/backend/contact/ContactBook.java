@@ -2,6 +2,7 @@ package edu.chalmers.sikkr.backend.contact;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,15 +18,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.util.ClipartUtility;
 import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
+import edu.chalmers.sikkr.backend.util.ProgressListener;
 
 import static android.provider.ContactsContract.CommonDataKinds.*;
 
 /**
  * @author Oskar Jönefors
  */
-public class ContactBook {
+public class ContactBook implements ProgressListenable {
 
     private Context context;
     private final Map<String, Contact> contacts = new TreeMap<String, Contact>();
@@ -34,17 +37,26 @@ public class ContactBook {
     private final Map<String, String> contactNameMap = new TreeMap<String, String>();
 
     private ClipartUtility cu;
+    private Collection<ProgressListener> listeners;
 
     private final static ContactBook singleton = new ContactBook();
 
-    private ContactBook() { }
+    private ContactBook() {
+        listeners = new ArrayList<ProgressListener>();
+    }
 
     private void setup(Context context) {
         this.context = context;
         contacts.clear();
         cu = new ClipartUtility(context);
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
+
+        double rowCount = (double)cursor.getCount();
+
         while (cursor.moveToNext()) {
+
+            notifyListeners(cursor.getPosition()/rowCount, "Retrieving contact information.");
+
             final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI,Uri.encode(name.trim()));
             Cursor mapContact = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup._ID}, null, null, null);
@@ -72,6 +84,16 @@ public class ContactBook {
     }
 
     public static void setupSingleton(Context context) {
+        singleton.setup(context);
+    }
+
+    /**
+     * This method is used if another class want's to monitor the progress of the ContactBook initialization.
+     * @param context
+     * @param listener
+     */
+    public static void setupSingleton(Context context, ProgressListener listener) {
+        singleton.addProgressListener(listener);
         singleton.setup(context);
     }
 
@@ -180,5 +202,22 @@ public class ContactBook {
         }
 
         return results;
+    }
+
+    @Override
+    public void addProgressListener(ProgressListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeProgressListener(ProgressListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public void notifyListeners(double progress, String taskMsg) {
+        for (ProgressListener listener : listeners) {
+            listener.notifyProgress(progress, "Contact Book", taskMsg);
+        }
     }
 }
