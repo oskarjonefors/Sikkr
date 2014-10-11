@@ -8,8 +8,8 @@ import edu.chalmers.sikkr.backend.util.ProgressListener;
  */
 public interface ProgressListenable {
 
-    addProgressListener(ProgressListener listener);
+    void addProgressListener(ProgressListener listener);
 
-    removeProgressListener(ProgressListener listener);
+    void removeProgressListener(ProgressListener listener);
 
 }
