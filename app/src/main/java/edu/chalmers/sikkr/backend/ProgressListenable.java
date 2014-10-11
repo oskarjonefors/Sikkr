@@ -12,4 +12,6 @@ public interface ProgressListenable {
 
     void removeProgressListener(ProgressListener listener);
 
+    void notifyListeners(double progress, String taskMsg);
+
 }
