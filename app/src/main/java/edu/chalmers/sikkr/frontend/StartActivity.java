@@ -193,7 +193,7 @@ public class StartActivity extends Activity {
         ProgressBar initBar = (ProgressBar) findViewById(R.id.initProgressBar);
         TextView initText = (TextView) findViewById(R.id.initTextView);
         initBar.setProgress((int)(progress * initBar.getMax()));
-        initText.setText(senderTag + ": " + taskMsg + "...");
+        initText.setText(taskMsg + "...");
 
     }
 
