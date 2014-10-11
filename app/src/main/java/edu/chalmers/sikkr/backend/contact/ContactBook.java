@@ -74,6 +74,7 @@ public class ContactBook implements ProgressListenable {
                     contactNameMap.put(name, contact_id);
                 }
             }
+            mapContact.close();
         }
         cursor.close();
         cu.saveChanges();
