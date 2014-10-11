@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -11,19 +12,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.widget.EditText;
 
-import org.apache.commons.lang3.ObjectUtils;
-
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.util.ProgressListener;
 import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
@@ -48,26 +50,8 @@ public class StartActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_start);
-        ContactBook.setupSingleton(this);
-        TextToSpeechUtility.setupTextToSpeech(this);
-        TheInbox.setupInbox(this);
-        CallLog.setUpCallLog(this);
-        VoiceMessagePlayer.setupSingleton(this);
-        VoiceMessageRecorder.setupSingleton(this);
-        VoiceMessageSender.setupSingleton(this);
-
-
-        try {
-            MMSInbox.setContext(this);
-            MMSInbox.getSharedInstance().loadInbox();
-        } catch (Throwable t) {
-            final List<String> trace = new ArrayList<String>();
-            for (StackTraceElement el : t.getStackTrace()) {
-                trace.add("" + el);
-            }
-            LogUtility.writeLogFile(TAG, trace.toArray(new String[trace.size()]));
-        }
+        LogUtility.writeLogFile(TAG, true, "Works before the initializer.");
+        new Initializer().execute(this);
     }
 
 
@@ -201,6 +185,65 @@ public class StartActivity extends Activity {
                 trace.add("" + el);
             }
             LogUtility.writeLogFile("tjenare", trace.toArray(new String[trace.size()]));
+        }
+    }
+
+    public void updateProgress(double progress, String senderTag, String taskMsg) {
+
+        ProgressBar initBar = (ProgressBar) findViewById(R.id.initProgressBar);
+        TextView initText = (TextView) findViewById(R.id.initTextView);
+        initBar.setProgress((int)(progress * initBar.getMax()));
+        initText.setText(senderTag + ": " + taskMsg + "...");
+
+    }
+
+    public class Initializer extends AsyncTask<StartActivity, String, Boolean> implements ProgressListener {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            setContentView(R.layout.init_screen);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                setContentView(R.layout.activity_start);
+            } else {
+                throw new RuntimeException("Initialization failed!");
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(StartActivity... params) {
+            ContactBook.setupSingleton(params[0], this);
+            TextToSpeechUtility.setupTextToSpeech(params[0]);
+            TheInbox.setupInbox(params[0]);
+            CallLog.setUpCallLog(params[0]);
+            VoiceMessagePlayer.setupSingleton(params[0]);
+            VoiceMessageRecorder.setupSingleton(params[0]);
+            VoiceMessageSender.setupSingleton(params[0]);
+            try {
+                MMSInbox.setContext(params[0]);
+                MMSInbox.getSharedInstance().loadInbox();
+            } catch (Throwable t) {
+                final List<String> trace = new ArrayList<String>();
+                for (StackTraceElement el : t.getStackTrace()) {
+                    trace.add("" + el);
+                }
+                LogUtility.writeLogFile(TAG, trace.toArray(new String[trace.size()]));
+            }
+            return true;
+        }
+
+        @Override
+        public void onProgressUpdate(String... values) {
+            updateProgress(Double.parseDouble(values[0]), values[1], values[2]);
+        }
+
+        @Override
+        public void notifyProgress(double progress, String senderTag, String taskMsg) {
+            publishProgress(progress + "", senderTag, taskMsg);
         }
     }
 }
