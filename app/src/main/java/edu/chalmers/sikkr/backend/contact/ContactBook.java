@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.util.ClipartUtility;
@@ -37,7 +36,7 @@ public class ContactBook implements ProgressListenable {
     private final Map<String, String> contactNameMap = new TreeMap<String, String>();
 
     private ClipartUtility cu;
-    private Collection<ProgressListener> listeners;
+    private final Collection<ProgressListener> listeners;
 
     private final static ContactBook singleton = new ContactBook();
 
@@ -89,7 +88,7 @@ public class ContactBook implements ProgressListenable {
     }
 
     /**
-     * This method is used if another class want's to monitor the progress of the ContactBook initialization.
+     * This method is used if another class wants to monitor the progress of the ContactBook initialization.
      * @param context
      * @param listener
      */
@@ -185,7 +184,7 @@ public class ContactBook implements ProgressListenable {
     }
 
     /**
-     * Return the contacts whos' names best matches the given pattern.
+     * Return the contacts whos names best matches the given pattern.
      * @param searchPattern
      * @return
      */
