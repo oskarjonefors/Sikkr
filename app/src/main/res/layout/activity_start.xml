@@ -84,6 +84,10 @@
         android:textSize="35dp"/>
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7312db6b3e7f3c870d1d248a931e92ddaf774648
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

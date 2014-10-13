@@ -16,34 +16,55 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD
+=======
+
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+>>>>>>> 7312db6b3e7f3c870d1d248a931e92ddaf774648
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.mms.MMSInbox;
+<<<<<<< HEAD
+=======
+import edu.chalmers.sikkr.backend.sms.TheInbox;
+>>>>>>> 7312db6b3e7f3c870d1d248a931e92ddaf774648
 import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
 import edu.chalmers.sikkr.backend.util.SystemData;
+import edu.chalmers.sikkr.backend.mms.MMSInbox;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
+
 import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
 
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
+<<<<<<< HEAD
 
 
 
 public class StartActivity extends Activity {
     private ArrayList<String> matches;
     private final static int MY_TTS_CHECK_CODE = 1337;
+=======
+public class StartActivity extends Activity {
+    private ArrayList<String> matches;
+    private final static int MY_TTS_CHECK_CODE = 1337;
+
+>>>>>>> 7312db6b3e7f3c870d1d248a931e92ddaf774648
     private String text;
     private Intent intent;
     private String[] words;
     private Contact contact;
     public static final String TAG = "StartActivity";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +160,8 @@ public class StartActivity extends Activity {
         } else if (requestCode == MY_TTS_CHECK_CODE ) {
             if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 TextToSpeechUtility.setupTextToSpeech(this);
+<<<<<<< HEAD
+=======
             } else {
                 Intent installIntent = new Intent();
                 installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
@@ -146,6 +169,37 @@ public class StartActivity extends Activity {
             }
 
         }
+    }
+
+    /**
+     * Method to check if voice recognition was used to select functionality
+     * Will redirect user to the selected activity
+     */
+    private void selectFunctionality() {
+        if (text.equals("1") || text.contains("senast")) {
+            intent = new Intent(this, LatestCallsActivity.class);
+            startActivity(intent);
+        } else if (text.equals("2") || text.contains("favor")) {
+            intent = new Intent(this, ContactGridActivity.class);
+            startActivity(intent);
+        } else if (text.equals("3") || text.contains("med") || text.contains("inkorg")) {
+            intent = new Intent(this, SMS_Activity.class);
+            startActivity(intent);
+        } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
+            words = text.split(" ");
+            if (words.length > 1) {
+                intent = new Intent(this, ContactGridActivity.class);
+                intent.putExtra("initial_letter", words[1].charAt(0));
+                startActivity(intent);
+>>>>>>> 7312db6b3e7f3c870d1d248a931e92ddaf774648
+            } else {
+                Intent installIntent = new Intent();
+                installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(installIntent);
+            }
+
+        }
+
     }
 
     /**
@@ -186,6 +240,7 @@ public class StartActivity extends Activity {
             }
             LogUtility.writeLogFile("tjenare", trace.toArray(new String[trace.size()]));
         }
+<<<<<<< HEAD
 
     }
     /**
@@ -220,3 +275,7 @@ public class StartActivity extends Activity {
 }
 
 
+=======
+    }
+}
+>>>>>>> 7312db6b3e7f3c870d1d248a931e92ddaf774648

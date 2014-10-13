@@ -20,6 +20,8 @@ import edu.chalmers.sikkr.backend.contact.ContactBook;
  * @author Jesper Olsson
  */
 public class ButtonAdapter extends BaseAdapter {
+
+
     final private Context mContext;
     private Character mLetter;
     final private ArrayList<Character> al;
