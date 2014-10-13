@@ -23,19 +23,34 @@
             android:layout_height="fill_parent">
 
             <Button
-                android:layout_width="170dp"
-                android:layout_height="130dp"
+                android:layout_width="150dp"
+                android:layout_height="170dp"
                 android:text="@string/lastCall"
                 android:id="@+id/lastCall"
-                android:onClick="clickedButton"/>
+                android:onClick="clickedButton"
+                android:drawableTop="@drawable/call_history"
+                android:drawablePadding="5dp"
+                android:background="@null"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"/>
 
             <Button
-                android:layout_width="170dp"
-                android:layout_height="130dp"
+                android:layout_width="150dp"
+                android:layout_height="170dp"
                 android:text="@string/favCont"
                 android:id="@+id/fav_contacts"
-                android:onClick="clickedButton"/>
+                android:onClick="clickedButton"
+                android:drawableTop="@drawable/favorites_icon"
+                android:drawablePadding="5dp"
+                android:background="@null"
+                android:paddingStart="10dp"
+                android:paddingEnd="0dp"/>
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -43,18 +58,26 @@
             android:layout_height="fill_parent">
 
             <Button
-                android:layout_width="170dp"
-                android:layout_height="130dp"
+                android:layout_width="150dp"
+                android:layout_height="170dp"
                 android:text="@string/message"
                 android:id="@+id/message"
-                android:onClick="clickedButton"/>
+                android:onClick="clickedButton"
+                android:drawableTop="@drawable/messages_icon"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:background="@null"/>
 
             <Button
-                android:layout_width="170dp"
-                android:layout_height="130dp"
+                android:layout_width="150dp"
+                android:layout_height="170dp"
                 android:text="@string/contBook"
                 android:id="@+id/contactBook"
                 android:onClick="clickedButton"
+                android:drawableTop="@drawable/contacts_icon"
+                android:background="@null"
+                android:paddingStart="10dp"
+                android:paddingEnd="0dp"
                 />
 
 
@@ -65,7 +88,7 @@
 
     <ImageView
         android:layout_width="150dp"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -78,6 +101,7 @@
         android:src="@drawable/microphone"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:background="@null"
         android:onClick="clickedButton"/>
 
 </RelativeLayout>
