@@ -18,7 +18,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -29,10 +28,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by Eric on 2014-10-13.
@@ -147,8 +143,7 @@ public final class ServerInterface {
      * @return a list of new messages from the server.
      */
     public static List<Message> getNewMessages() {
-
-        return null;
+        return singleton.getNewMessagesFromServer();
     }
 
 
@@ -159,7 +154,7 @@ public final class ServerInterface {
      * @param content the content of the message as a byte array.
      */
     public static void sendMessage(String number, byte[] content) {
-
+        singleton.sendMessageToServer(number, content);
     }
 
     /**
@@ -194,11 +189,54 @@ public final class ServerInterface {
      * -------------------- Instance methods -------------------------------------------------------
      */
 
+    private byte[] encrypt(byte[] bytes) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA/None/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, SERVER_KEY);
+        return cipher.doFinal(bytes);
+    }
+
+    private byte[] decrypt(byte[] bytes) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA/None/NoPadding");
+        cipher.init(Cipher.DECRYPT_MODE, PRIVATE_KEY);
+        return cipher.doFinal(bytes);
+    }
+
+    private void writeLine(String string, boolean flush) throws IOException {
+        BUFFERED_WRITER.append(string);
+        BUFFERED_WRITER.newLine();
+        if (flush) {
+            BUFFERED_WRITER.flush();
+        }
+    }
+
+    private void writeLine(String string) throws IOException {
+        writeLine(string, true);
+    }
+
+    private void sendMessageToServer(String number, byte[] content) {
+        try {
+            byte[] encryptedNumber = encrypt(number.getBytes());
+            byte[] encryptedContent = encrypt(content);
+            writeLine("send_message", false);
+            writeLine(encryptedNumber.length + "", false);
+            writeLine(encryptedContent.length + "", true);
+
+            OUTPUT_STREAM.write(encryptedNumber);
+            OUTPUT_STREAM.flush();
+            OUTPUT_STREAM.write(encryptedContent);
+            OUTPUT_STREAM.flush();
+
+        } catch (Exception e) {
+        }
+    }
+
+    private List<Message> getNewMessagesFromServer() {
+        return null;
+    }
+
     private PublicKey getServerKey() {
         try {
-            BUFFERED_WRITER.append("get_server_key");
-            BUFFERED_WRITER.newLine();
-            BUFFERED_WRITER.flush();
+            writeLine("get_server_key");
 
             ObjectInputStream ois = new ObjectInputStream(OBJECT_INPUT_STREAM);
             return (PublicKey) ois.readObject();
@@ -212,7 +250,7 @@ public final class ServerInterface {
 
     private void verify() {
         try {
-            sendVerificationRequest();
+            writeLine("verify:"+LOCAL_NUMBER);
             switch (getVerificationMethod()) {
                 case NEW_CLIENT:
                     newClientVerification();
@@ -225,12 +263,6 @@ public final class ServerInterface {
         } catch (Exception e) {
 
         }
-    }
-
-    private void sendVerificationRequest() throws IOException {
-        BUFFERED_WRITER.append("verify:0737721528");
-        BUFFERED_WRITER.newLine();
-        BUFFERED_WRITER.flush();
     }
 
     private VerificationType getVerificationMethod() throws IOException {
@@ -250,26 +282,16 @@ public final class ServerInterface {
         OBJECT_OUTPUT_STREAM.flush();
     }
 
-    private void useVerificationCode() throws IOException, InvalidKeyException, NoSuchAlgorithmException,
-            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+    private void useVerificationCode() throws Exception {
 
         int length = Integer.parseInt(BUFFERED_READER.readLine());
-        byte[] encrypted = new byte[length], decrypted, serverEncrypted;
-        Cipher cipher;
+        byte[] readBytes = new byte[length], encrypted;
 
-        INPUT_STREAM.read(encrypted);
-        cipher = Cipher.getInstance("RSA/None/NoPadding");
-        cipher.init(Cipher.DECRYPT_MODE, PRIVATE_KEY);
+        INPUT_STREAM.read(readBytes);
+        encrypted = encrypt(decrypt(readBytes));
 
-        decrypted = cipher.doFinal(encrypted);
-        cipher.init(Cipher.ENCRYPT_MODE, SERVER_KEY);
-
-        serverEncrypted = cipher.doFinal(decrypted);
-        BUFFERED_WRITER.append(serverEncrypted.length + "");
-        BUFFERED_WRITER.newLine();
-        BUFFERED_WRITER.flush();
-
-        OUTPUT_STREAM.write(serverEncrypted);
+        writeLine(encrypted.length + "");
+        OUTPUT_STREAM.write(encrypted);
         OUTPUT_STREAM.flush();
     }
 
