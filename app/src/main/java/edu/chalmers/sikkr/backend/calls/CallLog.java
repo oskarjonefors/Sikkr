@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -43,14 +44,29 @@ public class CallLog {
             call.setCallDate(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.DATE)));
             call.setCallType(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.TYPE)));
             call.setIsCallNew(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.NEW)));
-            call.setContactID(cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID)));
+            call.setContactID(getContactIDFromNumber(call.getCallNumber()));
+            Log.d("CallLog", "Get ContactID " + call.getContactID());
 
             callList.add(call);
         }
         cursor.close();
     }
+    private String getContactIDFromNumber(String contactNbr){
 
-    public ArrayList getCallList() {
+        contactNbr= Uri.encode(contactNbr);
+        String phoneContactID;
+        String[] projection =new String[] {ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID};
+        Cursor contactCursor = context.getContentResolver().query(Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,contactNbr),projection,null,null,null);
+
+        if (contactCursor.moveToFirst()){
+            phoneContactID = contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID));
+            contactCursor.close();
+            return phoneContactID;
+        }
+        else { return null; }
+    }
+
+    public ArrayList<OneCall> getCallList() {
         collectCallLog();
         return callList;
     }
