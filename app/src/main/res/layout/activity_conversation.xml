@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Conversation"
-        android:id="@+id/ContName"
+        android:id="@+id/conversation_name"
         android:layout_gravity="center_horizontal"
         android:textSize="36dp"/>
 

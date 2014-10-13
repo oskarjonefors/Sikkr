@@ -1,12 +1,13 @@
 package edu.chalmers.sikkr.backend.sms;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Jingis on 2014-10-03.
  */
-public class SmsConversation {
+public class SmsConversation{
     final private String phoneNbr;
     final private String contactName;
     final private String latestDate;

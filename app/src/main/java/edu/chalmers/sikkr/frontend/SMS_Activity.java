@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
+import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +32,7 @@ import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
 
 public class SMS_Activity extends Activity {
-    ArrayList<SmsConversation> smsList;
+    private ArrayList<SmsConversation> smsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +81,9 @@ public class SMS_Activity extends Activity {
      */
     public void clickedText(View view) {
         int position = (Integer) view.getTag();
-        Toast.makeText(view.getContext(), "trycker på text med address:" + smsList.get(position).getAddress(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(view.getContext(), ConversationActivity.class);
-        intent.putExtra("phoneNumber", smsList.get(position).getAddress());
-        intent.putExtra("contactName", getContactByNbr(smsList.get(position).getAddress()));
+        intent.putExtra("position", position);
+        intent.putExtra("name", getContactByNbr(smsList.get(position).getAddress()));
         startActivity(intent);
     }
 
@@ -121,7 +121,6 @@ public class SMS_Activity extends Activity {
 
     }
 
-
     //Inner adapterclass
     public class SmsViewAdapter extends ArrayAdapter {
 
@@ -135,7 +134,6 @@ public class SMS_Activity extends Activity {
             this.list = list;
             this.layoutId = layoutId;
         }
-
 
         @Override
         public View getView(int i, final View v, ViewGroup viewGroup) {

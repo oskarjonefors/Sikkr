@@ -29,7 +29,9 @@ public class TheInbox {
         box.setUp(context);
     }
 
-    private void setUp(Context context) {
+    private void setUp(Context context)
+    {
+        smsList = new ArrayList<SmsConversation>();
         this.context = context;
     }
 
@@ -39,7 +41,6 @@ public class TheInbox {
 
     private void collectSms() {
         Uri uriToAndroidInbox = Uri.parse("content://sms/inbox");
-        smsList = new ArrayList<SmsConversation>();
         Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
 
         while(cursor.moveToNext()) {

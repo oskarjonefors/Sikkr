@@ -16,12 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.sms.OneSms;
 import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 
 public class ConversationActivity extends Activity {
-    private ArrayList<SmsConversation> smsList;
+    private SmsConversation thisConversation;
+    private List<OneSms> recievedMessages;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +33,20 @@ public class ConversationActivity extends Activity {
 
     }
     public void createConversationLayout(){
-        smsList = TheInbox.getInstance().getSmsInbox();
-        ArrayAdapter adapter = new ConversationAdapter(this, R.layout.conversationitem_left, smsList);
-        ListView listV = (ListView)findViewById(R.id.conversation_list);
-        listV.setAdapter(adapter);
+        final Bundle bundle = getIntent().getExtras();
+        if(bundle!=null && bundle.containsKey("position") && bundle.containsKey("name")){
+            thisConversation = TheInbox.getInstance().getSmsInbox().get(bundle.getInt("position"));
+            TextView tv = (TextView)findViewById(R.id.conversation_name);
+            tv.setText(bundle.getString("name"));
+            recievedMessages = thisConversation.getSmsList();
+            ArrayAdapter adapter = new ConversationAdapter(this, R.layout.conversationitem_left,recievedMessages );
+            ListView listV = (ListView)findViewById(R.id.conversation_list);
+            listV.setAdapter(adapter);
+        }
+    }
 
+    public void readMessage(View view){
+        ((OneSms)view.getTag()).play();
     }
 
 
@@ -58,45 +69,4 @@ public class ConversationActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class ConversationAdapter extends ArrayAdapter {
-        private final Context mContext;
-        private final List<SmsConversation> mList;
-        private final int mLayoutId;
-        private String name ="";
-
-
-
-        private ConversationAdapter(Context context, int layoutId, List list) {
-            super(ConversationActivity.this, layoutId, list);
-            mContext = context;
-            mList = list;
-            mLayoutId = layoutId;
-            final Bundle bundle = getIntent().getExtras();
-            if(bundle!=null && bundle.containsKey("contactName")){
-                name = bundle.getString("contactName");
-            }
-
-        }
-        public View getView(int i, final View v, ViewGroup viewGroup) {
-            View view = v;
-            final ViewHolder holder;
-            if (view == null) {
-                LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-                view = inflater.inflate(mLayoutId, viewGroup, false);
-                holder = new ViewHolder();
-                //holder.contactName = (TextView) view.findViewById(R.id.ContName);
-                view.setTag(holder);
-            } else {
-                holder = (ViewHolder)view.getTag();
-            }
-            TextView tv = (TextView)view.findViewById(R.id.ContName);
-            tv.setText(name);
-            //holder.contactName.setText(name);
-            return view;
-        }
-    }
-
-    static class ViewHolder{
-        TextView contactName;
-    }
 }
