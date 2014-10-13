@@ -6,15 +6,22 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Calendar;
@@ -56,12 +63,12 @@ public final class ServerInterface {
      * @throws IOException if connectivity to the server cannot be resolved.
      */
     private ServerInterface(Context context) throws IOException {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         final TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         final KeyPair key = getKeyPair();
 
         PRIVATE_KEY = (RSAPrivateKey) key.getPrivate();
         PUBLIC_KEY = (RSAPublicKey) key.getPublic();
-        SERVER_KEY = getServerKey();
 
         LOCAL_NUMBER = tMgr.getLine1Number();
         SOCKET = new Socket(SERVER_IP, 997);
@@ -76,6 +83,7 @@ public final class ServerInterface {
         OBJECT_OUTPUT_STREAM = OBJECT_SOCKET.getOutputStream();
 
 
+        SERVER_KEY = getServerKey();
         verify();
     }
 
@@ -83,24 +91,60 @@ public final class ServerInterface {
      * -------------------- Static methods ---------------------------------------------------------
      */
 
-    private static KeyPair getKeyPair() {
+
+    private static KeyPair generateKeyPair(File keyFile) {
         KeyPairGenerator keyGen;
         KeyPair key = null;
+        ObjectOutputStream oos;
+
+        if (keyFile.exists()) {
+            keyFile.delete();
+        }
+
+        try {
+            keyGen = KeyPairGenerator.getInstance("RSA");
+            keyGen.initialize(4096);
+            key = keyGen.genKeyPair();
+
+            keyFile.createNewFile();
+            oos = new ObjectOutputStream(new FileOutputStream(keyFile));
+            oos.writeObject(key);
+        } catch (NoSuchAlgorithmException e) {
+        } catch (IOException e) {
+        }
 
         return key;
+    }
+
+    private static KeyPair getKeyPair() {
+        final File keyFile = new File(".rsa/sikkr_key_pair");
+        KeyPair key = null;
+        if (keyFile.exists()) {
+            try {
+                key = getKeyPairFromFile(keyFile);
+            } catch (Exception e) {
+                key = generateKeyPair(keyFile);
+            }
+        } else {
+            generateKeyPair(keyFile);
+        }
+        return key;
+    }
+
+    private static KeyPair getKeyPairFromFile(File keyFile) throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(keyFile));
+        return (KeyPair) ois.readObject();
     }
 
     /**
      * @return a list of new messages from the server.
      */
     public static List<Message> getNewMessages() {
-        //TODO
+
         return null;
     }
 
-    private static PublicKey getServerKey() {
-        return null;
-    }
+
 
     /**
      * Sends a message to somebody through the server.
@@ -108,7 +152,7 @@ public final class ServerInterface {
      * @param content the content of the message as a byte array.
      */
     public static void sendMessage(String number, byte[] content) {
-        //TODO
+
     }
 
     /**
@@ -116,12 +160,13 @@ public final class ServerInterface {
      * @param context a context from the SiKKr application.
      */
     public static void setupSingleton(Context context) {
-        if (context == null) {
+        if (context == null && singleton != null) {
             throw new UnsupportedOperationException("Cannot create instance of ServerInterface with a null context");
         } else {
             try {
                 singleton = new ServerInterface(context.getApplicationContext());
             } catch (Exception e) {
+                singleton = null;
                 Log.e("ServerInterface", "Could not create instance of singleton");
             }
         }
@@ -141,6 +186,22 @@ public final class ServerInterface {
     /*
      * -------------------- Instance methods -------------------------------------------------------
      */
+
+    private PublicKey getServerKey() {
+        try {
+            BUFFERED_WRITER.append("get_server_key");
+            BUFFERED_WRITER.newLine();
+            BUFFERED_WRITER.flush();
+
+            ObjectInputStream ois = new ObjectInputStream(OBJECT_INPUT_STREAM);
+            return (PublicKey) ois.readObject();
+        } catch (IOException e) {
+
+        } catch (ClassNotFoundException e) {
+
+        }
+        return null;
+    }
 
     private void verify() {
 
