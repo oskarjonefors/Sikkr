@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,6 +18,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +28,11 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by Eric on 2014-10-13.
@@ -204,9 +211,71 @@ public final class ServerInterface {
     }
 
     private void verify() {
+        try {
+            sendVerificationRequest();
+            switch (getVerificationMethod()) {
+                case NEW_CLIENT:
+                    newClientVerification();
+                    break;
+                case VERIFICATION_CODE:
+                    useVerificationCode();
+                    break;
+                default:
+            }
+        } catch (Exception e) {
 
+        }
     }
 
+    private void sendVerificationRequest() throws IOException {
+        BUFFERED_WRITER.append("verify:0737721528");
+        BUFFERED_WRITER.newLine();
+        BUFFERED_WRITER.flush();
+    }
+
+    private VerificationType getVerificationMethod() throws IOException {
+        String read = BUFFERED_READER.readLine();
+        if (read.contains("verification_method ")) {
+            return VerificationType.valueOf(read.replace("verification_method ", "").toUpperCase());
+        } else {
+            return VerificationType.INVALID;
+        }
+    }
+
+    private void newClientVerification() throws ClassNotFoundException, IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(PUBLIC_KEY);
+        OBJECT_OUTPUT_STREAM.write(baos.toByteArray());
+        OBJECT_OUTPUT_STREAM.flush();
+    }
+
+    private void useVerificationCode() throws IOException, InvalidKeyException, NoSuchAlgorithmException,
+            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+
+        int length = Integer.parseInt(BUFFERED_READER.readLine());
+        byte[] encrypted = new byte[length], decrypted, serverEncrypted;
+        Cipher cipher;
+
+        INPUT_STREAM.read(encrypted);
+        cipher = Cipher.getInstance("RSA/None/NoPadding");
+        cipher.init(Cipher.DECRYPT_MODE, PRIVATE_KEY);
+
+        decrypted = cipher.doFinal(encrypted);
+        cipher.init(Cipher.ENCRYPT_MODE, SERVER_KEY);
+
+        serverEncrypted = cipher.doFinal(decrypted);
+        BUFFERED_WRITER.append(serverEncrypted.length + "");
+        BUFFERED_WRITER.newLine();
+        BUFFERED_WRITER.flush();
+
+        OUTPUT_STREAM.write(serverEncrypted);
+        OUTPUT_STREAM.flush();
+    }
+
+    private enum VerificationType {
+        NEW_CLIENT, VERIFICATION_CODE, INVALID;
+    }
 
     public final static class Message {
 
