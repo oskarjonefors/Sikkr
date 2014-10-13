@@ -232,7 +232,7 @@ public class StartActivity extends Activity {
 
         @Override
         public void onProgressUpdate(String... values) {
-            updateProgress(Double.parseDouble(values[0]), values[1], values[2]);
+            updateProgress(Double.parseDouble(values[0]), values[2]);
         }
 
         @Override

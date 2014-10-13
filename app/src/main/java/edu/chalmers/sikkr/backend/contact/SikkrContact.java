@@ -6,6 +6,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.chalmers.sikkr.backend.util.ContactPriorityUtility;
+
 /**
  * @author Oskar Jönefors
  */
@@ -16,6 +18,7 @@ public class SikkrContact implements Contact {
     final private List<String> phoneNumbers;
     final private List<String> mobilePhoneNumbers;
     final private Bitmap photo;
+    private long priority = 0;
 
 
     public SikkrContact(final String name, final String id, final Bitmap photo) {
@@ -73,6 +76,16 @@ public class SikkrContact implements Contact {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public long getPriority() {
+        return priority;
+    }
+
+    @Override
+    public void calculatePriority(boolean isFavorite, int timesContacted, long lastContacted) {
+        priority = ContactPriorityUtility.getPriority(isFavorite, timesContacted, lastContacted);
     }
 
     @Override

@@ -38,4 +38,20 @@ public interface Contact extends Comparable<Contact> {
      * Return the contact's default number.
      */
     String getDefaultNumber();
+
+    /**
+     * Get the priority of the contact, where higher number means more prioritized. This
+     * @return
+     */
+    long getPriority();
+
+    /**
+     * Calculate and set a long value that determines the priority of the contact for shows in contact views.
+     * Higher is more prioritized, and the value is calculated from the three given parameters.
+     *
+     * @param isFavorite        - Whether or not the contact is marked as favorite.
+     * @param timesContacted    - How many times the contact has been contacted.
+     * @param lastContacted     - The long time in milliseconds for when the contact was last contacted.
+     */
+    void calculatePriority(boolean isFavorite, int timesContacted, long lastContacted);
 }

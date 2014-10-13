@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.util.ClipartUtility;
@@ -57,6 +58,9 @@ public class ContactBook implements ProgressListenable {
             notifyListeners(cursor.getPosition()/rowCount, "Retrieving contact information.");
 
             final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+            final boolean isFavorite = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.STARRED)) == 1;
+            final int timesContacted = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.TIMES_CONTACTED));
+            final long lastTimeContacted = cursor.getLong(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
             Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI,Uri.encode(name.trim()));
             Cursor mapContact = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup._ID}, null, null, null);
             if (mapContact.moveToNext()) {
@@ -69,6 +73,8 @@ public class ContactBook implements ProgressListenable {
                 addPhoneNumbers(contact, phoneNumbers);
 
                 if (contact.getDefaultNumber() != null) {
+                    contact.calculatePriority(isFavorite, timesContacted, lastTimeContacted);
+                    Log.d("StartActivity", "Priority for " + contact.getName() + " is " + contact.getPriority());
                     contacts.put(contact_id, contact);
                     contactNameMap.put(name, contact_id);
                 }
