@@ -24,24 +24,22 @@
 
             <Button
                 android:layout_width="150dp"
-                android:layout_height="170dp"
+                android:layout_height="150dp"
                 android:text="@string/lastCall"
                 android:id="@+id/lastCall"
                 android:onClick="clickedButton"
                 android:drawableTop="@drawable/call_history"
-                android:drawablePadding="5dp"
                 android:background="@null"
                 android:paddingStart="0dp"
                 android:paddingEnd="10dp"/>
 
             <Button
                 android:layout_width="150dp"
-                android:layout_height="170dp"
+                android:layout_height="150dp"
                 android:text="@string/favCont"
                 android:id="@+id/fav_contacts"
                 android:onClick="clickedButton"
                 android:drawableTop="@drawable/favorites_icon"
-                android:drawablePadding="5dp"
                 android:background="@null"
                 android:paddingStart="10dp"
                 android:paddingEnd="0dp"/>
@@ -59,7 +57,7 @@
 
             <Button
                 android:layout_width="150dp"
-                android:layout_height="170dp"
+                android:layout_height="150dp"
                 android:text="@string/message"
                 android:id="@+id/message"
                 android:onClick="clickedButton"
@@ -70,7 +68,7 @@
 
             <Button
                 android:layout_width="150dp"
-                android:layout_height="170dp"
+                android:layout_height="150dp"
                 android:text="@string/contBook"
                 android:id="@+id/contactBook"
                 android:onClick="clickedButton"
