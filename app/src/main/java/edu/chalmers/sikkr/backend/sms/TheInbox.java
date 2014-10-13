@@ -23,7 +23,6 @@ public class TheInbox {
     private static ArrayList<SmsConversation> smsList;
     private static ArrayList<SmsConversation> sentList;
     final private Map<String, SmsConversation> map = new TreeMap<String, SmsConversation>();
-    final private Map<String, SmsConversation> sentMap = new TreeMap<String, SmsConversation>();
 
     private TheInbox() {}
 
@@ -33,7 +32,6 @@ public class TheInbox {
 
     private void setUp(Context context)
     {
-        sentList = new ArrayList<SmsConversation>();
         smsList = new ArrayList<SmsConversation>();
         this.context = context;
     }
@@ -65,7 +63,7 @@ public class TheInbox {
                 //Toast.makeText(context, "Found existing conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
                 conversation = map.get(address);
             }
-            sms = new OneSms(msg, address, date);
+            sms = new OneSms(msg, address, date, false);
             conversation.addSms(sms);
         }
 
@@ -84,18 +82,11 @@ public class TheInbox {
             String msg = cursor.getString(cursor.getColumnIndexOrThrow("body"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
 
-            //If a sms conversation form this contact does not exist, create a new SmsConversation
-            if(!sentMap.containsKey(address)) {
-                //Toast.makeText(context, "Creating new conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
-                conversation = new SmsConversation(address, person, date, true);
-                sentList.add(conversation);
-                sentMap.put(address, conversation);
-            } else {
-                //Toast.makeText(context, "Found existing conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
-                conversation = sentMap.get(address);
+            if(map.containsKey(address)) {
+                conversation = map.get(address);
+                sms = new OneSms(msg, address, date, true);
+                conversation.addSms(sms);
             }
-            sms = new OneSms(msg, address, date);
-            conversation.addSms(sms);
         }
         cursor.close();
 
@@ -103,11 +94,9 @@ public class TheInbox {
 
     public ArrayList<SmsConversation> getSmsInbox() {
         collectSms();
+        collectSentSms();
         return smsList;
     }
 
-    public ArrayList<SmsConversation> getSentMessages(){
-        collectSentSms();
-        return sentList;
-    }
+
 }

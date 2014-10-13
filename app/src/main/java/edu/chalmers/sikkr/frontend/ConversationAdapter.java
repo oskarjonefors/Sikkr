@@ -2,6 +2,7 @@ package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,12 @@ public class ConversationAdapter extends ArrayAdapter {
             view.setTag(holder);
         }else{
             holder = (ViewHolder)view.getTag();
+        }
+
+        if(list.get(position).isSent()){
+            holder.message.setBackgroundColor(Color.BLUE);
+        }else{
+            holder.message.setBackgroundColor(Color.GREEN);
         }
 
         view.findViewById(R.id.conversation_icon).setTag(list.get(position));

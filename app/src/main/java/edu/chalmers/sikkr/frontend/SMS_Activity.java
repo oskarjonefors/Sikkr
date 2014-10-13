@@ -29,7 +29,7 @@ import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
 
 public class SMS_Activity extends Activity {
-    private ArrayList<SmsConversation> smsList;
+    private static ArrayList<SmsConversation> smsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,9 @@ public class SMS_Activity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public static ArrayList<SmsConversation> getConversations(){
+        return smsList;
+    }
 
     public void readMsg(View view) {
         ((OneSms) view.getTag()).play();

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import edu.chalmers.sikkr.R;
@@ -24,8 +25,7 @@ import edu.chalmers.sikkr.backend.util.LogUtility;
 
 public class ConversationActivity extends Activity {
     private SmsConversation thisConversation;
-    private List<OneSms> recievedMessages;
-    private List<OneSms> sentMessages;
+    private List<OneSms> messages;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +37,12 @@ public class ConversationActivity extends Activity {
     public void createConversationLayout(){
         final Bundle bundle = getIntent().getExtras();
         if(bundle!=null && bundle.containsKey("position") && bundle.containsKey("name")){
-            thisConversation = TheInbox.getInstance().getSentMessages().get(bundle.getInt("position"));
+            thisConversation = SMS_Activity.getConversations().get(bundle.getInt("position"));
             TextView tv = (TextView)findViewById(R.id.conversation_name);
             tv.setText(bundle.getString("name"));
-            recievedMessages = thisConversation.getSmsList();
-            ArrayAdapter adapter = new ConversationAdapter(this, R.layout.conversationitem_left,recievedMessages );
+            messages = thisConversation.getSmsList();
+            Collections.sort(messages);
+            ArrayAdapter adapter = new ConversationAdapter(this, R.layout.conversationitem_left,messages );
             ListView listV = (ListView)findViewById(R.id.conversation_list);
             listV.setAdapter(adapter);
         }
