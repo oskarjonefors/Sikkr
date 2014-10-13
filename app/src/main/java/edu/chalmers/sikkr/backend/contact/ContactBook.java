@@ -185,8 +185,21 @@ public class ContactBook implements ProgressListenable {
      * @return
      */
     public Contact getClosestMatch(String searchPattern) {
-        final List<Contact> m = getClosestMatches(searchPattern);
-        return (m == null ? null : m.get(0));
+        final List<Contact> matches = getClosestMatches(searchPattern);
+        if (matches == null) {
+            return null;
+        }
+
+        Contact topContact = matches.get(0);
+        long topPriority = topContact.getPriority();
+
+        for (Contact c : matches) {
+            if (c.getPriority() > topPriority) {
+                topContact = c;
+            }
+        }
+
+        return topContact;
     }
 
     /**
