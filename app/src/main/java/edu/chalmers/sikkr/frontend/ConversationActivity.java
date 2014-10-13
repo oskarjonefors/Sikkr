@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import edu.chalmers.sikkr.backend.util.LogUtility;
 public class ConversationActivity extends Activity {
     private SmsConversation thisConversation;
     private List<OneSms> recievedMessages;
+    private List<OneSms> sentMessages;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class ConversationActivity extends Activity {
     public void createConversationLayout(){
         final Bundle bundle = getIntent().getExtras();
         if(bundle!=null && bundle.containsKey("position") && bundle.containsKey("name")){
-            thisConversation = TheInbox.getInstance().getSmsInbox().get(bundle.getInt("position"));
+            thisConversation = TheInbox.getInstance().getSentMessages().get(bundle.getInt("position"));
             TextView tv = (TextView)findViewById(R.id.conversation_name);
             tv.setText(bundle.getString("name"));
             recievedMessages = thisConversation.getSmsList();
@@ -46,6 +48,7 @@ public class ConversationActivity extends Activity {
     }
 
     public void readMessage(View view){
+        LogUtility.writeLogFile("readMessage","Jag kom hit");
         ((OneSms)view.getTag()).play();
     }
 

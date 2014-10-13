@@ -43,8 +43,8 @@ public class ConversationAdapter extends ArrayAdapter {
             holder = (ViewHolder)view.getTag();
         }
 
-        view.findViewById(R.id.conversation_icon).setTag(list.get(position).getMessage());
-
+        view.findViewById(R.id.conversation_icon).setTag(list.get(position));
+        holder.message.setText(list.get(position).getMessage());
         return view;
     }
 

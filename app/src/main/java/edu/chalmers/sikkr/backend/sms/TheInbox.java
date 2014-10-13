@@ -21,7 +21,9 @@ public class TheInbox {
     private Context context;
     final private static TheInbox box = new TheInbox();
     private static ArrayList<SmsConversation> smsList;
+    private static ArrayList<SmsConversation> sentList;
     final private Map<String, SmsConversation> map = new TreeMap<String, SmsConversation>();
+    final private Map<String, SmsConversation> sentMap = new TreeMap<String, SmsConversation>();
 
     private TheInbox() {}
 
@@ -31,6 +33,7 @@ public class TheInbox {
 
     private void setUp(Context context)
     {
+        sentList = new ArrayList<SmsConversation>();
         smsList = new ArrayList<SmsConversation>();
         this.context = context;
     }
@@ -42,7 +45,6 @@ public class TheInbox {
     private void collectSms() {
         Uri uriToAndroidInbox = Uri.parse("content://sms/inbox");
         Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
-
         while(cursor.moveToNext()) {
 
             SmsConversation conversation;
@@ -56,26 +58,56 @@ public class TheInbox {
             //If a sms conversation form this contact does not exist, create a new SmsConversation
             if(!map.containsKey(address)) {
                 //Toast.makeText(context, "Creating new conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
-                conversation = new SmsConversation(address, person, date);
+                conversation = new SmsConversation(address, person, date, false);
                 smsList.add(conversation);
                 map.put(address, conversation);
             } else {
                 //Toast.makeText(context, "Found existing conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
                 conversation = map.get(address);
             }
-
-
             sms = new OneSms(msg, address, date);
             conversation.addSms(sms);
-
-
         }
 
         cursor.close();
     }
 
+    private void collectSentSms(){
+        Uri uriToAndroidSentMessages = Uri.parse("content://sms/sent");
+        Cursor cursor = context.getContentResolver().query(uriToAndroidSentMessages, null, null, null, null);
+        while(cursor.moveToNext()){
+            SmsConversation conversation;
+            OneSms sms;
+
+            String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+            String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
+            String msg = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+            String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+
+            //If a sms conversation form this contact does not exist, create a new SmsConversation
+            if(!sentMap.containsKey(address)) {
+                //Toast.makeText(context, "Creating new conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
+                conversation = new SmsConversation(address, person, date, true);
+                sentList.add(conversation);
+                sentMap.put(address, conversation);
+            } else {
+                //Toast.makeText(context, "Found existing conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
+                conversation = sentMap.get(address);
+            }
+            sms = new OneSms(msg, address, date);
+            conversation.addSms(sms);
+        }
+        cursor.close();
+
+    }
+
     public ArrayList<SmsConversation> getSmsInbox() {
         collectSms();
         return smsList;
+    }
+
+    public ArrayList<SmsConversation> getSentMessages(){
+        collectSentSms();
+        return sentList;
     }
 }

@@ -11,12 +11,14 @@ public class SmsConversation{
     final private String phoneNbr;
     final private String contactName;
     final private String latestDate;
+    final private boolean isSent;
     final private List<OneSms> smsConversation = new ArrayList<OneSms>();
 
-    public SmsConversation(String adress, String person, String latestDate) {
+    public SmsConversation(String adress, String person, String latestDate, boolean isSent) {
         this.phoneNbr = adress;
         contactName = person;
         this.latestDate = latestDate;
+        this.isSent = isSent;
     }
 
     public void addSms(OneSms sms) {
@@ -25,7 +27,9 @@ public class SmsConversation{
     public String getAddress() {
         return phoneNbr;
     }
-
+    public boolean isSent(){
+        return isSent;
+    }
     public String getContactName() {
         return contactName;
     }
