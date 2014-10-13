@@ -4,10 +4,10 @@
     <string name="app_name">Sikkr</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="lastCall">LastCall</string>
-    <string name="favCont">Fav. Contact</string>
-    <string name="contBook">ContactBook</string>
-    <string name="message">Message</string>
+    <string name="lastCall">Samtal</string>
+    <string name="favCont">Favoriter</string>
+    <string name="contBook">Kontakter</string>
+    <string name="message">Meddelanden</string>
     <string name="title_activity_conversation">ConversationActivity</string>
     <string name="title_activity_latest_calls">LatestCallsActivity</string>
     <string-array name="clipart_list">
