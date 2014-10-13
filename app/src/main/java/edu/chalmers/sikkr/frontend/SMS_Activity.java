@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
-import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,8 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +36,6 @@ public class SMS_Activity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sms_layout);
         createSmsLayout();
-
     }
 
     private void createSmsLayout() {
@@ -72,11 +68,11 @@ public class SMS_Activity extends Activity {
 
 
     public void readMsg(View view) {
-        //Toast.makeText(this, ((OneSms) view.getTag()).getMessage(), Toast.LENGTH_LONG ).show();
         ((OneSms) view.getTag()).play();
     }
 
-    /*
+    /**
+     *
     Open the clicked contacts sms history view
      */
     public void clickedText(View view) {
@@ -87,7 +83,11 @@ public class SMS_Activity extends Activity {
         startActivity(intent);
     }
 
-
+    /**
+     * Get the saved contact name related to the number from the phonebook
+     * @param number
+     * @return
+     */
     public String getContactByNbr(String number) {
         String contact = "";
 
@@ -101,9 +101,7 @@ public class SMS_Activity extends Activity {
             try {
                 cursor.moveToNext();
                 contact = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-            } catch(Exception e) {
-                Toast.makeText(this, "EXCEPTION. tryed to move cursor to first", Toast.LENGTH_SHORT).show();
-            }
+            } catch(Exception e){}
             finally {
                 cursor.close();
             }
@@ -116,12 +114,11 @@ public class SMS_Activity extends Activity {
     public String getPropperDate(String s) {
         Long dateNbr = Long.parseLong(s);
         Date date = new Date(dateNbr);
-        String formattedDate = new SimpleDateFormat("EEE, MMM d, ''yy").format(date);
-        return formattedDate;
+        return new SimpleDateFormat("EEE, MMM d, ''yy").format(date);
 
     }
 
-    //Inner adapterclass
+    //Inner adapter class
     public class SmsViewAdapter extends ArrayAdapter {
 
         private final Context context;
@@ -157,7 +154,7 @@ public class SMS_Activity extends Activity {
             //Link an sms to the playbutton
             view.findViewById(R.id.imageButton).setTag(currentConv.getSmsList().get(0));
             //view for date
-            TextView dateView = (TextView)view.findViewById(R.id.date);
+            TextView dateView = holder.date;
             dateView.setText(currentConv.getSmsList().get(0).getDate());
             
             //set the correct data of the element
