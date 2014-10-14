@@ -125,9 +125,9 @@ public class LatestCallsActivity extends Activity {
 
             long deltaMillis = rightNowMillis - callDateMillis;
 
-            int timeDays = (int) TimeUnit.DAYS.convert(deltaMillis, TimeUnit.DAYS);
-            int timeHours = (int) TimeUnit.HOURS.convert(deltaMillis, TimeUnit.HOURS);
-            int timeMinutes= (int) TimeUnit.MINUTES.convert(deltaMillis, TimeUnit.MINUTES);
+            int timeDays = (int) TimeUnit.MILLISECONDS.toDays(deltaMillis);
+            int timeHours = (int) TimeUnit.MILLISECONDS.toHours(deltaMillis);
+            int timeMinutes= (int) TimeUnit.MILLISECONDS.toMinutes(deltaMillis);
 
             Log.i("TD, TH, TM"," "+ timeDays + " " + timeHours + " " + timeMinutes);
 
