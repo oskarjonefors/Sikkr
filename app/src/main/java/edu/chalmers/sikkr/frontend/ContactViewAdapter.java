@@ -17,7 +17,9 @@ import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.contact.Contact;
 
 /**
- * Created by ivaldi on 2014-09-24.
+ * Adapter that populates a grid view with contacts.
+ * 
+ * @author Oskar Jönefors
  */
 public class ContactViewAdapter extends ArrayAdapter {
 
@@ -52,7 +54,6 @@ public class ContactViewAdapter extends ArrayAdapter {
         layout.setOnClickListener(new ContactGridClickListener(contact));
         holder.contactName.setText(contact.getName());
         holder.image.setImageBitmap(contact.getPhoto());
-        Log.d("ContactViewAdapter", "SETTING IMAGE " + contact.getPhoto() + "for " + contact.getName());
         return view;
     }
 
