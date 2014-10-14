@@ -67,18 +67,13 @@ public class LatestCallsActivity extends Activity {
         private final Context context;
         private final List<OneCall> list;
         private final int layoutId;
-        private Calendar calendar;
 
         private LatestCallItemAdapter(Context context, int layoutId, List list) {
             super(LatestCallsActivity.this, layoutId, list);
             this.context = context;
             this.list = list;
             this.layoutId = layoutId;
-            calendar = GregorianCalendar.getInstance();
         }
-
-        //iterar genom denna metod pga listan
-
 
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
@@ -113,41 +108,19 @@ public class LatestCallsActivity extends Activity {
                     name = (TextView) view.findViewById(R.id.nameText);
                     name.setText(list.get(i).getCallNumber());
                 }
-                    //sets the correct timezone of to the calendar
-                    calendar = millisToDate(Long.parseLong(list.get(i).getCallDate()));
 
-                    //sets the dateView to the correct time
-                    date = (TextView) view.findViewById(R.id.dateText);
-                    date.setText(callDateToString(calendar));
+                //sets the dateView to the correct time
+                date = (TextView) view.findViewById(R.id.dateText);
+                String callDate = callDateToString(Long.parseLong(list.get(i).getCallDate()));
+                date.setText(callDate);
             }
 
             return view;
         }
-        //converts the calldate given in milliseconds and returns a calendar in the correct Timezone.
-        public Calendar millisToDate(Long millis){
 
-            //Sets the current and the desired timezone
-            //TimeZone fromTZ = calendar.getTimeZone();
-            TimeZone toTz = TimeZone.getDefault();
-
-            //Set a date in calendar
-            calendar.setTimeInMillis(millis);
-            //UTC to timezone
-           calendar.add(Calendar.MILLISECOND, toTz.getRawOffset());
-
-            //Checks the daylight savings (summertime or not)
-            if (toTz.inDaylightTime(calendar.getTime())) {
-                calendar.add(Calendar.MILLISECOND, toTz.getDSTSavings());
-            }
-
-            return calendar;
-        }
-
-        public String callDateToString(Calendar calendar) {
+        public String callDateToString(long callDateMillis) {
 
             Calendar rightNow = GregorianCalendar.getInstance();
-
-            long callDateMillis = calendar.getTimeInMillis();
             long rightNowMillis = rightNow.getTimeInMillis();
 
             long deltaMillis = rightNowMillis - callDateMillis;
@@ -163,6 +136,8 @@ public class LatestCallsActivity extends Activity {
                 if ((timeDays/7) <= 4) {
                     return (timeDays/7) + " w";
                 }
+                //return the days divided by 7 (to get it in weeks) and divided by 4 (to get it in months)
+                return null;
 
             } else if (timeDays >= 1) {
 
