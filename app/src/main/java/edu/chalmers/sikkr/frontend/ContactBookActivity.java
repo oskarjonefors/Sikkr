@@ -6,6 +6,7 @@ package edu.chalmers.sikkr.frontend;
         import android.speech.RecognizerIntent;
         import android.view.Menu;
         import android.view.MenuItem;
+        import android.view.View;
         import android.view.Window;
         import android.widget.GridView;
 
@@ -25,7 +26,6 @@ public class ContactBookActivity extends Activity {
         setContentView(R.layout.activity_contact_book);
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ButtonAdapter(this));
-        SpeechRecognitionHelper.run(this);
     }
 
 
@@ -57,9 +57,9 @@ public class ContactBookActivity extends Activity {
         }
     }
 
-
-
-
+    public void voiceSearch(View view) {
+        SpeechRecognitionHelper.run(this);
+    }
 
 
 }
