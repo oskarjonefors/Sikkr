@@ -62,7 +62,7 @@ public class ButtonAdapter extends BaseAdapter {
         btn.setText(String.valueOf(Character.toUpperCase((al.get(position)))));
         btn.setTextColor(Color.BLACK);
         btn.setTextSize(80);
-        btn.setBackgroundResource(R.drawable.background_2);
+        btn.setBackground(null);
         btn.setId(position);
 
         btn.setOnClickListener(new ContactBookClickListener(position, btn.getText().charAt(0)));
