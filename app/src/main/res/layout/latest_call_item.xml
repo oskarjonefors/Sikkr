@@ -20,7 +20,12 @@
         android:id="@+id/nameText"/>
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="55dp"
         android:layout_height="70dp"
         android:id="@+id/dateText"/>
+
+    <ImageView
+        android:layout_width="55dp"
+        android:layout_height="70dp"
+        android:id="@+id/call_type"/>
 </LinearLayout>

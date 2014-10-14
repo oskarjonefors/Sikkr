@@ -44,7 +44,7 @@ public class CallLog {
             OneCall call = new OneCall();
             call.setCallNumber(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.NUMBER)));
             call.setCallDate(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.DATE)));
-            call.setCallType(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.TYPE)));
+            call.setCallType(cursor.getInt(cursor.getColumnIndex(android.provider.CallLog.Calls.TYPE)));
             call.setIsCallNew(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.NEW)));
             call.setContactID(getContactIDFromNumber(call.getCallNumber()));
             Log.d("CallLog", "Get ContactID " + call.getContactID());
