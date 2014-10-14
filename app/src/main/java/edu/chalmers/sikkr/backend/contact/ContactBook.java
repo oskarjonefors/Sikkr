@@ -2,7 +2,9 @@ package edu.chalmers.sikkr.backend.contact;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +46,15 @@ public class ContactBook implements ProgressListenable {
     private ContactBook() {
         listeners = new ArrayList<ProgressListener>();
     }
+
+    private final static Character[] VALID_INITIAL_CHARACTERS = {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z', 'Å', 'Ä', 'Ö' };
+
+    /* This character will be chosen as initial character
+    for all contacts not matching the valid characters. */
+    private final static Character SYMBOL_INITIAL_CHARACTER = '#';
 
     private void setup(Context context) {
         this.context = context;
@@ -141,9 +152,18 @@ public class ContactBook implements ProgressListenable {
      * Get a set of all the contacts' initial letters.
      */
     public Set<Character> getInitialLetters() {
+
+        Set<Character> validChars = new HashSet(Arrays.asList(VALID_INITIAL_CHARACTERS));
+
         final Set<Character> letters = new TreeSet<Character>();
         for (final Contact contact : contacts.values()) {
-            letters.add(Character.toUpperCase(contact.getName().charAt(0)));
+            Character c = Character.toUpperCase(contact.getName().charAt(0));
+
+            if (validChars.contains(c)) {
+                letters.add(c);
+            } else {
+                letters.add(SYMBOL_INITIAL_CHARACTER);
+            }
         }
         return letters;
     }
@@ -166,8 +186,14 @@ public class ContactBook implements ProgressListenable {
      */
     public Set<Contact> getContacts(char initialLetter) {
         final Set<Contact> c = new TreeSet<Contact>();
+        final List<Character> validChars = Arrays.asList(VALID_INITIAL_CHARACTERS);
+
         for (final Contact contact : contacts.values()) {
-            if (contact.getName().toLowerCase().charAt(0) == Character.toLowerCase(initialLetter)) {
+            final char cl = contact.getName().toUpperCase().charAt(0);
+
+            if (validChars.contains(cl) && cl == Character.toUpperCase(initialLetter)) {
+                c.add(contact);
+            } else if (!validChars.contains(cl) && initialLetter == SYMBOL_INITIAL_CHARACTER) {
                 c.add(contact);
             }
         }
