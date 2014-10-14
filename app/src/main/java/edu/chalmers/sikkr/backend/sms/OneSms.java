@@ -44,4 +44,15 @@ public class OneSms implements Comparable<OneSms> {
         return -thisDate.compareTo(otherDate);
 
     }
+
+    public boolean equals(Object rhs){
+        if(this == rhs){
+            return true;
+        }else if(rhs == null || rhs.getClass()!= OneSms.class ){
+            return false;
+        }else{
+            OneSms tmp = (OneSms)rhs;
+            return message.equals(tmp.message) && senderNbr.equals(tmp.senderNbr) && date.equals(tmp.date) && isSent == tmp.isSent();
+        }
+    }
 }

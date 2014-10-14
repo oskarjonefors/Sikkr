@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.sms.OneSms;
@@ -153,16 +154,19 @@ public class SMS_Activity extends Activity {
 
             //get the current sms conversation
             SmsConversation currentConv = list.get(i);
+            Set<OneSms> messageSet = currentConv.getSmsList();
+            List<OneSms> messageList = new ArrayList<OneSms>();
+            messageList.addAll(messageSet);
 
             //Link an sms to the playbutton
             int counter = 0;
-            while(currentConv.getSmsList().get(counter).isSent()){
+            while(messageList.get(counter).isSent()){
                 counter = counter + 1;
             }
-            view.findViewById(R.id.imageButton).setTag(currentConv.getSmsList().get(counter));
+            view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
             //view for date
             TextView dateView = holder.date;
-            dateView.setText(currentConv.getSmsList().get(0).getDate());
+            dateView.setText(messageList.get(counter).getDate());
             
             //set the correct data of the element
             holder.contactName.setText((getContactByNbr(currentConv.getAddress())));

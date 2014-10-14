@@ -15,7 +15,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.sms.OneSms;
@@ -25,7 +27,7 @@ import edu.chalmers.sikkr.backend.util.LogUtility;
 
 public class ConversationActivity extends Activity {
     private SmsConversation thisConversation;
-    private List<OneSms> messages;
+    private Set<OneSms> messageSet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +42,10 @@ public class ConversationActivity extends Activity {
             thisConversation = SMS_Activity.getConversations().get(bundle.getInt("position"));
             TextView tv = (TextView)findViewById(R.id.conversation_name);
             tv.setText(bundle.getString("name"));
-            messages = thisConversation.getSmsList();
+            messageSet = new HashSet<OneSms>();
+            messageSet = thisConversation.getSmsList();
+            List<OneSms> messages = new ArrayList<OneSms>();
+            messages.addAll(messageSet);
             Collections.sort(messages);
             ArrayAdapter adapter = new ConversationAdapter(this, R.layout.conversationitem_left,messages );
             ListView listV = (ListView)findViewById(R.id.conversation_list);
