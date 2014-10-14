@@ -7,6 +7,8 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,6 +27,7 @@ import java.security.PublicKey;
 import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -48,8 +51,8 @@ public final class ServerInterface {
     private final String LOCAL_NUMBER;
     private final Socket SOCKET, OBJECT_SOCKET, WRITE_SOCKET;
 
-    private final InputStream INPUT_STREAM;
-    private final OutputStream OUTPUT_STREAM;
+    private final DataInputStream INPUT_STREAM;
+    private final DataOutputStream OUTPUT_STREAM;
 
     private final BufferedReader BUFFERED_READER;
     private final BufferedWriter BUFFERED_WRITER;
@@ -78,8 +81,8 @@ public final class ServerInterface {
         OBJECT_SOCKET = new Socket(SERVER_IP, 998);
         WRITE_SOCKET = new Socket(SERVER_IP, 999);
 
-        INPUT_STREAM = SOCKET.getInputStream();
-        OUTPUT_STREAM = SOCKET.getOutputStream();
+        INPUT_STREAM = new DataInputStream(SOCKET.getInputStream());
+        OUTPUT_STREAM = new DataOutputStream(SOCKET.getOutputStream());
         BUFFERED_READER = new BufferedReader(new InputStreamReader(WRITE_SOCKET.getInputStream()));
         BUFFERED_WRITER = new BufferedWriter(new OutputStreamWriter(WRITE_SOCKET.getOutputStream()));
         OBJECT_INPUT_STREAM = OBJECT_SOCKET.getInputStream();
@@ -143,7 +146,11 @@ public final class ServerInterface {
      * @return a list of new messages from the server.
      */
     public static List<Message> getNewMessages() {
-        return singleton.getNewMessagesFromServer();
+        try {
+            return singleton.getNewMessagesFromServer();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 
@@ -213,14 +220,15 @@ public final class ServerInterface {
         writeLine(string, true);
     }
 
-    private void sendMessageToServer(String number, byte[] content) {
+    private void sendMessageToServer(String number, byte[] content, int messageType) {
         try {
             byte[] encryptedNumber = encrypt(number.getBytes());
             byte[] encryptedContent = encrypt(content);
             writeLine("send_message", false);
-            writeLine(encryptedNumber.length + "", false);
-            writeLine(encryptedContent.length + "", true);
-
+            OUTPUT_STREAM.writeInt(encryptedNumber.length);
+            OUTPUT_STREAM.writeInt(encryptedContent.length);
+            OUTPUT_STREAM.writeInt(messageType);
+            OUTPUT_STREAM.writeLong(System.currentTimeMillis());
             OUTPUT_STREAM.write(encryptedNumber);
             OUTPUT_STREAM.flush();
             OUTPUT_STREAM.write(encryptedContent);
@@ -230,8 +238,39 @@ public final class ServerInterface {
         }
     }
 
-    private List<Message> getNewMessagesFromServer() {
-        return null;
+    private List<Message> getNewMessagesFromServer() throws Exception {
+        final List<Message> messages = new ArrayList<Message>();
+        final int n;
+
+        writeLine("get_messages");
+
+        n = INPUT_STREAM.readInt();;
+
+        for (int i = 0; i < n; i++) {
+            final int senderNumberLength = INPUT_STREAM.readInt();
+            final int contentLength = INPUT_STREAM.readInt();
+            final byte[] encryptedSenderNumber = new byte[senderNumberLength];
+            final byte[] encryptedContent = new byte[contentLength];
+            final byte[] content;
+            final int type;
+            final long time;
+            final String senderNumber;
+            final Message msg;
+
+            INPUT_STREAM.readFully(encryptedSenderNumber);
+            INPUT_STREAM.readFully(encryptedContent);
+
+            senderNumber = new String(decrypt(encryptedSenderNumber));
+            content = decrypt(encryptedContent);
+            type = INPUT_STREAM.readInt();
+            time = INPUT_STREAM.readLong();
+
+
+            msg = new Message(senderNumber, "0737721528", content, type, time);
+            messages.add(msg);
+        }
+
+        return messages;
     }
 
     private PublicKey getServerKey() {
@@ -284,13 +323,13 @@ public final class ServerInterface {
 
     private void useVerificationCode() throws Exception {
 
-        int length = Integer.parseInt(BUFFERED_READER.readLine());
+        int length = INPUT_STREAM.readInt();
         byte[] readBytes = new byte[length], encrypted;
 
-        INPUT_STREAM.read(readBytes);
+        INPUT_STREAM.readFully(readBytes);
         encrypted = encrypt(decrypt(readBytes));
 
-        writeLine(encrypted.length + "");
+        OUTPUT_STREAM.writeInt(encrypted.length);
         OUTPUT_STREAM.write(encrypted);
         OUTPUT_STREAM.flush();
     }
@@ -304,10 +343,13 @@ public final class ServerInterface {
         public final String SENDER, RECIEVER;
         public final byte[] CONTENT;
         public final int TYPE;
-        public final Calendar TIMESTAMP;
+        public final long TIMESTAMP;
+
+        public final static int TYPE_TEXT = 1;
+        public final static int TYPE_DATA = 2;
 
         private Message(final String SENDER, final String RECIEVER, final byte[] CONTENT,
-                       final int TYPE, final Calendar TIMESTAMP) {
+                       final int TYPE, final long TIMESTAMP) {
             this.SENDER = SENDER;
             this.RECIEVER = RECIEVER;
             this.CONTENT = CONTENT;
