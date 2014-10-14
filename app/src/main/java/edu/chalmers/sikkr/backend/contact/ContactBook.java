@@ -153,7 +153,7 @@ public class ContactBook implements ProgressListenable {
      */
     public Set<Character> getInitialLetters() {
 
-        Set<Character> validChars = new HashSet(Arrays.asList(VALID_INITIAL_CHARACTERS));
+        Set<Character> validChars = new HashSet<Character>(Arrays.asList(VALID_INITIAL_CHARACTERS));
 
         final Set<Character> letters = new TreeSet<Character>();
         for (final Contact contact : contacts.values()) {
@@ -229,7 +229,7 @@ public class ContactBook implements ProgressListenable {
     }
 
     /**
-     * Return the contacts whos names best matches the given pattern.
+     * Return the contacts who's names best matches the given pattern.
      * @param searchPattern
      * @return
      */
