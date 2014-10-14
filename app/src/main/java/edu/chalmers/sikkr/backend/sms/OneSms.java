@@ -1,5 +1,7 @@
 package edu.chalmers.sikkr.backend.sms;
 
+import android.util.Log;
+
 import java.util.Date;
 
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
@@ -45,6 +47,12 @@ public class OneSms implements Comparable<OneSms> {
 
     }
 
+    @Override
+    public int hashCode() {
+        return 11*message.hashCode()*senderNbr.hashCode()*date.hashCode() + (isSent ? 1 : 0);
+    }
+
+    @Override
     public boolean equals(Object rhs){
         if(this == rhs){
             return true;
