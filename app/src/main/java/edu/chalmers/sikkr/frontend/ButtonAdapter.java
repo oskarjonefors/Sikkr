@@ -2,6 +2,7 @@ package edu.chalmers.sikkr.frontend;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -56,12 +57,14 @@ public class ButtonAdapter extends BaseAdapter {
             btn = new Button(mContext);
             btn.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.WRAP_CONTENT,500 ));
 
+
         }else{
             btn = (Button) convertView;
         }
         btn.setText(String.valueOf(Character.toUpperCase((al.get(position)))));
         btn.setTextColor(Color.BLACK);
         btn.setTextSize(80);
+        btn.setTypeface(null, Typeface.BOLD);
         btn.setBackground(null);
         btn.setId(position);
 
