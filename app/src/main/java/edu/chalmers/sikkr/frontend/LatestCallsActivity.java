@@ -27,6 +27,7 @@ import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.calls.OneCall;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.util.DateDiffUtility;
 
 public class LatestCallsActivity extends Activity {
 
@@ -131,46 +132,12 @@ public class LatestCallsActivity extends Activity {
 
                 //sets the dateView to the correct time
                 date = (TextView) view.findViewById(R.id.dateText);
-                String callDate = callDateToString(Long.parseLong(list.get(i).getCallDate()));
+                String callDate = DateDiffUtility.callDateToString(Long.parseLong(list.get(i).getCallDate()));
                 date.setText(callDate);
             }
 
             return view;
         }
 
-        public String callDateToString(long callDateMillis) {
-
-            Calendar rightNow = GregorianCalendar.getInstance();
-            long rightNowMillis = rightNow.getTimeInMillis();
-
-            long deltaMillis = rightNowMillis - callDateMillis;
-
-            int timeDays = (int) TimeUnit.MILLISECONDS.toDays(deltaMillis);
-            int timeHours = (int) TimeUnit.MILLISECONDS.toHours(deltaMillis);
-            int timeMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(deltaMillis);
-
-            Log.i("TD, TH, TM", " " + timeDays + " " + timeHours + " " + timeMinutes);
-
-            if ((timeDays / 7) >= 1) {
-
-                if ((timeDays / 7) <= 4) {
-                    return (timeDays / 7) + " w";
-                }
-            } else if (timeDays >= 1) {
-
-                return (timeDays / 1) + " d";
-
-            } else if ((timeHours / 1) > 0) {
-
-                return timeHours + " h";
-
-            } else if ((timeMinutes / 5) >= 1) {
-
-                return timeMinutes + " min";
-
-            }
-
-            return "Just Now";
-        }
     }
  }
