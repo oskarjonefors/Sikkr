@@ -33,12 +33,17 @@ import static android.provider.ContactsContract.CommonDataKinds.*;
 public class ContactBook implements ProgressListenable {
 
     private Context context;
+
+    /* Maps a contact ID to a contact */
     private final Map<String, Contact> contacts = new TreeMap<String, Contact>();
 
     /* This map uses contact name as key and contact id as value */
     private final Map<String, String> contactNameMap = new TreeMap<String, String>();
 
-    private ClipartUtility cu;
+    /* Chooses display pictures for the contacts who do not have display pictures. */
+    private ClipartUtility clipartUtility;
+
+    /* Used to make other classes aware of it's progress. */
     private final Collection<ProgressListener> listeners;
 
     private final static ContactBook singleton = new ContactBook();
@@ -47,25 +52,26 @@ public class ContactBook implements ProgressListenable {
         listeners = new ArrayList<ProgressListener>();
     }
 
+    /* These characters are the only valid initial characters that the contacts will be sorted by */
     private final static Character[] VALID_INITIAL_CHARACTERS = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
             'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
             'U', 'V', 'W', 'X', 'Y', 'Z', 'Å', 'Ä', 'Ö' };
 
-    /* This character will be chosen as initial character
-    for all contacts not matching the valid characters. */
+    /* All contacts with initial letters not in the above list will be grouped under this character. */
     private final static Character SYMBOL_INITIAL_CHARACTER = '#';
 
     private void setup(Context context) {
         this.context = context;
         contacts.clear();
-        cu = new ClipartUtility(context);
+        clipartUtility = new ClipartUtility(context);
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
 
         double rowCount = (double)cursor.getCount();
 
         while (cursor.moveToNext()) {
 
+            /* Notifies all added ProgressListeners of the contact retrieving progress. */
             notifyListeners(cursor.getPosition()/rowCount, "Retrieving contact information.");
 
             final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
@@ -93,7 +99,7 @@ public class ContactBook implements ProgressListenable {
             mapContact.close();
         }
         cursor.close();
-        cu.saveChanges();
+        clipartUtility.saveChanges();
     }
 
     private boolean hasContext() {
@@ -106,10 +112,15 @@ public class ContactBook implements ProgressListenable {
 
     /**
      * This method is used if another class wants to monitor the progress of the ContactBook initialization.
-     * @param context
-     * @param listener
+     * @param context   - Context used for retrieve the contacts. Cannot be null.
+     * @param listener  - A ProgressListener that wants to monitor the class initialization.
      */
     public static void setupSingleton(Context context, ProgressListener listener) {
+
+        if (context == null) {
+            throw new IllegalArgumentException("Context cannot be null!");
+        }
+
         singleton.addProgressListener(listener);
         singleton.setup(context);
     }
@@ -123,7 +134,6 @@ public class ContactBook implements ProgressListenable {
     }
 
     private void addPhoneNumbers(final SikkrContact contact, final Cursor phoneNumbers) {
-
 
         while (phoneNumbers.moveToNext()) {
             final String phNumber = phoneNumbers.getString(phoneNumbers.getColumnIndex(Phone.NUMBER));
@@ -141,7 +151,7 @@ public class ContactBook implements ProgressListenable {
     private Bitmap getPhoto(Uri contactUri, long id) {
             final InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(), contactUri, true);
             if (input == null) {
-                return cu.getContactImage("" + id);
+                return clipartUtility.getContactImage("" + id);
             } else {
                 return BitmapFactory.decodeStream(input);
             }
