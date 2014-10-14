@@ -155,7 +155,11 @@ public class SMS_Activity extends Activity {
             SmsConversation currentConv = list.get(i);
 
             //Link an sms to the playbutton
-            view.findViewById(R.id.imageButton).setTag(currentConv.getSmsList().get(0));
+            int counter = 0;
+            while(currentConv.getSmsList().get(counter).isSent()){
+                counter = counter + 1;
+            }
+            view.findViewById(R.id.imageButton).setTag(currentConv.getSmsList().get(counter));
             //view for date
             TextView dateView = holder.date;
             dateView.setText(currentConv.getSmsList().get(0).getDate());
