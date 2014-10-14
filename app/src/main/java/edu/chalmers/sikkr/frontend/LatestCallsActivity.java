@@ -1,6 +1,9 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
@@ -82,16 +84,16 @@ public class LatestCallsActivity extends Activity {
             TextView date;
             Contact contact;
             String contactID = list.get(i).getContactID();
+            Resources res = context.getResources();
+            Bitmap bitmap;
+            Drawable drawable;
+            ImageView image;
 
-
-
-            //get the contact from List<OneCall>
-
-            if(view==null){
+            if (view == null) {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 view = inflater.inflate(layoutId, viewGroup, false);
 
-                if(contactID!=null) {
+                if (contactID != null) {
                     contact = ContactBook.getSharedInstance().getContact(contactID);
 
                     //set name to adapter
@@ -99,14 +101,32 @@ public class LatestCallsActivity extends Activity {
                     name.setText(contact.getName());
 
                     //set pic in the adapter
-                    Drawable d = new BitmapDrawable(getResources(), contact.getPhoto());
-                    ImageView image = (ImageView) view.findViewById(R.id.latest_call_image);
-                    image.setImageDrawable(d);
-                }
-                else {
+                    drawable = new BitmapDrawable(getResources(), contact.getPhoto());
+                    image = (ImageView) view.findViewById(R.id.latest_call_image);
+                    image.setImageDrawable(drawable);
+                } else {
                     //setting name as phonenbr
                     name = (TextView) view.findViewById(R.id.nameText);
                     name.setText(list.get(i).getCallNumber());
+                }
+
+                switch (list.get(i).getCallType()) {
+                    case android.provider.CallLog.Calls.INCOMING_TYPE:
+                        bitmap = BitmapFactory.decodeResource(res, res.getIdentifier("incoming_call", "drawable", context.getPackageName()));
+                        drawable = new BitmapDrawable(getResources(), bitmap);
+                        image = (ImageView) view.findViewById(R.id.call_type);
+                        image.setImageDrawable(drawable);
+                        break;
+
+                    case android.provider.CallLog.Calls.OUTGOING_TYPE:
+                        bitmap = BitmapFactory.decodeResource(res, res.getIdentifier("outgoing_call", "drawable", context.getPackageName()));
+                        drawable = new BitmapDrawable(getResources(), bitmap);
+                        image = (ImageView) view.findViewById(R.id.call_type);
+                        image.setImageDrawable(drawable);
+                        break;
+
+                    case android.provider.CallLog.Calls.MISSED_TYPE:
+                        name.setTextColor(getResources().getColor(android.R.color.holo_red_light));
                 }
 
                 //sets the dateView to the correct time
@@ -127,18 +147,15 @@ public class LatestCallsActivity extends Activity {
 
             int timeDays = (int) TimeUnit.MILLISECONDS.toDays(deltaMillis);
             int timeHours = (int) TimeUnit.MILLISECONDS.toHours(deltaMillis);
-            int timeMinutes= (int) TimeUnit.MILLISECONDS.toMinutes(deltaMillis);
+            int timeMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(deltaMillis);
 
-            Log.i("TD, TH, TM"," "+ timeDays + " " + timeHours + " " + timeMinutes);
+            Log.i("TD, TH, TM", " " + timeDays + " " + timeHours + " " + timeMinutes);
 
-            if ((timeDays /7 ) >= 1) {
+            if ((timeDays / 7) >= 1) {
 
-                if ((timeDays/7) <= 4) {
-                    return (timeDays/7) + " w";
+                if ((timeDays / 7) <= 4) {
+                    return (timeDays / 7) + " w";
                 }
-                //return the days divided by 7 (to get it in weeks) and divided by 4 (to get it in months)
-                return null;
-
             } else if (timeDays >= 1) {
 
                 return (timeDays / 1) + " d";
