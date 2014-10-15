@@ -18,6 +18,7 @@ public class SikkrContact implements Contact {
     final private List<String> phoneNumbers;
     final private List<String> mobilePhoneNumbers;
     final private Bitmap photo;
+    private boolean isFavorite;
     private long priority = 0;
 
 
@@ -84,8 +85,18 @@ public class SikkrContact implements Contact {
     }
 
     @Override
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    @Override
     public void calculatePriority(boolean isFavorite, int timesContacted, long lastContacted) {
         priority = ContactPriorityUtility.getPriority(isFavorite, timesContacted, lastContacted);
+    }
+
+    @Override
+    public void setFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
     }
 
     @Override

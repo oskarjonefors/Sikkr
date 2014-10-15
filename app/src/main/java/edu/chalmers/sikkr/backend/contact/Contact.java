@@ -45,6 +45,8 @@ public interface Contact extends Comparable<Contact> {
      */
     long getPriority();
 
+    boolean isFavorite();
+
     /**
      * Calculate and set a long value that determines the priority of the contact for shows in contact views.
      * Higher is more prioritized, and the value is calculated from the three given parameters.
@@ -54,4 +56,10 @@ public interface Contact extends Comparable<Contact> {
      * @param lastContacted     - The long time in milliseconds for when the contact was last contacted.
      */
     void calculatePriority(boolean isFavorite, int timesContacted, long lastContacted);
+
+    /**
+     * Set whether or not this contact is a favorite.
+     * @param isFavorite
+     */
+    void setFavorite(boolean isFavorite);
 }

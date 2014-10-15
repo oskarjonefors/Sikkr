@@ -31,7 +31,7 @@ public class ContactGridActivity extends Activity {
         if(bundle != null && bundle.containsKey("initial_letter")) {
             contacts = book.getContacts(bundle.getChar("initial_letter"));
         } else {
-            contacts = book.getContacts();
+            contacts = book.getFavoriteContacts();
         }
 
         final List<Contact> contactList = new ArrayList<Contact>();

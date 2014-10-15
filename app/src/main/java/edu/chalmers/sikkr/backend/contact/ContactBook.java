@@ -91,6 +91,7 @@ public class ContactBook implements ProgressListenable {
 
                 if (contact.getDefaultNumber() != null) {
                     contact.calculatePriority(isFavorite, timesContacted, lastTimeContacted);
+                    contact.setFavorite(isFavorite);
                     Log.d("StartActivity", "Priority for " + contact.getName() + " is " + contact.getPriority());
                     contacts.put(contact_id, contact);
                     contactNameMap.put(name, contact_id);
@@ -256,8 +257,19 @@ public class ContactBook implements ProgressListenable {
         for (String str : matches) {
             results.add(getContact(contactNameMap.get(str)));
         }
-
         return results;
+    }
+
+    public Set<Contact> getFavoriteContacts() {
+        final Set<Contact> favSet = new TreeSet<Contact>();
+
+        for (Contact c : contacts.values()) {
+            if (c.isFavorite()) {
+                favSet.add(c);
+            }
+        }
+
+        return favSet;
     }
 
     @Override
