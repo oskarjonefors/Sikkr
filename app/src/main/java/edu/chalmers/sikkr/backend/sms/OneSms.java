@@ -1,18 +1,19 @@
 package edu.chalmers.sikkr.backend.sms;
 
-import android.util.Log;
-
+import java.util.Calendar;
 import java.util.Date;
 
+import edu.chalmers.sikkr.backend.AbstractMessage;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 
 /**
  * Created by Jingis on 2014-09-30.
  */
-public class OneSms implements Comparable<OneSms> {
+public class OneSms extends AbstractMessage {
     private String message;
     private String senderNbr;
     private String date;
+    private Calendar calendar;
     private boolean isSent;
 
     public OneSms(String msg, String senderNbr, String date, boolean isSent) {
@@ -31,20 +32,12 @@ public class OneSms implements Comparable<OneSms> {
     public String getDate() {
         return date;
     }
-    public String getNbr() {
+    public String getSender() {
         return senderNbr;
     }
 
     public void play() {
         TextToSpeechUtility.readAloud(message);
-    }
-
-    @Override
-    public int compareTo(OneSms another) {
-        Date thisDate = new Date(Long.parseLong(date));
-        Date otherDate = new Date(Long.parseLong(another.date));
-        return -thisDate.compareTo(otherDate);
-
     }
 
     @Override
@@ -62,5 +55,12 @@ public class OneSms implements Comparable<OneSms> {
             OneSms tmp = (OneSms)rhs;
             return message.equals(tmp.message) && senderNbr.equals(tmp.senderNbr) && date.equals(tmp.date) && isSent == tmp.isSent();
         }
+    }
+
+    public Calendar getTimestamp(){
+        Date thisDate = new Date(Long.parseLong(date));
+        calendar = Calendar.getInstance();
+        calendar.setTime(thisDate);
+        return calendar;
     }
 }

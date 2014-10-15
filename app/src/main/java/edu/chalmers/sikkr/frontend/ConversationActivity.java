@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.ListableMessage;
 import edu.chalmers.sikkr.backend.sms.OneSms;
 import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
@@ -27,7 +28,7 @@ import edu.chalmers.sikkr.backend.util.LogUtility;
 
 public class ConversationActivity extends Activity {
     private SmsConversation thisConversation;
-    private Set<OneSms> messageSet;
+    private Set<ListableMessage> messageSet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +43,9 @@ public class ConversationActivity extends Activity {
             thisConversation = SMS_Activity.getConversations().get(bundle.getInt("position"));
             TextView tv = (TextView)findViewById(R.id.conversation_name);
             tv.setText(bundle.getString("name"));
-            messageSet = new HashSet<OneSms>();
+            messageSet = new HashSet<ListableMessage>();
             messageSet = thisConversation.getSmsList();
-            List<OneSms> messages = new ArrayList<OneSms>();
+            List<ListableMessage> messages = new ArrayList<ListableMessage>();
             messages.addAll(messageSet);
             Collections.sort(messages);
             ArrayAdapter adapter = new ConversationAdapter(this, R.layout.conversationitem_left,messages );

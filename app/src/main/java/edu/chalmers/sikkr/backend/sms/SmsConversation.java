@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.chalmers.sikkr.backend.ListableMessage;
+
 /**
  * Created by Jingis on 2014-10-03.
  */
@@ -14,7 +16,7 @@ public class SmsConversation{
     final private String contactName;
     final private String latestDate;
     final private boolean isSent;
-    final private Set<OneSms> smsConversation = new HashSet<OneSms>();
+    final private Set<ListableMessage> smsConversation = new HashSet<ListableMessage>();
 
     public SmsConversation(String adress, String person, String latestDate, boolean isSent) {
         this.phoneNbr = adress;
@@ -35,7 +37,7 @@ public class SmsConversation{
     public String getContactName() {
         return contactName;
     }
-    public Set<OneSms> getSmsList() {
+    public Set<ListableMessage> getSmsList() {
         return smsConversation;
     }
     public String getLatestDate() {

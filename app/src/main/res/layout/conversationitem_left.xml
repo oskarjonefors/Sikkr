@@ -7,11 +7,8 @@
     <ImageButton
         android:id="@+id/conversation_icon"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
         android:layout_marginRight="6dip"
-        android:contentDescription="TODO"
         android:background="@drawable/play"
         android:onClick="readMessage"/>
 
@@ -19,11 +16,6 @@
         android:id="@+id/conversation_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/conversation_icon"
-        android:gravity="center_vertical"
         android:text="Example"
         android:textSize="16sp" />
 

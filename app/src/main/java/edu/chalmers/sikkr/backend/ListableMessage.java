@@ -5,13 +5,14 @@ import java.util.Calendar;
 /**
  * Created by Eric on 2014-10-03.
  */
-public interface ListableMessage {
+public interface ListableMessage extends Comparable<ListableMessage> {
 
     /**
      * Return the Calendar timestamp for when the message was created.
      * @return
      */
     Calendar getTimestamp();
+
 
     /**
      * Return the phone number of the sender of the message.
@@ -21,5 +22,16 @@ public interface ListableMessage {
      * @return A string representing a phone number, alternatively "0" or "-1" for two special cases.
      */
     String getSender();
+
+    void play();
+
+    String getMessage();
+
+    @Override
+    int compareTo(ListableMessage other);
+
+    boolean isSent();
+
+
 
 }

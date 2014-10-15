@@ -4,12 +4,14 @@ import android.net.Uri;
 
 import java.util.Calendar;
 
+import edu.chalmers.sikkr.backend.AbstractMessage;
+import edu.chalmers.sikkr.backend.ListableMessage;
 import edu.chalmers.sikkr.backend.VoiceMessage;
 
 /**
  * Created by Eric on 2014-10-02.
  */
-public class MMS implements VoiceMessage, Comparable<MMS> {
+public class MMS extends AbstractMessage implements VoiceMessage{
 
 
     private final Calendar timestamp;
@@ -39,7 +41,15 @@ public class MMS implements VoiceMessage, Comparable<MMS> {
     }
 
     @Override
-    public int compareTo(MMS another) {
-        return 0;
+    public String getMessage(){
+        return "";
     }
+    @Override
+    public void play(){
+    }
+    @Override
+    public boolean isSent(){
+        return true;
+    }
+
 }

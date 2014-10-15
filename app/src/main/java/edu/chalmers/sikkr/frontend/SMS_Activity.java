@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.ListableMessage;
 import edu.chalmers.sikkr.backend.sms.OneSms;
 import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
@@ -45,6 +46,7 @@ public class SMS_Activity extends Activity {
         ListView listV = (ListView) findViewById(R.id.listView);
         listV.setAdapter(adapter);
     }
+
 
 
     @Override
@@ -154,8 +156,8 @@ public class SMS_Activity extends Activity {
 
             //get the current sms conversation
             SmsConversation currentConv = list.get(i);
-            Set<OneSms> messageSet = currentConv.getSmsList();
-            List<OneSms> messageList = new ArrayList<OneSms>();
+            Set<ListableMessage> messageSet = currentConv.getSmsList();
+            List<ListableMessage> messageList = new ArrayList<ListableMessage>();
             messageList.addAll(messageSet);
 
             //Link an sms to the playbutton
@@ -164,15 +166,13 @@ public class SMS_Activity extends Activity {
                 counter = counter + 1;
             }
             view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
-            //view for date
-            TextView dateView = holder.date;
-            dateView.setText(messageList.get(counter).getDate());
-            
+
             //set the correct data of the element
             holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
             holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             holder.contactName.setTag(i);
             holder.date.setText(getPropperDate(list.get(i).getLatestDate()));
+
 
             return view;
         }
