@@ -8,12 +8,12 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:id="@+id/contact_book_microphone"
         android:src="@drawable/microphone"
         android:background="@null"
-        android:onClick="voiceSearch"/>
+        android:onClick="voiceSearch"
+        android:layout_above="@+id/space"
+        android:layout_centerHorizontal="true" />
 
     <GridView
         android:layout_width="wrap_content"
@@ -27,4 +27,11 @@
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/contact_book_microphone"
         android:background="@color/background_color"/>
+
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/space" />
 </RelativeLayout>
