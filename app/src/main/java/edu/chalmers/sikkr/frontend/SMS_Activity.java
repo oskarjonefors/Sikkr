@@ -74,7 +74,7 @@ public class SMS_Activity extends Activity {
     }
 
     public void readMsg(View view) {
-        ((OneSms) view.getTag()).play();
+        ((ListableMessage) view.getTag()).play();
     }
 
     /**
@@ -117,7 +117,7 @@ public class SMS_Activity extends Activity {
         return contact;
     }
 
-    public String getPropperDate(String s) {
+    public static String getPropperDate(String s) {
         Long dateNbr = Long.parseLong(s);
         Date date = new Date(dateNbr);
         return new SimpleDateFormat("EEE, MMM d, ''yy").format(date);

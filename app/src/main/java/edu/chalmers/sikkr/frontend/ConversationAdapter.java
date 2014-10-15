@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import edu.chalmers.sikkr.R;
@@ -40,44 +43,48 @@ public class ConversationAdapter extends ArrayAdapter {
             view = inflater.inflate(layoutId, parent, false);
             holder = new ViewHolder();
             holder.message = (TextView)view.findViewById(R.id.conversation_message);
+            holder.playButton=(ImageButton)view.findViewById(R.id.conversation_icon);
             view.setTag(holder);
-            if(list.get(position).isSent()) {
-                RelativeLayout.LayoutParams userNameAndChatMessageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                userNameAndChatMessageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
 
-                RelativeLayout.LayoutParams userNameParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                userNameParams.addRule(RelativeLayout.LEFT_OF, R.id.conversation_message);
-
-                RelativeLayout.LayoutParams chatMessageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                chatMessageParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, R.id.conversation_icon);
-            }else{
-                RelativeLayout.LayoutParams userNameAndChatMessageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                userNameAndChatMessageParams.addRule(RelativeLayout.RIGHT_OF, R.id.conversation_icon);
-
-                RelativeLayout.LayoutParams userImageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                userImageParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-
-                RelativeLayout.LayoutParams userNameParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                userNameParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, R.id.conversation_message);
-
-            }
         }else{
             holder = (ViewHolder)view.getTag();
-
         }
 
-        if(list.get(position).isSent()){
+        if(list.get(position).isSent()) {
             holder.message.setBackgroundColor(Color.BLUE);
-        }else{
-            holder.message.setBackgroundColor(Color.GREEN);
-        }
 
-        view.findViewById(R.id.conversation_icon).setTag(list.get(position));
-        holder.message.setText(list.get(position).getMessage());
+            RelativeLayout.LayoutParams userNameAndChatMessageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            userNameAndChatMessageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+
+            RelativeLayout.LayoutParams chatMessageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            chatMessageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+            RelativeLayout.LayoutParams userNameParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            userNameParams.addRule(RelativeLayout.LEFT_OF, R.id.conversation_icon);
+
+            holder.playButton.setLayoutParams(chatMessageParams);
+            holder.message.setLayoutParams(userNameParams);
+        }else {
+            holder.message.setBackgroundColor(Color.GREEN);
+            RelativeLayout.LayoutParams userNameAndChatMessageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            userNameAndChatMessageParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+
+            RelativeLayout.LayoutParams chatMessageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            chatMessageParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+            RelativeLayout.LayoutParams userNameParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            userNameParams.addRule(RelativeLayout.RIGHT_OF, R.id.conversation_icon);
+
+            holder.playButton.setLayoutParams(chatMessageParams);
+            holder.message.setLayoutParams(userNameParams);
+        }
+        holder.message.setText(new SimpleDateFormat("EEE, MMM d, ''yy").format(list.get(position).getTimestamp().getTime()));
+        holder.playButton.setTag(list.get(position));
         return view;
     }
 
     private static class ViewHolder{
+        ImageButton playButton;
         TextView message;
 
     }

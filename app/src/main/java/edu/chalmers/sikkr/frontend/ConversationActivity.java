@@ -3,12 +3,14 @@ package edu.chalmers.sikkr.frontend;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,20 +23,35 @@ import java.util.Set;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.ListableMessage;
+import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.sms.OneSms;
 import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
+import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 public class ConversationActivity extends Activity {
     private SmsConversation thisConversation;
     private Set<ListableMessage> messageSet;
+    private VoiceMessageRecorder recorder;
+    private ImageButton sendButton;
+    private ImageButton cancelButton;
+    private ImageButton recordButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
         createConversationLayout();
-
+        recorder = VoiceMessageRecorder.getSharedInstance();
+        sendButton = (ImageButton)findViewById(R.id.conversation_send);
+        cancelButton = (ImageButton)findViewById(R.id.conversation_cancel);
+        recordButton = (ImageButton)findViewById(R.id.conversation_record);
+        recordButton.setVisibility(View.VISIBLE);
+        sendButton.setVisibility(View.GONE);
+        sendButton.setEnabled(false);
+        cancelButton.setEnabled(false);
+        cancelButton.setVisibility(View.GONE);
 
     }
     public void createConversationLayout(){
@@ -54,9 +71,36 @@ public class ConversationActivity extends Activity {
         }
     }
 
+    public void cancelMessage(View view){
+        recorder.getVoiceMessage();
+        cancelButton.setVisibility(View.GONE);
+        sendButton.setVisibility(View.GONE);
+        cancelButton.setEnabled(false);
+        sendButton.setEnabled(false);
+        recordButton.setEnabled(true);
+    }
+
+    public void recordMessage(View view){
+        switch (recorder.getRecordingState()) {
+            case RESET:
+                recorder.startRecording();
+                recordButton.setBackgroundResource(R.drawable.stop_record);
+                break;
+            case RECORDING:
+                recorder.stopRecording();
+                recordButton.setBackgroundResource(R.drawable.start_record);
+                sendButton.setVisibility(View.VISIBLE);
+                cancelButton.setVisibility(View.VISIBLE);
+                sendButton.setEnabled(true);
+                cancelButton.setEnabled(true);
+                recordButton.setEnabled(false);
+                break;
+        }
+    }
+
     public void readMessage(View view){
         LogUtility.writeLogFile("readMessage","Jag kom hit");
-        ((OneSms)view.getTag()).play();
+        ((ListableMessage)view.getTag()).play();
     }
 
 
