@@ -28,15 +28,18 @@ import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by Eric on 2014-10-13.
  */
 public final class ServerInterface {
+
+    private final static String SERVER_IP = "127.0.0.1";
 
     /**
      * Singleton of ServerInterface
@@ -46,10 +49,8 @@ public final class ServerInterface {
     /*
      * -------------------- Instance constants, mostly assigned in constructor. --------------------
      */
-    private final String SERVER_IP = "127.0.0.1";
     private final PublicKey SERVER_KEY;
     private final String LOCAL_NUMBER;
-    private final Socket SOCKET, OBJECT_SOCKET, WRITE_SOCKET;
 
     private final DataInputStream INPUT_STREAM;
     private final DataOutputStream OUTPUT_STREAM;
@@ -70,6 +71,7 @@ public final class ServerInterface {
      */
     private ServerInterface(Context context) throws IOException {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        final Socket SOCKET, OBJECT_SOCKET, WRITE_SOCKET;
         final TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         final KeyPair key = getKeyPair();
 
@@ -160,8 +162,8 @@ public final class ServerInterface {
      * @param number the number that you want to send the message to.
      * @param content the content of the message as a byte array.
      */
-    public static void sendMessage(String number, byte[] content) {
-        singleton.sendMessageToServer(number, content);
+    public static void sendMessage(String number, byte[] content, int messageType) {
+        singleton.sendMessageToServer(number, content, messageType);
     }
 
     /**
@@ -196,10 +198,13 @@ public final class ServerInterface {
      * -------------------- Instance methods -------------------------------------------------------
      */
 
-    private byte[] encrypt(byte[] bytes) throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA/None/NoPadding");
-        cipher.init(Cipher.ENCRYPT_MODE, SERVER_KEY);
-        return cipher.doFinal(bytes);
+    private byte[] aesDecrypt(byte[] data, byte[] key, byte[] iv) throws Exception {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        SecretKeySpec kSpec = new SecretKeySpec(key, "AES/CBC/PKCS5Padding");
+
+        cipher.init(Cipher.DECRYPT_MODE, kSpec, new IvParameterSpec(iv));
+        return cipher.doFinal(data);
+
     }
 
     private byte[] decrypt(byte[] bytes) throws Exception {
@@ -208,34 +213,10 @@ public final class ServerInterface {
         return cipher.doFinal(bytes);
     }
 
-    private void writeLine(String string, boolean flush) throws IOException {
-        BUFFERED_WRITER.append(string);
-        BUFFERED_WRITER.newLine();
-        if (flush) {
-            BUFFERED_WRITER.flush();
-        }
-    }
-
-    private void writeLine(String string) throws IOException {
-        writeLine(string, true);
-    }
-
-    private void sendMessageToServer(String number, byte[] content, int messageType) {
-        try {
-            byte[] encryptedNumber = encrypt(number.getBytes());
-            byte[] encryptedContent = encrypt(content);
-            writeLine("send_message", false);
-            OUTPUT_STREAM.writeInt(encryptedNumber.length);
-            OUTPUT_STREAM.writeInt(encryptedContent.length);
-            OUTPUT_STREAM.writeInt(messageType);
-            OUTPUT_STREAM.writeLong(System.currentTimeMillis());
-            OUTPUT_STREAM.write(encryptedNumber);
-            OUTPUT_STREAM.flush();
-            OUTPUT_STREAM.write(encryptedContent);
-            OUTPUT_STREAM.flush();
-
-        } catch (Exception e) {
-        }
+    private byte[] encrypt(byte[] bytes) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA/None/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, SERVER_KEY);
+        return cipher.doFinal(bytes);
     }
 
     private List<Message> getNewMessagesFromServer() throws Exception {
@@ -244,11 +225,15 @@ public final class ServerInterface {
 
         writeLine("get_messages");
 
-        n = INPUT_STREAM.readInt();;
+        n = INPUT_STREAM.readInt();
 
         for (int i = 0; i < n; i++) {
+            final int ivLength = INPUT_STREAM.readInt();
+            final int keyLength = INPUT_STREAM.readInt();
             final int senderNumberLength = INPUT_STREAM.readInt();
             final int contentLength = INPUT_STREAM.readInt();
+            final byte[] encryptedKey = new byte[keyLength], key;
+            final byte[] encryptedIV = new byte[ivLength], iv;
             final byte[] encryptedSenderNumber = new byte[senderNumberLength];
             final byte[] encryptedContent = new byte[contentLength];
             final byte[] content;
@@ -257,11 +242,15 @@ public final class ServerInterface {
             final String senderNumber;
             final Message msg;
 
+            INPUT_STREAM.readFully(encryptedIV);
+            INPUT_STREAM.readFully(encryptedKey);
             INPUT_STREAM.readFully(encryptedSenderNumber);
             INPUT_STREAM.readFully(encryptedContent);
 
-            senderNumber = new String(decrypt(encryptedSenderNumber));
-            content = decrypt(encryptedContent);
+            iv = decrypt(encryptedIV);
+            key = decrypt(encryptedKey);
+            senderNumber = new String(aesDecrypt(encryptedSenderNumber, key, iv));
+            content = aesDecrypt(encryptedContent, key, iv);
             type = INPUT_STREAM.readInt();
             time = INPUT_STREAM.readLong();
 
@@ -287,23 +276,6 @@ public final class ServerInterface {
         return null;
     }
 
-    private void verify() {
-        try {
-            writeLine("verify:"+LOCAL_NUMBER);
-            switch (getVerificationMethod()) {
-                case NEW_CLIENT:
-                    newClientVerification();
-                    break;
-                case VERIFICATION_CODE:
-                    useVerificationCode();
-                    break;
-                default:
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
     private VerificationType getVerificationMethod() throws IOException {
         String read = BUFFERED_READER.readLine();
         if (read.contains("verification_method ")) {
@@ -321,17 +293,87 @@ public final class ServerInterface {
         OBJECT_OUTPUT_STREAM.flush();
     }
 
+    private void sendMessageToServer(String number, byte[] content, int messageType) {
+        try {
+            EncryptedMessage message = new EncryptedMessage(number.getBytes(), content);
+            byte[] encryptedIV = encrypt(message.iv);
+            byte[] encryptedKey = encrypt(message.aeskey);
+            writeLine("send_message");
+            OUTPUT_STREAM.writeInt(encryptedIV.length);
+            OUTPUT_STREAM.writeInt(encryptedKey.length);
+            OUTPUT_STREAM.writeInt(message.encryptedBytes[0].length);
+            OUTPUT_STREAM.writeInt(message.encryptedBytes[1].length);
+            OUTPUT_STREAM.writeInt(1);
+            OUTPUT_STREAM.writeLong(1000);
+            OUTPUT_STREAM.write(encryptedIV);
+            OUTPUT_STREAM.write(encryptedKey);
+            OUTPUT_STREAM.write(message.encryptedBytes[0]);
+            OUTPUT_STREAM.write(message.encryptedBytes[1]);
+            OUTPUT_STREAM.flush();
+
+        } catch (Exception e) {
+        }
+    }
+
     private void useVerificationCode() throws Exception {
 
+        int ivLength = INPUT_STREAM.readInt();
+        int keyLength = INPUT_STREAM.readInt();
         int length = INPUT_STREAM.readInt();
-        byte[] readBytes = new byte[length], encrypted;
+        byte[] readBytes = new byte[length];
+        byte[] recievedIV = new byte[ivLength], iv, encryptedIV;
+        byte[] recievedKey = new byte[keyLength], key, encryptedKey;
+        byte[] decryptedBytes;
+        EncryptedMessage message;
 
+        INPUT_STREAM.readFully(recievedIV);
+        INPUT_STREAM.readFully(recievedKey);
         INPUT_STREAM.readFully(readBytes);
-        encrypted = encrypt(decrypt(readBytes));
 
-        OUTPUT_STREAM.writeInt(encrypted.length);
-        OUTPUT_STREAM.write(encrypted);
+        iv = decrypt(recievedIV);
+        key = decrypt(recievedKey);
+        decryptedBytes = aesDecrypt(readBytes, key, iv);
+        message = new EncryptedMessage(decryptedBytes);
+        encryptedIV = encrypt(message.iv);
+        encryptedKey = encrypt(message.aeskey);
+
+        OUTPUT_STREAM.writeInt(encryptedIV.length);
+        OUTPUT_STREAM.writeInt(encryptedKey.length);
+        OUTPUT_STREAM.writeInt(message.encryptedBytes[0].length);
+
+        OUTPUT_STREAM.write(encryptedIV);
+        OUTPUT_STREAM.write(encryptedKey);
+        OUTPUT_STREAM.write(message.encryptedBytes[0]);
         OUTPUT_STREAM.flush();
+    }
+
+    private void verify() {
+        try {
+            writeLine("verify:"+LOCAL_NUMBER);
+            switch (getVerificationMethod()) {
+                case NEW_CLIENT:
+                    newClientVerification();
+                    break;
+                case VERIFICATION_CODE:
+                    useVerificationCode();
+                    break;
+                default:
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void writeLine(String string, boolean flush) throws IOException {
+        BUFFERED_WRITER.append(string);
+        BUFFERED_WRITER.newLine();
+        if (flush) {
+            BUFFERED_WRITER.flush();
+        }
+    }
+
+    private void writeLine(String string) throws IOException {
+        writeLine(string, true);
     }
 
     private enum VerificationType {
