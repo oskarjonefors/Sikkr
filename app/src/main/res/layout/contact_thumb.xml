@@ -5,13 +5,12 @@
     android:orientation="vertical" android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:onClick="clickedContact">
-        <ImageView
+        <edu.chalmers.sikkr.frontend.TintFeedbackButton
             android:id="@+id/contact_thumb"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:background="@color/background_color"
-            android:scaleType="fitXY">
-        </ImageView>
+            android:scaleType="fitXY"/>
 
         <ImageView
             android:id="@+id/name_bar"

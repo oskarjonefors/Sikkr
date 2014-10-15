@@ -54,7 +54,7 @@ public class ButtonAdapter extends BaseAdapter {
     public View getView (int position, View convertView, ViewGroup parent){
         Button btn;
         if(convertView == null) {
-            btn = new Button(mContext);
+            btn = new TintFeedbackButton(mContext);
             btn.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.WRAP_CONTENT,500 ));
 
 

@@ -2,11 +2,12 @@ package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ public class ContactViewAdapter extends ArrayAdapter {
             view = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
             holder.contactName = (TextView)view.findViewById(R.id.contact_name);
-            holder.image = (ImageView)view.findViewById(R.id.contact_thumb);
+            holder.displayPic = (Button)view.findViewById(R.id.contact_thumb);
             holder.star = (ImageView)view.findViewById(R.id.fav_star);
             view.setTag(holder);
         } else {
@@ -52,9 +53,9 @@ public class ContactViewAdapter extends ArrayAdapter {
 
         final Contact contact = contacts.get(position);
         RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.contact_grid_layout);
-        layout.setOnClickListener(new ContactGridClickListener(contact));
+        holder.displayPic.setOnClickListener(new ContactGridClickListener(contact));
         holder.contactName.setText(contact.getName());
-        holder.image.setImageBitmap(contact.getPhoto());
+        holder.displayPic.setBackground(new BitmapDrawable(context.getResources(), contact.getPhoto()));
         if (contact.isFavorite()) {
             holder.star.setVisibility(View.VISIBLE);
         }
@@ -63,7 +64,7 @@ public class ContactViewAdapter extends ArrayAdapter {
 
     static class ViewHolder {
         TextView contactName;
-        ImageView image;
+        Button displayPic;
         ImageView star;
     }
 }

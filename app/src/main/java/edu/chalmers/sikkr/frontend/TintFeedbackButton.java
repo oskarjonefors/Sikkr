@@ -7,6 +7,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.Button;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class TintFeedbackButton extends Button {
 
     public TintFeedbackButton(Context context, AttributeSet attrs) {
@@ -20,20 +24,30 @@ public class TintFeedbackButton extends Button {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         /* index 1 in this array is the Top drawable */
-        final Drawable[] drawables = getCompoundDrawables();
+        Drawable[] drawableArray = getCompoundDrawables();
+        final List<Drawable> drawables = new ArrayList<Drawable>();
+        drawables.addAll(Arrays.asList(drawableArray));
 
-        if (drawables != null && drawables.length >= 1) {
+        if (getBackground() != null)
+            drawables.add(getBackground());
 
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    drawables[1].setColorFilter(new LightingColorFilter(0xff888888, 0x000000));
-                    break;
 
-                case MotionEvent.ACTION_UP:
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                for (Drawable draw : drawables) {
+                    if (draw != null)
+                        draw.setColorFilter(new LightingColorFilter(0xff888888, 0x000000));
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
                     /* clear color filter */
-                    drawables[1].setColorFilter(null);
-                    break;
-            }
+                for (Drawable draw : drawables) {
+                    if (draw != null)
+                        draw.setColorFilter(null);
+                }
+                break;
         }
         return super.onTouchEvent(event);
     }
