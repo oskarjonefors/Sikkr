@@ -22,6 +22,15 @@
             android:layout_marginTop="170dp"
             />
 
+    <ImageView
+        android:id="@+id/fav_star"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/star_icon"
+        android:visibility="invisible"
+        android:layout_alignBottom="@+id/name_bar"
+        android:layout_alignEnd="@+id/contact_thumb" />
+
         <TextView
             android:id="@+id/contact_name"
             android:layout_width="200dp"

@@ -44,6 +44,7 @@ public class ContactViewAdapter extends ArrayAdapter {
             holder = new ViewHolder();
             holder.contactName = (TextView)view.findViewById(R.id.contact_name);
             holder.image = (ImageView)view.findViewById(R.id.contact_thumb);
+            holder.star = (ImageView)view.findViewById(R.id.fav_star);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -54,11 +55,15 @@ public class ContactViewAdapter extends ArrayAdapter {
         layout.setOnClickListener(new ContactGridClickListener(contact));
         holder.contactName.setText(contact.getName());
         holder.image.setImageBitmap(contact.getPhoto());
+        if (contact.isFavorite()) {
+            holder.star.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
     static class ViewHolder {
         TextView contactName;
         ImageView image;
+        ImageView star;
     }
 }
