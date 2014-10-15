@@ -10,7 +10,8 @@
     android:id="@+id/contactActivity"
     android:orientation="vertical"
     android:layout_centerHorizontal="true"
-    android:background="@color/background_color">
+    android:background="@color/background_color"
+    android:keepScreenOn="true">
 
     <TextView
         android:layout_width="wrap_content"

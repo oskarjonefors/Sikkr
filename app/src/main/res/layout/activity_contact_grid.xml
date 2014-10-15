@@ -10,4 +10,5 @@
     android:stretchMode="columnWidth"
     android:gravity="center"
     android:background="@color/background_color"
+    android:keepScreenOn="true"
     />
