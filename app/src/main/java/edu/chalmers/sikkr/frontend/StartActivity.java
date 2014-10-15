@@ -156,9 +156,7 @@ public class StartActivity extends Activity {
                 for (int i = 1; i < words.length; i++) {
                     searchString += words[i] + " ";
                 }
-                LogUtility.writeLogFile("tjenare", "SökSträng: " + searchString);
                 contact = cb.getClosestMatch(searchString);
-                LogUtility.writeLogFile("tjenare","Kontaktnamn: " + contact);
             }
             if (contact != null) {
                 if (contact.getDefaultNumber() != null && contact.getName() != null) {
@@ -169,8 +167,6 @@ public class StartActivity extends Activity {
                     }
                     startActivity(intent);
                     finish();
-                    LogUtility.writeLogFile("tjenare", "Kontaktnamn: " + contact.getName());
-                    LogUtility.writeLogFile("tjenare", "Default Number: " + contact.getDefaultNumber());
                 }
             }
         }catch (Throwable t) {
