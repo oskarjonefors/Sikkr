@@ -186,9 +186,11 @@ public class StartActivity extends Activity {
 
         ProgressBar initBar = (ProgressBar) findViewById(R.id.initProgressBar);
         TextView initText = (TextView) findViewById(R.id.initTextView);
-        initBar.setProgress((int)(progress * initBar.getMax()));
-        initText.setText(taskMsg + "...");
 
+        if (initBar != null && initText != null) {
+            initBar.setProgress((int) (progress * initBar.getMax()));
+            initText.setText(taskMsg + "...");
+        }
     }
 
     private class Initializer extends AsyncTask<StartActivity, String, Boolean> implements ProgressListener {
