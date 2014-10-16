@@ -124,7 +124,7 @@ public class StartActivity extends Activity {
         } else if (text.equals("2") || text.contains("favor")) {
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);
-        } else if (text.equals("3") || text.contains("med") || text.contains("inkorg")) {
+        } else if (text.equals("3") || text.contains("med") || text.contains("inkorg") || text.contains("sm")) {
             intent = new Intent(this, SMS_Activity.class);
             startActivity(intent);
         } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
@@ -134,9 +134,8 @@ public class StartActivity extends Activity {
                 intent.putExtra("initial_letter", words[1].charAt(0));
                 startActivity(intent);
             } else {
-                Intent installIntent = new Intent();
-                installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                startActivity(installIntent);
+                intent  = new Intent(this, ContactBookActivity.class);
+                startActivity(intent);
             }
 
         }
