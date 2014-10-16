@@ -37,7 +37,7 @@ public class TintFeedbackButton extends Button {
             case MotionEvent.ACTION_DOWN:
                 for (Drawable draw : drawables) {
                     if (draw != null)
-                        draw.setColorFilter(new LightingColorFilter(0xff888888, 0x000000));
+                        draw.setColorFilter(new LightingColorFilter(0xff888888, 0xff888888));
                 }
                 break;
 
