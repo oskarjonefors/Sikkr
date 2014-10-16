@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,7 @@ import edu.chalmers.sikkr.backend.ListableMessage;
 import edu.chalmers.sikkr.backend.sms.OneSms;
 import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
+import edu.chalmers.sikkr.backend.util.LogUtility;
 
 public class SMS_Activity extends Activity {
     private static ArrayList<SmsConversation> smsList;
@@ -159,6 +161,7 @@ public class SMS_Activity extends Activity {
             Set<ListableMessage> messageSet = currentConv.getSmsList();
             List<ListableMessage> messageList = new ArrayList<ListableMessage>();
             messageList.addAll(messageSet);
+            Collections.sort(messageList);
 
             //Link an sms to the playbutton
             int counter = 0;
@@ -166,6 +169,7 @@ public class SMS_Activity extends Activity {
                 counter = counter + 1;
             }
             view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
+            LogUtility.writeLogFile("counterweird", "Counter = " +counter);
 
             //set the correct data of the element
             holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
