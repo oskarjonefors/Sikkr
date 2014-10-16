@@ -1,6 +1,7 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -23,7 +24,6 @@ public class TintFeedbackButton extends Button {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        /* index 1 in this array is the Top drawable */
         Drawable[] drawableArray = getCompoundDrawables();
         final List<Drawable> drawables = new ArrayList<Drawable>();
         drawables.addAll(Arrays.asList(drawableArray));
@@ -31,14 +31,15 @@ public class TintFeedbackButton extends Button {
         if (getBackground() != null)
             drawables.add(getBackground());
 
-
-
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 for (Drawable draw : drawables) {
                     if (draw != null)
-                        draw.setColorFilter(new LightingColorFilter(0xff888888, 0x000000));
+                        draw.setColorFilter(new LightingColorFilter(0xff888888, 0xff888888));
                 }
+
+                setTextColor(0xff888888);
+
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -47,6 +48,9 @@ public class TintFeedbackButton extends Button {
                     if (draw != null)
                         draw.setColorFilter(null);
                 }
+
+                setTextColor(Color.BLACK);
+
                 break;
         }
         return super.onTouchEvent(event);
