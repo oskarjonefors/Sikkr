@@ -153,17 +153,26 @@ public final class ServerInterface {
     }
 
     /**
-     * @return a list of new messages from the server.
+     * @return a list of recieved messages from the server.
      */
-    public static List<Message> getNewMessages() {
+    public static List<Message> getReceivedMessages() {
         try {
-            return singleton.getNewMessagesFromServer();
+            return singleton.getReceivedMessagesFromServer();
         } catch (Exception e) {
             return null;
         }
     }
 
-
+    /**
+     * @return a list of sent messages from the server.
+     */
+    public static List<Message> getSentMessages() {
+        try {
+            return singleton.getSentMessagesFromServer();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * Sends a message to somebody through the server.
@@ -235,11 +244,19 @@ public final class ServerInterface {
         return cipher.doFinal(bytes);
     }
 
-    private List<Message> getNewMessagesFromServer() throws Exception {
+    private List<Message> getReceivedMessagesFromServer() throws Exception {
+        writeLine("get_received_messages");
+        return getMessagesFromServer();
+    }
+
+    private List<Message> getSentMessagesFromServer() throws Exception {
+        writeLine("get_sent_messages");
+        return getMessagesFromServer();
+    }
+
+    private List<Message> getMessagesFromServer() throws Exception {
         final List<Message> messages = new ArrayList<Message>();
         final int n;
-
-        writeLine("get_messages");
 
         n = INPUT_STREAM.readInt();
 
@@ -247,31 +264,36 @@ public final class ServerInterface {
             final int ivLength = INPUT_STREAM.readInt();
             final int keyLength = INPUT_STREAM.readInt();
             final int senderNumberLength = INPUT_STREAM.readInt();
+            final int receiverNumberLength = INPUT_STREAM.readInt();
             final int contentLength = INPUT_STREAM.readInt();
             final byte[] encryptedKey = new byte[keyLength], key;
             final byte[] encryptedIV = new byte[ivLength], iv;
             final byte[] encryptedSenderNumber = new byte[senderNumberLength];
+            final byte[] encryptedReceiverNumber = new byte[receiverNumberLength];
             final byte[] encryptedContent = new byte[contentLength];
             final byte[] content;
             final int type;
             final long time;
             final String senderNumber;
+            final String receiverNumber;
             final Message msg;
 
             INPUT_STREAM.readFully(encryptedIV);
             INPUT_STREAM.readFully(encryptedKey);
             INPUT_STREAM.readFully(encryptedSenderNumber);
+            INPUT_STREAM.readFully(encryptedReceiverNumber);
             INPUT_STREAM.readFully(encryptedContent);
 
             iv = decrypt(encryptedIV);
             key = decrypt(encryptedKey);
             senderNumber = new String(aesDecrypt(encryptedSenderNumber, key, iv));
+            receiverNumber = new String(aesDecrypt(encryptedReceiverNumber, key, iv));
             content = aesDecrypt(encryptedContent, key, iv);
             type = INPUT_STREAM.readInt();
             time = INPUT_STREAM.readLong();
 
 
-            msg = new Message(senderNumber, "0737721528", content, type, time);
+            msg = new Message(senderNumber, receiverNumber, content, type, time);
             messages.add(msg);
         }
 
