@@ -174,6 +174,14 @@ public final class ServerInterface {
         singleton.sendMessageToServer(number, content, messageType);
     }
 
+    public static boolean serverHasClient(String number) {
+        try {
+            return singleton.hasClient(number);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /**
      * Sets up the singleton.
      * @param context a context from the SiKKr application.
@@ -321,6 +329,42 @@ public final class ServerInterface {
 
         } catch (Exception e) {
         }
+    }
+
+    private boolean hasClient(String number) throws Exception {
+        EncryptedMessage msg = new EncryptedMessage(number.getBytes());
+        byte[] iv = encrypt(msg.iv), key = encrypt(msg.aeskey);
+        byte[] answerIv, answerKey, answer;
+        int ivLength, keyLength, answerLength;
+
+        writeLine("is_client");
+        OUTPUT_STREAM.writeInt(iv.length);
+        OUTPUT_STREAM.writeInt(key.length);
+        OUTPUT_STREAM.writeInt(msg.encryptedBytes[0].length);
+
+        OUTPUT_STREAM.write(iv);
+        OUTPUT_STREAM.write(key);
+        OUTPUT_STREAM.write(msg.encryptedBytes[0]);
+
+        OUTPUT_STREAM.flush();
+
+        ivLength = INPUT_STREAM.readInt();
+        keyLength = INPUT_STREAM.readInt();
+        answerLength = INPUT_STREAM.readInt();
+
+        iv = new byte[ivLength];
+        key = new byte[keyLength];
+        answer = new byte[answerLength];
+
+        INPUT_STREAM.readFully(iv);
+        INPUT_STREAM.readFully(key);
+        INPUT_STREAM.readFully(answer);
+
+        iv = decrypt(iv);
+        key = decrypt(key);
+        answer = aesDecrypt(answer, key, iv);
+
+        return Boolean.parseBoolean(new String(answer));
     }
 
     private void useVerificationCode() throws Exception {
