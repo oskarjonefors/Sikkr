@@ -122,8 +122,8 @@ public class VoiceMessageRecorder {
             state = RecordingState.RESET;
         } else {
             throw new IllegalArgumentException("Cannot discard recording since " +
-            state == RecordingState.RECORDING ? "recording hasn't been stopped yet." :
-            "there is no recorded file to discard.");
+                    (state == RecordingState.RECORDING ? "recording hasn't been stopped yet." :
+            "there is no recorded file to discard."));
         }
     }
 
