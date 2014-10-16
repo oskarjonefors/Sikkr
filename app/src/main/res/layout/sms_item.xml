@@ -10,7 +10,7 @@
         android:id="@+id/imageButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/play_button"
+        android:background="@drawable/play"
         android:onClick="readMsg"/>
 
     <TextView

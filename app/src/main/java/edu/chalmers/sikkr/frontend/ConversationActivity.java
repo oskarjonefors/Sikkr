@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,8 +36,8 @@ public class ConversationActivity extends Activity {
     private SmsConversation thisConversation;
     private Set<ListableMessage> messageSet;
     private VoiceMessageRecorder recorder;
-    private ImageButton sendButton;
-    private ImageButton cancelButton;
+    private Button sendButton;
+    private Button cancelButton;
     private ImageButton recordButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,8 @@ public class ConversationActivity extends Activity {
         setContentView(R.layout.activity_conversation);
         createConversationLayout();
         recorder = VoiceMessageRecorder.getSharedInstance();
-        sendButton = (ImageButton)findViewById(R.id.conversation_send);
-        cancelButton = (ImageButton)findViewById(R.id.conversation_cancel);
+        sendButton = (Button)findViewById(R.id.conversation_send);
+        cancelButton = (Button)findViewById(R.id.conversation_cancel);
         recordButton = (ImageButton)findViewById(R.id.conversation_record);
         recordButton.setVisibility(View.VISIBLE);
         sendButton.setVisibility(View.GONE);
