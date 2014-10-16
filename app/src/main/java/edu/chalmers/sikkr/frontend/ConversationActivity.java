@@ -71,7 +71,7 @@ public class ConversationActivity extends Activity {
         }
     }
 
-    public void cancelMessage(){
+    public void cancelMessage(View v){
         recorder.getVoiceMessage();
         cancelButton.setVisibility(View.GONE);
         sendButton.setVisibility(View.GONE);
@@ -80,7 +80,7 @@ public class ConversationActivity extends Activity {
         recordButton.setEnabled(true);
     }
 
-    public void recordMessage(){
+    public void recordMessage(View v){
         switch (recorder.getRecordingState()) {
             case RESET:
                 recorder.startRecording();
@@ -98,7 +98,7 @@ public class ConversationActivity extends Activity {
         }
     }
 
-    public void sendMessage(){
+    public void sendMessage(View v){
         VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
         try {
             sender.sendMessage(recorder.getVoiceMessage(), thisConversation.getAddress());
