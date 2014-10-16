@@ -64,6 +64,7 @@ public class TheInbox {
                 conversation = map.get(address);
             }
             sms = new OneSms(msg, address, date, false);
+            //sms.markAsRead();
             conversation.addSms(sms);
         }
 
@@ -85,6 +86,7 @@ public class TheInbox {
             if(map.containsKey(address)) {
                 conversation = map.get(address);
                 sms = new OneSms(msg, address, date, true);
+                sms.markAsRead();
                 conversation.addSms(sms);
             }
         }

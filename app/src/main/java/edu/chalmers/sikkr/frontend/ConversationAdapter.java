@@ -78,6 +78,11 @@ public class ConversationAdapter extends ArrayAdapter {
             holder.playButton.setLayoutParams(chatMessageParams);
             holder.message.setLayoutParams(userNameParams);
         }
+        if(!list.get(position).isRead()){
+            holder.playButton.setBackgroundResource(R.drawable.unread_play);
+        }else{
+            holder.playButton.setBackgroundResource(R.drawable.play);
+        }
         holder.message.setText(new SimpleDateFormat("EEE, MMM d, ''yy").format(list.get(position).getTimestamp().getTime()));
         holder.playButton.setTag(list.get(position));
         return view;

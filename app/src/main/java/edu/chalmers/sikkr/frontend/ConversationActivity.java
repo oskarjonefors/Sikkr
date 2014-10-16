@@ -148,6 +148,7 @@ public class ConversationActivity extends Activity {
 
     public void readMessage(View view){
         ((ListableMessage)view.getTag()).play();
+        ((OneSms)view.getTag()).markAsRead();
     }
 
 

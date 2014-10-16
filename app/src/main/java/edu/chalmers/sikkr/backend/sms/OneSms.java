@@ -15,12 +15,14 @@ public class OneSms extends AbstractMessage {
     private String date;
     private Calendar calendar;
     private boolean isSent;
+    private boolean isRead;
 
     public OneSms(String msg, String senderNbr, String date, boolean isSent) {
         this.message = msg;
         this.senderNbr = senderNbr;
         this.date = date;
         this.isSent = isSent;
+        isRead = false;
     }
 
     public String getMessage() {
@@ -28,6 +30,12 @@ public class OneSms extends AbstractMessage {
     }
     public boolean isSent(){
         return isSent;
+    }
+    public boolean isRead(){
+        return isRead;
+    }
+    public void markAsRead(){
+        isRead = true;
     }
     public String getDate() {
         return date;
