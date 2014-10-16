@@ -114,6 +114,10 @@ public final class ServerInterface {
             keyGen.initialize(4096);
             key = keyGen.genKeyPair();
 
+            if (!keyFile.getParentFile().exists()) {
+                keyFile.getParentFile().mkdir();
+            }
+
             keyFile.createNewFile();
             oos = new ObjectOutputStream(new FileOutputStream(keyFile));
             oos.writeObject(key);
@@ -125,8 +129,10 @@ public final class ServerInterface {
     }
 
     private static KeyPair getKeyPair() {
-        final File keyFile = new File(".rsa/sikkr_key_pair");
+        final File keyFileDirectory = new File(".rsa/");
+        final File keyFile = new File(keyFileDirectory, "sikkr_key_pair");
         KeyPair key = null;
+
         if (keyFile.exists()) {
             try {
                 key = getKeyPairFromFile(keyFile);
@@ -141,7 +147,9 @@ public final class ServerInterface {
 
     private static KeyPair getKeyPairFromFile(File keyFile) throws IOException, ClassNotFoundException {
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(keyFile));
-        return (KeyPair) ois.readObject();
+        Object readObject = ois.readObject();
+        ois.close();
+        return (KeyPair) readObject;
     }
 
     /**
