@@ -1,0 +1,32 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+apply plugin: 'pmd'
+apply plugin: 'jacoco'
+apply plugin: 'findbugs'
+
+mainClassName = "src.main.application.ServerApplication"
+
+sourceSets {
+
+	main {
+		java {
+			srcDir 'src'
+		}
+	}
+
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://maven2.javacpp.googlecode.com/git/"
+    }
+    maven {
+        url "http://maven2.javacv.googlecode.com/git/"
+    }
+}
+
+dependencies {
+    compile 'org.bouncycastle:bcprov-jdk15on:1.51'
+}
