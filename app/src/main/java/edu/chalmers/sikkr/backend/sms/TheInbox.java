@@ -21,7 +21,6 @@ public class TheInbox {
     private Context context;
     final private static TheInbox box = new TheInbox();
     private static ArrayList<SmsConversation> smsList;
-    private static ArrayList<SmsConversation> sentList;
     final private Map<String, SmsConversation> map = new TreeMap<String, SmsConversation>();
 
     private TheInbox() {}

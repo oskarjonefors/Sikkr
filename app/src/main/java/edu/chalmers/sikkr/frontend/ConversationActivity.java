@@ -36,8 +36,8 @@ public class ConversationActivity extends Activity {
     private SmsConversation thisConversation;
     private Set<ListableMessage> messageSet;
     private VoiceMessageRecorder recorder;
-    private Button sendButton;
-    private Button cancelButton;
+    private ImageButton sendButton;
+    private ImageButton cancelButton;
     private ImageButton recordButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,8 @@ public class ConversationActivity extends Activity {
         setContentView(R.layout.activity_conversation);
         createConversationLayout();
         recorder = VoiceMessageRecorder.getSharedInstance();
-        sendButton = (Button)findViewById(R.id.conversation_send);
-        cancelButton = (Button)findViewById(R.id.conversation_cancel);
+        sendButton = (ImageButton)findViewById(R.id.conversation_send);
+        cancelButton = (ImageButton)findViewById(R.id.conversation_cancel);
         recordButton = (ImageButton)findViewById(R.id.conversation_record);
         recordButton.setVisibility(View.VISIBLE);
         sendButton.setVisibility(View.GONE);
@@ -73,12 +73,8 @@ public class ConversationActivity extends Activity {
     }
 
     public void cancelMessage(View v){
-        recorder.getVoiceMessage();
-        cancelButton.setVisibility(View.GONE);
-        sendButton.setVisibility(View.GONE);
-        cancelButton.setEnabled(false);
-        sendButton.setEnabled(false);
-        recordButton.setEnabled(true);
+        recorder.discardRecording();
+        hideButtons();
     }
 
     public void recordMessage(View v){
@@ -106,6 +102,15 @@ public class ConversationActivity extends Activity {
         } catch (MessageNotSentException e) {
             Log.e("ContactActivity", "Message not sent");
         }
+        hideButtons();
+    }
+
+    private void hideButtons(){
+        cancelButton.setVisibility(View.GONE);
+        sendButton.setVisibility(View.GONE);
+        cancelButton.setEnabled(false);
+        sendButton.setEnabled(false);
+        recordButton.setEnabled(true);
     }
 
     public void readMessage(View view){

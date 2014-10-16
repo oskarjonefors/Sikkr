@@ -25,23 +25,21 @@
             android:layout_centerHorizontal="true"
             android:onClick="recordMessage"
             />
-        <edu.chalmers.sikkr.frontend.TintFeedbackButton
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/conversation_send"
             android:onClick="sendMessage"
-            android:drawableTop="@drawable/send_voicemessage"
-            android:background="@null"
+            android:background="@drawable/send_voicemessage"
             android:layout_toRightOf="@id/conversation_record"
             android:layout_alignParentBottom="true"
             />
-        <edu.chalmers.sikkr.frontend.TintFeedbackButton
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/conversation_cancel"
             android:onClick = "cancelMessage"
-            android:drawableTop="@drawable/cancel_recording"
-            android:background="@null"
+            android:background="@drawable/cancel_recording"
             android:layout_toLeftOf="@id/conversation_record"
             android:layout_alignParentBottom="true"
             />
