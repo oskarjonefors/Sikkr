@@ -24,16 +24,12 @@ public class TintFeedbackButton extends Button {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        /* index 1 in this array is the Top drawable */
         Drawable[] drawableArray = getCompoundDrawables();
         final List<Drawable> drawables = new ArrayList<Drawable>();
         drawables.addAll(Arrays.asList(drawableArray));
 
         if (getBackground() != null)
             drawables.add(getBackground());
-
-
-
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
