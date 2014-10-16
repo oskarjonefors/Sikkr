@@ -23,9 +23,6 @@ hs_err_pid*
 # Files for the Dalvik VM
 *.dex
 
-# Java class files
-*.class
-
 # Generated files
 bin/
 gen/
@@ -48,13 +45,11 @@ proguard/
 *.pydevproject
 .metadata
 .gradle
-bin/
 tmp/
 *.tmp
 *.bak
 *.swp
 *~.nib
-local.properties
 .settings/
 .loadpath
 
@@ -133,3 +128,12 @@ Temporary Items
 #/.idea/workspace.xml
 #/.idea/libraries
 .idea
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Custom ignores
+contacts.xml
+messages.xml
+*/contacts/*
+*/messages/*
