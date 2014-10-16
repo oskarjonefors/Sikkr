@@ -111,6 +111,22 @@ public class VoiceMessageRecorder {
         }
     }
 
+    /**
+     * Delete the current recording and reset the player.
+     * This method can only be run when the recorder has stopped.
+     */
+    public void discardRecording() {
+        if (state == RecordingState.STOPPED) {
+            File discardFile = new File(currentFilePath);
+            discardFile.delete();
+            state = RecordingState.RESET;
+        } else {
+            throw new IllegalArgumentException("Cannot discard recording since " +
+            state == RecordingState.RECORDING ? "recording hasn't been stopped yet." :
+            "there is no recorded file to discard.");
+        }
+    }
+
     public RecordingState getRecordingState() {
         return state;
     }
