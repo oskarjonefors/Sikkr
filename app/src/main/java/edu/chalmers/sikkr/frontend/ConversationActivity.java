@@ -71,7 +71,7 @@ public class ConversationActivity extends Activity {
         }
     }
 
-    public void cancelMessage(View view){
+    public void cancelMessage(){
         recorder.getVoiceMessage();
         cancelButton.setVisibility(View.GONE);
         sendButton.setVisibility(View.GONE);
@@ -80,7 +80,7 @@ public class ConversationActivity extends Activity {
         recordButton.setEnabled(true);
     }
 
-    public void recordMessage(View view){
+    public void recordMessage(){
         switch (recorder.getRecordingState()) {
             case RESET:
                 recorder.startRecording();
@@ -98,8 +98,16 @@ public class ConversationActivity extends Activity {
         }
     }
 
+    public void sendMessage(){
+        VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
+        try {
+            sender.sendMessage(recorder.getVoiceMessage(), thisConversation.getAddress());
+        } catch (MessageNotSentException e) {
+            Log.e("ContactActivity", "Message not sent");
+        }
+    }
+
     public void readMessage(View view){
-        LogUtility.writeLogFile("readMessage","Jag kom hit");
         ((ListableMessage)view.getTag()).play();
     }
 

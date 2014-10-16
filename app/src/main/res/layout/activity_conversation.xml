@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/conversation_send"
             android:background ="@drawable/send_voicemessage"
+            android:onClick="sendMessage"
             android:layout_toRightOf="@id/conversation_record"
             android:layout_alignParentBottom="true"
             />
