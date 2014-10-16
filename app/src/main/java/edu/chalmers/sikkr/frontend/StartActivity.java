@@ -53,6 +53,7 @@ public class StartActivity extends Activity {
         new Initializer().execute(this);
     }
 
+
     /**
      * Actionhandler for this activity
      *

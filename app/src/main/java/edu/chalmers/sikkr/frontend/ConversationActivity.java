@@ -1,8 +1,13 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Telephony;
+import android.telephony.SmsMessage;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,26 +40,55 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 public class ConversationActivity extends Activity {
     private SmsConversation thisConversation;
     private Set<ListableMessage> messageSet;
+    List<ListableMessage> messages = new ArrayList<ListableMessage>();
     private VoiceMessageRecorder recorder;
     private ImageButton sendButton;
     private ImageButton cancelButton;
     private ImageButton recordButton;
+    ArrayAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
         createConversationLayout();
         recorder = VoiceMessageRecorder.getSharedInstance();
-        sendButton = (ImageButton)findViewById(R.id.conversation_send);
-        cancelButton = (ImageButton)findViewById(R.id.conversation_cancel);
-        recordButton = (ImageButton)findViewById(R.id.conversation_record);
+        sendButton = (ImageButton) findViewById(R.id.conversation_send);
+        cancelButton = (ImageButton) findViewById(R.id.conversation_cancel);
+        recordButton = (ImageButton) findViewById(R.id.conversation_record);
         recordButton.setVisibility(View.VISIBLE);
         sendButton.setVisibility(View.GONE);
         sendButton.setEnabled(false);
         cancelButton.setEnabled(false);
         cancelButton.setVisibility(View.GONE);
+        adapter.setNotifyOnChange(true);
+        BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
+                    String messageBody = smsMessage.getMessageBody();
+                    String phoneNbr = smsMessage.getOriginatingAddress();
+                    String date = String.valueOf(smsMessage.getTimestampMillis());
+                    OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
+                    ArrayList<SmsConversation> list = SMS_Activity.getConversations();
+                    for(int i = 0;i<list.size();i++){
+                        if(phoneNbr.equals(list.get(i).getAddress())){
+                            list.get(i).addSms(sms);
 
+                        }
+                    }
+                    if(phoneNbr.equals(thisConversation.getAddress())){
+                        messages.add(sms);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                adapter.setNotifyOnChange(true);
+                Collections.sort(messages);
+
+            }
+        };
+        registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
+
     public void createConversationLayout(){
         final Bundle bundle = getIntent().getExtras();
         if(bundle!=null && bundle.containsKey("position") && bundle.containsKey("name")){
@@ -63,10 +97,9 @@ public class ConversationActivity extends Activity {
             tv.setText(bundle.getString("name"));
             messageSet = new HashSet<ListableMessage>();
             messageSet = thisConversation.getSmsList();
-            List<ListableMessage> messages = new ArrayList<ListableMessage>();
             messages.addAll(messageSet);
             Collections.sort(messages);
-            ArrayAdapter adapter = new ConversationAdapter(this, R.layout.conversationitem_left,messages );
+            adapter = new ConversationAdapter(this, R.layout.conversationitem_left,messages );
             ListView listV = (ListView)findViewById(R.id.conversation_list);
             listV.setAdapter(adapter);
         }

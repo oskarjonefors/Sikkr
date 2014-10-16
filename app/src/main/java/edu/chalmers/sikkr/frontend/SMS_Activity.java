@@ -1,15 +1,19 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
+import android.provider.Telephony;
+import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,17 +38,37 @@ import edu.chalmers.sikkr.backend.util.LogUtility;
 
 public class SMS_Activity extends Activity {
     private static ArrayList<SmsConversation> smsList;
-
+    ArrayAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sms_layout);
         createSmsLayout();
+        BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
+                    String messageBody = smsMessage.getMessageBody();
+                    String phoneNbr = smsMessage.getOriginatingAddress();
+                    String date = String.valueOf(smsMessage.getTimestampMillis());
+                    OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
+                    for(int i = 0;i<smsList.size();i++){
+                        if(phoneNbr.equals(smsList.get(i).getAddress())){
+                            smsList.get(i).addSms(sms);
+                        }
+                    }
+                }
+                adapter.setNotifyOnChange(true);
+                adapter.notifyDataSetChanged();
+            }
+        };
+        registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
+
 
     private void createSmsLayout() {
         smsList = TheInbox.getInstance().getSmsInbox();
-        ArrayAdapter adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
+        adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
         ListView listV = (ListView) findViewById(R.id.listView);
         listV.setAdapter(adapter);
     }

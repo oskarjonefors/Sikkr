@@ -33,6 +33,7 @@ public class TheInbox {
     {
         smsList = new ArrayList<SmsConversation>();
         this.context = context;
+
     }
 
     public static TheInbox getInstance() {
