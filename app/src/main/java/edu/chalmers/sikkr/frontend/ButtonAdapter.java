@@ -1,6 +1,7 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,8 @@ import edu.chalmers.sikkr.backend.contact.ContactBook;
  * @author Jesper Olsson
  */
 public class ButtonAdapter extends BaseAdapter {
+
+
     final private Context mContext;
     private Character mLetter;
     final private ArrayList<Character> al;

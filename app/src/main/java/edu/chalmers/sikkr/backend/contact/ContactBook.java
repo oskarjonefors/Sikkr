@@ -25,6 +25,8 @@ import edu.chalmers.sikkr.backend.util.ClipartUtility;
 import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 
+import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
+
 import static android.provider.ContactsContract.CommonDataKinds.*;
 
 /**
@@ -45,6 +47,7 @@ public class ContactBook implements ProgressListenable {
 
     /* Used to make other classes aware of it's progress. */
     private final Collection<ProgressListener> listeners;
+
 
     private final static ContactBook singleton = new ContactBook();
 

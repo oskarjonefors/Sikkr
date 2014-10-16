@@ -15,6 +15,8 @@ import java.util.UUID;
 import edu.chalmers.sikkr.backend.VoiceMessage;
 import edu.chalmers.sikkr.backend.mms.MMS;
 
+import edu.chalmers.sikkr.backend.VoiceMessage;
+
 /**
  * A simple class for recording voice messages.
  * @author Oskar Jönefors
@@ -89,6 +91,7 @@ public class VoiceMessageRecorder {
             recorder.start();
             state = RecordingState.RECORDING;
         }
+
 
     }
 

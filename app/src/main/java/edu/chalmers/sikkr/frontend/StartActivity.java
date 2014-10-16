@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,23 +16,44 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.mms.MMSInbox;
+import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
+import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
 import edu.chalmers.sikkr.backend.util.SystemData;
+import edu.chalmers.sikkr.backend.mms.MMSInbox;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
+
 import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
-import edu.chalmers.sikkr.backend.mms.MMSInbox;
+
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 
+
+
+
 public class StartActivity extends Activity {
+    private ArrayList<String> matches;
+    private final static int MY_TTS_CHECK_CODE = 1337;
 
     private String text;
     private Intent intent;
@@ -39,13 +61,51 @@ public class StartActivity extends Activity {
     private Contact contact;
     private static final String TAG = "StartActivity";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LogUtility.writeLogFile(TAG, true, "Works before the initializer.");
         new Initializer().execute(this);
+        setContentView(R.layout.activity_start);
+        ContactBook.setupSingleton(this);
+        TheInbox.setupInbox(this);
+        CallLog.setUpCallLog(this);
+        VoiceMessagePlayer.setupSingleton(this);
+        VoiceMessageRecorder.setupSingleton(this);
+        VoiceMessageSender.setupSingleton(this);
+
+        try {
+            MMSInbox.setContext(this);
+            MMSInbox.getSharedInstance().loadInbox();
+        } catch (Throwable t) {
+            final List<String> trace = new ArrayList<String>();
+            for (StackTraceElement el : t.getStackTrace()) {
+                trace.add("" + el);
+            }
+            LogUtility.writeLogFile(TAG, trace.toArray(new String[trace.size()]));
+        }
+
+        Intent checkIntent = new Intent();
+        checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkIntent, MY_TTS_CHECK_CODE);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.start, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return item.getItemId() == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     /**
@@ -75,7 +135,6 @@ public class StartActivity extends Activity {
             case R.id.microphone:
                 SpeechRecognitionHelper.run(this);
                 break;
-
         }
     }
 
@@ -87,6 +146,7 @@ public class StartActivity extends Activity {
      * @param resultCode
      * @param data
      */
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
@@ -96,6 +156,15 @@ public class StartActivity extends Activity {
                 callContactByName();
                 selectFunctionality();
             }
+        } else if (requestCode == MY_TTS_CHECK_CODE) {
+            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                TextToSpeechUtility.setupTextToSpeech(this);
+            } else {
+                Intent installIntent = new Intent();
+                installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(installIntent);
+            }
+
         }
     }
 
@@ -120,10 +189,13 @@ public class StartActivity extends Activity {
                 intent.putExtra("initial_letter", words[1].charAt(0));
                 startActivity(intent);
             } else {
-                intent = new Intent(this, ContactBookActivity.class);
-                startActivity(intent);
+                Intent installIntent = new Intent();
+                installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(installIntent);
             }
+
         }
+
     }
 
     /**
@@ -153,13 +225,14 @@ public class StartActivity extends Activity {
                     finish();
                 }
             }
-        }catch (Throwable t) {
+        } catch (Throwable t) {
             final List<String> trace = new ArrayList<String>();
             for (StackTraceElement el : t.getStackTrace()) {
                 trace.add("" + el);
             }
             LogUtility.writeLogFile("tjenare", trace.toArray(new String[trace.size()]));
         }
+
     }
 
     void updateProgress(double progress, String taskMsg) {
@@ -223,9 +296,4 @@ public class StartActivity extends Activity {
         }
     }
 }
-
-
-
-
-
 

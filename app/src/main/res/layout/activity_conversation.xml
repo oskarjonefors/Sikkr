@@ -1,6 +1,57 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:padding="6dip"
-    android:keepScreenOn="true">
-</RelativeLayout>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Conversation"
+        android:id="@+id/conversation_name"
+        android:layout_gravity="center_horizontal"
+        android:textSize="36dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/conversation_record"
+            android:background ="@drawable/start_record"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:onClick="recordMessage"
+            />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/conversation_send"
+            android:background ="@drawable/send_voicemessage"
+            android:onClick="sendMessage"
+            android:layout_toRightOf="@id/conversation_record"
+            android:layout_alignParentBottom="true"
+            />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/conversation_cancel"
+            android:background ="@drawable/cancel_recording"
+            android:onClick = "cancelMessage"
+            android:layout_toLeftOf="@id/conversation_record"
+            android:layout_alignParentBottom="true"
+            />
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/conversation_list"
+            android:layout_above="@id/conversation_record"
+            />
+
+
+    </RelativeLayout>
+
+</LinearLayout>
+

@@ -36,20 +36,29 @@
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <Button
         android:onClick="buttonClick"
         android:layout_width="150dp"
         android:layout_height="120dp"
         android:text="Call"
         android:id="@+id/callButton"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="center" />
 
     <Button
         android:layout_width="150dp"
         android:layout_height="120dp"
         android:text="Voice Message"
-        android:onClick="voiceInteraction"
-        android:id="@+id/recButton"
-        android:layout_gravity="center" />
+        android:id="@+id/recordButton"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/callButton" />
+    </RelativeLayout>
+
+
 
 </LinearLayout>

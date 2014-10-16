@@ -19,6 +19,9 @@ package edu.chalmers.sikkr.frontend;
 
 public class ContactBookActivity extends Activity {
 
+    private ArrayList<String> matches;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +48,9 @@ public class ContactBookActivity extends Activity {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        ArrayList<String> matches;
+
         if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
-            matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (matches.size() > 0) {
                 Intent intent = new Intent(this, ContactGridActivity.class);
                 intent.putExtra("initial_letter", matches.get(0).charAt(0));

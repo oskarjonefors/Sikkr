@@ -34,6 +34,10 @@ public class FuzzySearchUtility {
         Set<SearchResult> discards = new TreeSet<SearchResult>();
         int topMatch = 1000;
 
+        if (pattern == null || pattern.trim().isEmpty()) {
+            return null;
+        }
+        
         for (String str : searchElements) {
             String element;
 
