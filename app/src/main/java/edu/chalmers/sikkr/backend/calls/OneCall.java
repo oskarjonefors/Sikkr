@@ -3,7 +3,7 @@ package edu.chalmers.sikkr.backend.calls;
 /**
  * Created by Mia on 02/10/14.
  */
-public class OneCall {
+public class OneCall implements Comparable <OneCall> {
     String callNumber, callDate, isCallNew, contactID;
     int callType;
 
@@ -40,4 +40,25 @@ public class OneCall {
     }
 
     public String getContactID() { return contactID; }
+
+
+    @Override
+    public int compareTo(OneCall anotherCall) {
+        if (anotherCall == null) {
+            throw new NullPointerException("another call is null");
+        } else {
+            long timeInMillis = Long.parseLong(this.getCallDate());
+            long anotherTimeInMillis = Long.parseLong(anotherCall.getCallDate());
+
+            if (timeInMillis > anotherTimeInMillis) {
+                return -1;
+            }
+            if (timeInMillis == anotherTimeInMillis) {
+
+                return 0;
+            }
+
+            return 1;
+        }
+    }
 }
