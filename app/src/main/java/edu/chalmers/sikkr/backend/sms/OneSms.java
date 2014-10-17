@@ -22,7 +22,7 @@ public class OneSms extends AbstractMessage {
         this.senderNbr = senderNbr;
         this.date = date;
         this.isSent = isSent;
-        isRead = false;
+        isRead = true;
     }
 
     public String getMessage() {
@@ -36,6 +36,9 @@ public class OneSms extends AbstractMessage {
     }
     public void markAsRead(){
         isRead = true;
+    }
+    public void markAsUnread(){
+        isRead = false;
     }
     public String getDate() {
         return date;

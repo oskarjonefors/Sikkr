@@ -73,8 +73,8 @@ public class ConversationActivity extends Activity {
                     ArrayList<SmsConversation> list = SMS_Activity.getConversations();
                     for(int i = 0;i<list.size();i++){
                         if(phoneNbr.equals(list.get(i).getAddress())){
+                            sms.markAsUnread();
                             list.get(i).addSms(sms);
-
                         }
                     }
                     if(phoneNbr.equals(thisConversation.getAddress())){

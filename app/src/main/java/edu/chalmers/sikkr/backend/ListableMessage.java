@@ -32,6 +32,7 @@ public interface ListableMessage extends Comparable<ListableMessage> {
 
     boolean isSent();
 
+    boolean isRead();
 
 
 }

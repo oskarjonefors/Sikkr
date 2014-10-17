@@ -51,5 +51,9 @@ public class MMS extends AbstractMessage implements VoiceMessage{
     public boolean isSent(){
         return true;
     }
+    @Override
+    public boolean isRead(){
+        return true;
+    }
 
 }

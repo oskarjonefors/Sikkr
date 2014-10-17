@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class SMS_Activity extends Activity {
                     OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
                     for(int i = 0;i<smsList.size();i++){
                         if(phoneNbr.equals(smsList.get(i).getAddress())){
+                            sms.markAsUnread();
                             smsList.get(i).addSms(sms);
                         }
                     }
@@ -101,6 +103,9 @@ public class SMS_Activity extends Activity {
 
     public void readMsg(View view) {
         ((ListableMessage) view.getTag()).play();
+        ((OneSms)view.getTag()).markAsRead();
+        ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
+        tryButton.setBackgroundResource(R.drawable.play);
     }
 
     /**
@@ -186,11 +191,14 @@ public class SMS_Activity extends Activity {
             List<ListableMessage> messageList = new ArrayList<ListableMessage>();
             messageList.addAll(messageSet);
             Collections.sort(messageList);
-
+            ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
             //Link an sms to the playbutton
             int counter = 0;
             while(messageList.get(counter).isSent()){
                 counter = counter + 1;
+            }
+            if(!messageList.get(counter).isRead()){
+                tryButton.setBackgroundResource(R.drawable.unread_play);
             }
             view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
             LogUtility.writeLogFile("counterweird", "Counter = " +counter);
