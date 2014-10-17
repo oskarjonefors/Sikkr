@@ -1,6 +1,7 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
@@ -43,6 +45,7 @@ public class StartActivity extends Activity {
     private Intent intent;
     private String[] words;
     private Contact contact;
+    private BroadcastReceiver reciever;
     private static final String TAG = "StartActivity";
 
     @Override
@@ -51,6 +54,11 @@ public class StartActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LogUtility.writeLogFile(TAG, true, "Works before the initializer.");
         new Initializer().execute(this);
+    }
+
+    @Override
+    protected void onDestroy(){
+        unregisterReceiver(reciever);
     }
 
 
@@ -215,7 +223,9 @@ public class StartActivity extends Activity {
             VoiceMessagePlayer.setupSingleton(params[0]);
             VoiceMessageRecorder.setupSingleton(params[0]);
             VoiceMessageSender.setupSingleton(params[0]);
-            try {
+            reciever = new SmsListener(params[0]);
+
+        try {
                 MMSInbox.setContext(params[0]);
                 MMSInbox.getSharedInstance().loadInbox();
             } catch (Throwable t) {

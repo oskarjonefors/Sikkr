@@ -1,6 +1,7 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,12 +13,13 @@ import java.util.List;
 import java.util.Set;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 
 
 public class ContactGridActivity extends Activity {
-
+    private BroadcastReceiver reciever;
     public ContactGridActivity() {}
 
     @Override
@@ -43,7 +45,14 @@ public class ContactGridActivity extends Activity {
 
         ContactViewAdapter adapter = new ContactViewAdapter(this, R.layout.contact_thumb, contactList);
         ((GridView) findViewById(R.id.contact_grid)).setAdapter(adapter);
+        reciever = new SmsListener(this);
     }
+
+    @Override
+    protected void onDestroy(){
+        unregisterReceiver(reciever);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

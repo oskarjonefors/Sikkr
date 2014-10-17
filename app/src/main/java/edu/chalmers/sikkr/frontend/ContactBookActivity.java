@@ -1,6 +1,7 @@
 package edu.chalmers.sikkr.frontend;
 
         import android.app.Activity;
+        import android.content.BroadcastReceiver;
         import android.content.Intent;
         import android.os.Bundle;
         import android.speech.RecognizerIntent;
@@ -13,6 +14,7 @@ package edu.chalmers.sikkr.frontend;
         import java.util.ArrayList;
 
         import edu.chalmers.sikkr.R;
+        import edu.chalmers.sikkr.backend.SmsListener;
         import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
         import edu.chalmers.sikkr.backend.util.SystemData;
 
@@ -20,7 +22,7 @@ package edu.chalmers.sikkr.frontend;
 public class ContactBookActivity extends Activity {
 
     private ArrayList<String> matches;
-
+    private BroadcastReceiver reciever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,14 @@ public class ContactBookActivity extends Activity {
         setContentView(R.layout.activity_contact_book);
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ButtonAdapter(this));
+        reciever = new SmsListener(this);
     }
+
+    @Override
+    protected void onDestroy(){
+        unregisterReceiver(reciever);
+    }
+
 
 
     @Override

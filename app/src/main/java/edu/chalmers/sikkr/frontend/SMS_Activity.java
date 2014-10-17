@@ -76,7 +76,6 @@ public class SMS_Activity extends Activity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items t

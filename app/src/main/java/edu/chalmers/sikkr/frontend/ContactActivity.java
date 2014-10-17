@@ -2,6 +2,7 @@ package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import android.util.Log;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.MessageNotSentException;
+import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
@@ -27,7 +29,7 @@ public class ContactActivity extends Activity {
 
     private Contact contact;
     private VoiceMessageRecorder recorder;
-
+    private BroadcastReceiver reciever;
     public void buttonClick(View view) {
         //Brings out the phone dialer
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
@@ -99,8 +101,13 @@ public class ContactActivity extends Activity {
 
         recorder = VoiceMessageRecorder.getSharedInstance();
 
+        reciever = new SmsListener(this);
     }
 
+    @Override
+    protected void onDestroy(){
+        unregisterReceiver(reciever);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
