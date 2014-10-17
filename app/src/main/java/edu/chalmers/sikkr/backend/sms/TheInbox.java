@@ -31,9 +31,10 @@ public class TheInbox {
 
     private void setUp(Context context)
     {
-        smsList = new ArrayList<SmsConversation>();
+        if(smsList== null) {
+            smsList = new ArrayList<SmsConversation>();
+        }
         this.context = context;
-
     }
 
     public static TheInbox getInstance() {
@@ -64,7 +65,7 @@ public class TheInbox {
                 conversation = map.get(address);
             }
             sms = new OneSms(msg, address, date, false);
-            //sms.markAsRead();
+            sms.markAsRead();
             conversation.addSms(sms);
         }
 
