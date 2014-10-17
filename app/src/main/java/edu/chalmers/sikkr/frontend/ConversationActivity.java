@@ -61,6 +61,7 @@ public class ConversationActivity extends Activity {
         cancelButton.setEnabled(false);
         cancelButton.setVisibility(View.GONE);
         adapter.setNotifyOnChange(true);
+
         BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -149,8 +150,9 @@ public class ConversationActivity extends Activity {
     public void readMessage(View view){
         ((ListableMessage)view.getTag()).play();
         ((OneSms)view.getTag()).markAsRead();
+        ImageButton trybutton =  (ImageButton)view.findViewById(R.id.conversation_icon);
+        trybutton.setBackgroundResource(R.drawable.play);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
