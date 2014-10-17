@@ -1,24 +1,26 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import java.util.Collections;
-import java.util.List;
-import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.Collections;
+import java.util.List;
+
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.calls.OneCall;
@@ -60,12 +62,14 @@ public class LatestCallsActivity extends Activity {
         listV.setAdapter(adapter);
     }
 
-    private static class ViewHolder{
+    private static class ViewHolder {
         TextView name;
         TextView date;
         Contact contact;
         Bitmap bitmap;
         Drawable drawable;
+        Drawable contactDrawable;
+        ImageView contactImage;
         ImageView image;
     }
 
@@ -93,22 +97,26 @@ public class LatestCallsActivity extends Activity {
                 view = inflater.inflate(layoutId, viewGroup, false);
                 holder = new ViewHolder();
                 holder.name = (TextView) view.findViewById(R.id.nameText);
-                holder.image = (ImageView) view.findViewById(R.id.latest_call_image);
+                holder.contactImage = (ImageView) view.findViewById(R.id.latest_call_image);
                 holder.name = (TextView) view.findViewById(R.id.nameText);
                 holder.date = (TextView) view.findViewById(R.id.dateText);
                 view.setTag(holder);
-            } else { holder = (ViewHolder) view.getTag(); }
+            } else {
+                holder = (ViewHolder) view.getTag();
+            }
 
-            if(contactID != null){
+            if (contactID != null) {
                 holder.contact = ContactBook.getSharedInstance().getContact(contactID);
                 holder.name.setText(holder.contact.getName());
 
-                if(holder.contact.getPhoto() != null) {
-                    holder.drawable = new BitmapDrawable(getResources(), holder.contact.getPhoto());
-                    holder.image.setImageDrawable(holder.drawable);
+                if (holder.contact.getPhoto() != null) {
+                    holder.contactDrawable = new BitmapDrawable(getResources(), holder.contact.getPhoto());
+                    holder.contactImage.setImageDrawable(holder.contactDrawable);
                 }
 
-            } else { holder.name.setText(list.get(i).getCallNumber()); }
+            } else {
+                holder.name.setText(list.get(i).getCallNumber());
+            }
 
             String callDate = DateDiffUtility.callDateToString(Long.parseLong(list.get(i).getCallDate()));
             holder.date.setText(callDate);
@@ -135,4 +143,4 @@ public class LatestCallsActivity extends Activity {
             return view;
         }
     }
- }
+}
