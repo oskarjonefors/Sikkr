@@ -31,7 +31,6 @@ public class ContactBookActivity extends Activity {
         setContentView(R.layout.activity_contact_book);
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ButtonAdapter(this));
-        reciever = new SmsListener(this);
     }
 
     @Override

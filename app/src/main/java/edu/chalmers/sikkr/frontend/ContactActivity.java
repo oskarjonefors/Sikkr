@@ -29,7 +29,6 @@ public class ContactActivity extends Activity {
 
     private Contact contact;
     private VoiceMessageRecorder recorder;
-    private BroadcastReceiver reciever;
     public void buttonClick(View view) {
         //Brings out the phone dialer
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
@@ -101,7 +100,6 @@ public class ContactActivity extends Activity {
 
         recorder = VoiceMessageRecorder.getSharedInstance();
 
-        reciever = new SmsListener(this);
     }
 
 

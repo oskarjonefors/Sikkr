@@ -19,7 +19,6 @@ import edu.chalmers.sikkr.backend.contact.ContactBook;
 
 
 public class ContactGridActivity extends Activity {
-    private BroadcastReceiver reciever;
     public ContactGridActivity() {}
 
     @Override
@@ -45,7 +44,6 @@ public class ContactGridActivity extends Activity {
 
         ContactViewAdapter adapter = new ContactViewAdapter(this, R.layout.contact_thumb, contactList);
         ((GridView) findViewById(R.id.contact_grid)).setAdapter(adapter);
-        reciever = new SmsListener(this);
     }
 
     @Override
