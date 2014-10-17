@@ -9,22 +9,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.calls.OneCall;
@@ -64,7 +58,6 @@ public class LatestCallsActivity extends Activity {
         ArrayAdapter adapter = new LatestCallItemAdapter(this, R.layout.latest_call_item, callList);
         ListView listV = (ListView) findViewById(R.id.listView);
         listV.setAdapter(adapter);
-
     }
 
     private static class ViewHolder{
@@ -72,7 +65,6 @@ public class LatestCallsActivity extends Activity {
         TextView name;
         TextView date;
         Contact contact;
-
 
         Bitmap bitmap;
         Drawable drawable;
@@ -85,8 +77,8 @@ public class LatestCallsActivity extends Activity {
         private final List<OneCall> list;
         private final int layoutId;
 
-
         private LatestCallItemAdapter(Context context, int layoutId, List<OneCall> list) {
+
             super(LatestCallsActivity.this, layoutId, list);
             this.context = context;
             this.list = list;
@@ -96,6 +88,7 @@ public class LatestCallsActivity extends Activity {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             View view = convertView;
+
             final ViewHolder holder;
 
             Resources res = context.getResources();
@@ -142,6 +135,7 @@ public class LatestCallsActivity extends Activity {
 
                 case android.provider.CallLog.Calls.MISSED_TYPE:
                     holder.name.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+
             }
 
             return view;

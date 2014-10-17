@@ -74,8 +74,7 @@ public class CallLog {
         Calendar rightNow = GregorianCalendar.getInstance();
         long rightNowMillis = rightNow.getTimeInMillis();
         long deltaMillis = rightNowMillis - Long.parseLong(callDate);
-
-        return (TimeUnit.MILLISECONDS.toDays(deltaMillis) / 7) > 4;
+        return TimeUnit.MILLISECONDS.toDays(deltaMillis) / 7 > 4;
     }
 
     public ArrayList<OneCall> getCallList() {

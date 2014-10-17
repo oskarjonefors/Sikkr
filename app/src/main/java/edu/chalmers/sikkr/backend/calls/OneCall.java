@@ -3,7 +3,9 @@ package edu.chalmers.sikkr.backend.calls;
 /**
  * Created by Mia on 02/10/14.
  */
+
 public class OneCall implements Comparable <OneCall> {
+
     String callNumber, callDate, isCallNew, contactID;
     int callType;
 
