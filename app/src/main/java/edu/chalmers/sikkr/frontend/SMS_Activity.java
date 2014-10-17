@@ -32,6 +32,7 @@ import java.util.Set;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.ListableMessage;
+import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.sms.OneSms;
 import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
@@ -45,9 +46,8 @@ public class SMS_Activity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sms_layout);
         createSmsLayout();
-
+        BroadcastReceiver receiver = new SmsListener(this);
     }
-
 
     private void createSmsLayout() {
         smsList = TheInbox.getInstance().getSmsInbox();
@@ -174,15 +174,16 @@ public class SMS_Activity extends Activity {
             Collections.sort(messageList);
             ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
             //Link an sms to the playbutton
-            int counter = 0;
+            int counter = messageList.size() -1;
             while(messageList.get(counter).isSent()){
-                counter = counter + 1;
+                counter = counter - 1;
             }
             if(!messageList.get(counter).isRead()){
                 tryButton.setBackgroundResource(R.drawable.unread_play);
+            }else{
+                tryButton.setBackgroundResource(R.drawable.play);
             }
             view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
-            LogUtility.writeLogFile("counterweird", "Counter = " +counter);
 
             //set the correct data of the element
             holder.contactName.setText((getContactByNbr(currentConv.getAddress())));

@@ -7,6 +7,6 @@ public abstract class AbstractMessage implements ListableMessage ,Comparable<Lis
 
     @Override
     public int compareTo(ListableMessage otherMessage){
-        return -getTimestamp().compareTo(otherMessage.getTimestamp());
+        return getTimestamp().compareTo(otherMessage.getTimestamp());
     }
 }

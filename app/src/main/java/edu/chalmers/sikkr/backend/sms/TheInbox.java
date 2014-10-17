@@ -55,7 +55,8 @@ public class TheInbox {
             String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
             String msg = cursor.getString(cursor.getColumnIndexOrThrow("body"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-            String seen = cursor.getString(cursor.getColumnIndexOrThrow("read"));
+            String seen = cursor.getString(cursor.getColumnIndexOrThrow("seen"));
+            String read = cursor.getString(cursor.getColumnIndexOrThrow("read"));
 
             //If a sms conversation form this contact does not exist, create a new SmsConversation
             if(!map.containsKey(address)) {
@@ -68,7 +69,7 @@ public class TheInbox {
                 conversation = map.get(address);
             }
             sms = new OneSms(msg, address, date, false);
-            if(seen.equals("0")){
+            if(seen.equals("0") || seen.equals("0")){
                 sms.markAsUnread();
                 conversation.addSms(sms);
             }else{

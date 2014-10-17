@@ -47,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll"
             android:id="@+id/conversation_list"
             android:layout_above="@id/conversation_record"
             />
