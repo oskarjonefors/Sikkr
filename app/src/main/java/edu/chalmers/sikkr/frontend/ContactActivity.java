@@ -104,10 +104,6 @@ public class ContactActivity extends Activity {
         reciever = new SmsListener(this);
     }
 
-    @Override
-    protected void onDestroy(){
-        unregisterReceiver(reciever);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -52,15 +52,10 @@ public class StartActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        reciever = new SmsListener(this);
         LogUtility.writeLogFile(TAG, true, "Works before the initializer.");
         new Initializer().execute(this);
     }
-
-    @Override
-    protected void onDestroy(){
-        unregisterReceiver(reciever);
-    }
-
 
     /**
      * Actionhandler for this activity
@@ -223,7 +218,6 @@ public class StartActivity extends Activity {
             VoiceMessagePlayer.setupSingleton(params[0]);
             VoiceMessageRecorder.setupSingleton(params[0]);
             VoiceMessageSender.setupSingleton(params[0]);
-            reciever = new SmsListener(params[0]);
 
         try {
                 MMSInbox.setContext(params[0]);

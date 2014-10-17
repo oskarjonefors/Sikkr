@@ -65,10 +65,9 @@ public class TheInbox {
                 conversation = map.get(address);
             }
             sms = new OneSms(msg, address, date, false);
-            if(!sms.isRead()){
-                sms.markAsRead();
+            if(sms.isRead()){
+                conversation.addSms(sms);
             }
-            conversation.addSms(sms);
         }
 
         cursor.close();
