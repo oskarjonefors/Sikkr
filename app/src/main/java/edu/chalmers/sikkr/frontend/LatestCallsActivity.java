@@ -61,15 +61,12 @@ public class LatestCallsActivity extends Activity {
     }
 
     private static class ViewHolder{
-
         TextView name;
         TextView date;
         Contact contact;
-
         Bitmap bitmap;
         Drawable drawable;
         ImageView image;
-
     }
 
     private class LatestCallItemAdapter extends ArrayAdapter {
@@ -78,7 +75,6 @@ public class LatestCallsActivity extends Activity {
         private final int layoutId;
 
         private LatestCallItemAdapter(Context context, int layoutId, List<OneCall> list) {
-
             super(LatestCallsActivity.this, layoutId, list);
             this.context = context;
             this.list = list;
@@ -88,14 +84,11 @@ public class LatestCallsActivity extends Activity {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             View view = convertView;
-
             final ViewHolder holder;
-
             Resources res = context.getResources();
             String contactID = list.get(i).getContactID();
 
             if (view == null) {
-
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 view = inflater.inflate(layoutId, viewGroup, false);
                 holder = new ViewHolder();
@@ -104,17 +97,19 @@ public class LatestCallsActivity extends Activity {
                 holder.name = (TextView) view.findViewById(R.id.nameText);
                 holder.date = (TextView) view.findViewById(R.id.dateText);
                 view.setTag(holder);
-
-            }else{ holder = (ViewHolder) view.getTag(); }
+            } else { holder = (ViewHolder) view.getTag(); }
 
             if(contactID != null){
                 holder.contact = ContactBook.getSharedInstance().getContact(contactID);
                 holder.name.setText(holder.contact.getName());
 
-            }else { holder.name.setText(list.get(i).getCallNumber()); }
+                if(holder.contact.getPhoto() != null) {
+                    holder.drawable = new BitmapDrawable(getResources(), holder.contact.getPhoto());
+                    holder.image.setImageDrawable(holder.drawable);
+                }
 
-            holder.drawable = new BitmapDrawable(getResources(), holder.contact.getPhoto());
-            holder.image.setImageDrawable(holder.drawable);
+            } else { holder.name.setText(list.get(i).getCallNumber()); }
+
             String callDate = DateDiffUtility.callDateToString(Long.parseLong(list.get(i).getCallDate()));
             holder.date.setText(callDate);
 
@@ -135,11 +130,9 @@ public class LatestCallsActivity extends Activity {
 
                 case android.provider.CallLog.Calls.MISSED_TYPE:
                     holder.name.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-
+                    break;
             }
-
             return view;
         }
-
     }
  }
