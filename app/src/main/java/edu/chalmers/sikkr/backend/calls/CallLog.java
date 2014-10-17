@@ -4,8 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Mia on 02/10/14.
@@ -39,18 +43,41 @@ public class CallLog {
         while (cursor.moveToNext()) {
             OneCall call = new OneCall();
             call.setCallNumber(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.NUMBER)));
-            call.setCallName(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.CACHED_NAME)));
             call.setCallDate(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.DATE)));
-            call.setCallType(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.TYPE)));
+            call.setCallType(cursor.getInt(cursor.getColumnIndex(android.provider.CallLog.Calls.TYPE)));
             call.setIsCallNew(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.NEW)));
-            call.setContactID(cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID)));
+            call.setContactID(getContactIDFromNumber(call.getCallNumber()));
+            Log.d("CallLog", "Get ContactID " + call.getContactID());
 
-            callList.add(call);
+            if(!isCallOld(call.getCallDate())) {
+                callList.add(call);
+            }
         }
         cursor.close();
     }
+    private String getContactIDFromNumber(String contactNbr){
 
-    public ArrayList getCallList() {
+        contactNbr= Uri.encode(contactNbr);
+        String phoneContactID;
+        String[] projection =new String[] {ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID};
+        Cursor contactCursor = context.getContentResolver().query(Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,contactNbr),projection,null,null,null);
+
+        if (contactCursor.moveToFirst()){
+            phoneContactID = contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID));
+            contactCursor.close();
+            return phoneContactID;
+        }
+        else { return null; }
+    }
+
+    private boolean isCallOld(String callDate) {
+        Calendar rightNow = GregorianCalendar.getInstance();
+        long rightNowMillis = rightNow.getTimeInMillis();
+        long deltaMillis = rightNowMillis - Long.parseLong(callDate);
+        return TimeUnit.MILLISECONDS.toDays(deltaMillis) / 7 > 4;
+    }
+
+    public ArrayList<OneCall> getCallList() {
         collectCallLog();
         return callList;
     }
