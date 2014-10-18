@@ -48,9 +48,10 @@ public final class FileUtility {
 				if (reader.next() == XMLStreamReader.START_ELEMENT 
 						&& reader.getName().getLocalPart() == "Contact") {
 					String number = reader.getAttributeValue(0); //Number
-					Logger.getGlobal().info("Found contact: "+number);
 					RSAPublicKey key = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(getPublicKeyFromFile("contacts/" + number + ".key")));
-					Contact contact = new Contact(number, key);
+                    Logger.getGlobal().info("Found contact "+number+" with key: ");
+                    Logger.getGlobal().info(new String(key.getEncoded()));
+                    Contact contact = new Contact(number, key);
 					contacts.add(contact);
 				}
 			}

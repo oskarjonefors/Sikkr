@@ -14,15 +14,16 @@ public final class EncryptedMessage {
 	
 	public EncryptedMessage(byte[]... bytes) throws Exception {
 		final KeyGenerator kGen = KeyGenerator.getInstance("AES");
-		
+		kGen.init(128);
+
 		encryptedBytes = new byte[bytes.length][];
 		SecretKey key = kGen.generateKey();
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		SecretKeySpec kSpec;
 		aeskey = key.getEncoded();
 		kSpec = new SecretKeySpec(aeskey, "AES/CBC/PKCS5Padding");
-		
-		
+
+
 		cipher.init(Cipher.ENCRYPT_MODE, kSpec);
 		iv = cipher.getIV();
 		for (int i = 0; i < bytes.length; i++) {

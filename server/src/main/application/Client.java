@@ -5,7 +5,7 @@ import java.net.Socket;
 
 public class Client {
 
-	private Socket socket = null, writeSocket = null, objectSocket = null;
+	private Socket socket = null, writeSocket = null;
 	private final InetAddress address;
 	private Thread thread;
 	private boolean started = false;
@@ -29,21 +29,13 @@ public class Client {
 	public void setWriteSocket(Socket writeSocket) {
 		this.writeSocket = writeSocket;
 	}
-
-	public Socket getObjectSocket() {
-		return objectSocket;
-	}
-
-	public void setObjectSocket(Socket objectSocket) {
-		this.objectSocket = objectSocket;
-	}
 	
 	public boolean allSocketsSet() {
-		return socket != null && writeSocket != null && objectSocket != null;
+		return socket != null && writeSocket != null;
 	}
 	
 	public boolean allSocketsOpen() {
-		return !socket.isClosed() && !writeSocket.isClosed() && !objectSocket.isClosed();
+		return !socket.isClosed() && !writeSocket.isClosed();
 	}
 	
 	public InetAddress getInetAddress() {
@@ -52,10 +44,6 @@ public class Client {
 	
 	public Thread getAssociatedThread() {
 		return thread;
-	}
-	
-	public void setAssociatedThread(Thread thread) {
-		this.thread = thread;
 	}
 	
 	public synchronized void startNewAssociatedThread(Thread thread) {
@@ -73,7 +61,6 @@ public class Client {
 		Client client = (Client) object;
 		return socket.equals(client.getSocket())
 				&& writeSocket.equals(client.getWriteSocket())
-				&& objectSocket.equals(client.getObjectSocket())
 				&& address.equals(client.getInetAddress())
 				&& thread.equals(client.getAssociatedThread());
 	}
@@ -83,9 +70,6 @@ public class Client {
 		
 		if (socket != null) {
 			hashCode += 13*socket.hashCode();
-		}
-		if (objectSocket != null) {
-			hashCode += 27*objectSocket.hashCode();
 		}
 		if (writeSocket != null) {
 			hashCode += 23*writeSocket.hashCode();

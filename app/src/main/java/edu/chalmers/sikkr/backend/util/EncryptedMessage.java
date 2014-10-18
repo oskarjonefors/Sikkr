@@ -14,7 +14,8 @@ public final class EncryptedMessage {
     public final byte[] iv;
 
     public EncryptedMessage(byte[]... bytes) throws Exception {
-        final KeyGenerator kGen = KeyGenerator.getInstance("AES");
+        final KeyGenerator kGen = KeyGenerator.getInstance("AES", "BC");
+        kGen.init(128);
 
         encryptedBytes = new byte[bytes.length][];
         SecretKey key = kGen.generateKey();

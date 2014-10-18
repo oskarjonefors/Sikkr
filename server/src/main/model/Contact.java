@@ -29,7 +29,7 @@ public class Contact implements Serializable {
 	}
 	
 	public byte[] encryptBytes(final byte[] input) throws Exception {
-		Cipher cipher = Cipher.getInstance("RSA/None/NoPadding");
+		Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 		return cipher.doFinal(input);
 	}

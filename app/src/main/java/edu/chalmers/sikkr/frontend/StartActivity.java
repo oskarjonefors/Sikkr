@@ -29,6 +29,7 @@ import edu.chalmers.sikkr.backend.mms.MMSInbox;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
+import edu.chalmers.sikkr.backend.util.ServerInterface;
 import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
 import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
@@ -238,6 +239,7 @@ public class StartActivity extends Activity {
         @Override
         protected Boolean doInBackground(StartActivity... params) {
             Intent checkIntent = new Intent();
+            ServerInterface.setupSingleton(params[0]);
             checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
             startActivityForResult(checkIntent, MY_TTS_CHECK_CODE);
             ContactBook.setupSingleton(params[0], this);

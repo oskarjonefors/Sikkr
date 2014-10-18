@@ -135,5 +135,5 @@ gradle-app.setting
 # Custom ignores
 contacts.xml
 messages.xml
-*/contacts/*
-*/messages/*
+contacts/*
+messages/*

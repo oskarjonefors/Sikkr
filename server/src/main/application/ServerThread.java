@@ -21,7 +21,6 @@ public class ServerThread extends Thread {
 	
 	private final InformationListener listener;
 	private final ServerSocket socket;
-	private final ServerSocket objectSocket;
 	private final ServerSocket writeSocket;
 	private final StateHolder stateHolder;
 	private final Map<InetAddress, Client> clients;
@@ -35,7 +34,6 @@ public class ServerThread extends Thread {
 		super("Server thread");
 		this.listener = listener;
 		this.socket = new ServerSocket(listener.getPort());
-		this.objectSocket = new ServerSocket(listener.getObjectPort());
 		this.writeSocket = new ServerSocket(listener.getWritePort());
 		this.readyClients = new HashSet<Client>();
 		
@@ -51,17 +49,11 @@ public class ServerThread extends Thread {
 	public void run() {
 		this.stateHolder.state = State.RUNNING;
 		IndividualServerSocketThread standard = null;
-		IndividualServerSocketThread object = null;
 		IndividualServerSocketThread write = null;
 		while (stateHolder.state == State.RUNNING) {
 			if (standard == null || !standard.isAlive()) {
 				standard = new IndividualServerSocketThread(socket, SocketApplication.STANDARD);
 				standard.start();
-			}
-			
-			if (object == null || !object.isAlive()) {
-				object = new IndividualServerSocketThread(objectSocket, SocketApplication.OBJECT);
-				object.start();
 			}
 			
 			if (write == null || !write.isAlive()) {
@@ -99,7 +91,7 @@ public class ServerThread extends Thread {
 	}
 	
 	private enum SocketApplication {
-		STANDARD, OBJECT, WRITE
+		STANDARD, WRITE
 	}
 	
 	private class IndividualServerSocketThread extends Thread {
@@ -125,9 +117,6 @@ public class ServerThread extends Thread {
 				switch (application) {
 					case STANDARD:
 						clients.get(address).setSocket(client);
-						break;
-					case OBJECT:
-						clients.get(address).setObjectSocket(client);
 						break;
 					case WRITE:
 						clients.get(address).setWriteSocket(client);

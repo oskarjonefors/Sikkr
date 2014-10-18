@@ -17,9 +17,12 @@ public class InformationEvent {
 		this.level = level;
 		this.log = log;
 		this.type = Type.LOG;
+        this.throwable = null;
 	}
 	
 	public InformationEvent(Throwable throwable) {
+        this.level = null;
+        this.log = null;
 		this.throwable = throwable;
 		this.type = Type.THROWABLE;
 	}

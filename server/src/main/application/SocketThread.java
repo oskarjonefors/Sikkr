@@ -2,17 +2,14 @@ package main.application;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -49,9 +46,6 @@ public class SocketThread extends Thread {
 	private final BufferedReader bufferedReader;
 	private final BufferedWriter bufferedWriter;
 	
-	private final InputStream objectInputStream;
-	private final OutputStream objectOutputStream;
-	
 	/*
 	 * ------------------- Initiation ------------------------------------
 	 */
@@ -69,9 +63,6 @@ public class SocketThread extends Thread {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 		}
-		
-		this.objectInputStream = client.getObjectSocket().getInputStream();
-		this.objectOutputStream = client.getObjectSocket().getOutputStream();
 	}
 	
 	/*
@@ -85,6 +76,9 @@ public class SocketThread extends Thread {
 		try {	
 			while (client.allSocketsOpen()) {
 				String command = bufferedReader.readLine();
+                if (command == null) {
+                    break;
+                }
 				if (command.toLowerCase().startsWith("verify:")) {
 					verify(command.replace("verify:", ""));
 				} else if (command.toLowerCase().equals("get_recieved_messages")) {
@@ -94,7 +88,7 @@ public class SocketThread extends Thread {
 				} else if (command.toLowerCase().equals("send_message")) {
 					beginRecieveMessage();
 				} else if (command.toLowerCase().equals("get_server_key")) {
-					sendObject(listener.getPublicKey());
+					sendServerKey();
 				} else if (command.toLowerCase().equals("is_client")) {
 					checkIfServerHasClient();
 				}
@@ -113,17 +107,24 @@ public class SocketThread extends Thread {
 	 * ------------------- Private methods -------------------------------
 	 */
 	
-	private RSAPublicKey askForPublicKey() throws IOException {
+	private RSAPublicKey askForPublicKey() throws Exception {
 		listener.sendInformation(new InformationEvent(Level.INFO, "Asking client for a public key"));
-		RSAPublicKey key;
-		try {
-			key = (RSAPublicKey) getObjectFromClient();
-		} catch (ClassNotFoundException e) {
-			listener.sendInformation(new InformationEvent(e));
-			key = null;
-		} 
-		
-		return key;
+        int ivLength = inputStream.readInt();
+        int keyLength = inputStream.readInt();
+        int readLength = inputStream.readInt();
+        byte[] encryptedIV = new byte[ivLength], iv;
+        byte[] encryptedKey = new byte[keyLength], key;
+        byte[] encryptedPublicKey = new byte[readLength], publicKey;
+
+        inputStream.readFully(encryptedIV);
+        inputStream.readFully(encryptedKey);
+        inputStream.readFully(encryptedPublicKey);
+
+        iv = listener.decrypt(encryptedIV);
+        key = listener.decrypt(encryptedKey);
+        publicKey = aesDecrypt(encryptedPublicKey, key, iv);
+
+        return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKey));
 	}
 	
 	private void beginRecieveMessage() throws Exception {
@@ -180,6 +181,8 @@ public class SocketThread extends Thread {
 		outputStream.write(encryptedKey);
 		outputStream.write(message.encryptedBytes[0]);
 		outputStream.flush();
+
+        listener.sendInformation(new InformationEvent(Level.INFO, "Key: "+new String(message.aeskey)+"\tiv: "+new String(message.iv)));
 		
 		ivLength = inputStream.readInt();
 		keyLength = inputStream.readInt();
@@ -192,7 +195,9 @@ public class SocketThread extends Thread {
 		inputStream.readFully(answerIV);
 		inputStream.readFully(answerKey);
 		inputStream.readFully(answer);
-		
+
+        listener.sendInformation(new InformationEvent(Level.INFO, "Finished reading the answer from client, now decrypting."));
+
 		decryptedIV = listener.decrypt(answerIV);
 		decryptedKey = listener.decrypt(answerKey);
 		return aesDecrypt(answer, decryptedKey, decryptedIV);
@@ -212,7 +217,7 @@ public class SocketThread extends Thread {
 	
 	private void sendMessagesToClient(List<Message> list) throws Exception {
 		if (isClientVerifiedContact()) {
-			listener.sendInformation(new InformationEvent(Level.INFO, "Sending messages to client: "+contact.getNumber()));
+			listener.sendInformation(new InformationEvent(Level.INFO, "Sending messages to client: " + contact.getNumber()));
 			//DataOutputStream dos = new DataOutputStream(outputStream);
 			outputStream.writeInt(list.size());
 			
@@ -240,8 +245,8 @@ public class SocketThread extends Thread {
 		}
 	}
 	
-	private void verify(String number) throws IOException {
-		listener.sendInformation(new InformationEvent(Level.INFO, "Verifying client: "+number));
+	private void verify(String number) throws Exception {
+		listener.sendInformation(new InformationEvent(Level.INFO, "Verifying client: " + number));
 		final Contact c = listener.getContactByNumber(number);
 		if (c == null) {
 			bufferedWriter.append("verification_method new_client");
@@ -269,25 +274,13 @@ public class SocketThread extends Thread {
 		try {
 			EncryptedMessage message = new EncryptedMessage(bytes);
 			answer = getClientVerificationAnswer(c, message);
+            listener.sendInformation(new InformationEvent(Level.INFO, "Decrypted client's answer"));
 		} catch (Exception e) {
 			listener.sendInformation(new InformationEvent(e));
 			return false;
 		}
 		
 		return (new String(bytes)).equals(new String(answer));
-	}
-	
-	private Object getObjectFromClient() throws IOException, ClassNotFoundException {
-		ObjectInputStream ois = new ObjectInputStream(objectInputStream);
-		return ois.readObject();
-	}
-	
-	private void sendObject(Object o) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(o);
-		objectOutputStream.write(baos.toByteArray());
-		objectOutputStream.flush();
 	}
 	
 	private byte[] aesDecrypt(byte[] data, byte[] key, byte[] iv) throws Exception {
@@ -340,6 +333,12 @@ public class SocketThread extends Thread {
 		
 		return new String(aesDecrypt(encryptedNumber, decryptedKey, decryptedIV));
 	}
-	
+
+    private void sendServerKey() throws IOException {
+        byte[] key = listener.getPublicKey().getEncoded();
+        outputStream.writeInt(key.length);
+        outputStream.write(key);
+        outputStream.flush();
+    }
 
 }

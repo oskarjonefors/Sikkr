@@ -14,8 +14,6 @@ public interface InformationListener {
 
 	int getPort();
 	
-	int getObjectPort();
-	
 	int getWritePort();
 	
 	RSAPublicKey getPublicKey();

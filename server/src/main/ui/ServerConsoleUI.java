@@ -40,11 +40,11 @@ public final class ServerConsoleUI implements InformationListener {
 		final KeyPair key;
 		RSAPublicKey publicKey = null;
 		RSAPrivateKey privateKey = null;
-		contacts = Collections.synchronizedMap(new HashMap<String, Contact>());
+		contacts = Collections.synchronizedMap(new HashMap<>());
 		
 		try {
 			keyGen = KeyPairGenerator.getInstance("RSA");
-	        keyGen.initialize(4096);
+	        keyGen.initialize(2048);
 	        key = keyGen.genKeyPair();
 	        publicKey = (RSAPublicKey) key.getPublic();
 	        privateKey = (RSAPrivateKey) key.getPrivate();
@@ -65,16 +65,14 @@ public final class ServerConsoleUI implements InformationListener {
 		this.privateKey = privateKey;
 		
 		setupUserInterface();
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-	        public void run() {
-	            try {
-					FileUtility.saveMessages(contacts.values());
-					FileUtility.saveContacts(contacts.values());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-	        }
-	    }, "Shutdown-thread"));
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                FileUtility.saveMessages(contacts.values());
+                FileUtility.saveContacts(contacts.values());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "Shutdown-thread"));
 	}
 	
 	/*
@@ -89,7 +87,7 @@ public final class ServerConsoleUI implements InformationListener {
 	@Override
 	public final byte[] decrypt(byte[] input) {
 		try {
-			Cipher cipher = Cipher.getInstance("RSA/None/NoPadding");
+			Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 			return cipher.doFinal(input);
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException 
@@ -131,19 +129,13 @@ public final class ServerConsoleUI implements InformationListener {
 	 * ------------------------ Private methods ---------------------------
 	 */
 	
-	private final void addMessageToContacts(Message message) {
+	private void addMessageToContacts(Message message) {
 		getContactByNumber(message.getSender()).sentMessages.add(message);
 		getContactByNumber(message.getReciever()).recievedMessages.add(message);
 	}
 	
-	private final void setupUserInterface() {
+	private void setupUserInterface() {
 		logger = Logger.getGlobal();
-	}
-
-	@Override
-	public int getObjectPort() {
-		// TODO Auto-generated method stub
-		return 998;
 	}
 
 	@Override

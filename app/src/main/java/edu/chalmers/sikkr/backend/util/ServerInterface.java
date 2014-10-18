@@ -11,6 +11,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,13 +21,18 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +45,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public final class ServerInterface {
 
-    private final static String SERVER_IP = "127.0.0.1";
+    private final static String SERVER_IP = "192.168.1.104";
 
     /**
      * Singleton of ServerInterface
@@ -58,9 +64,6 @@ public final class ServerInterface {
     private final BufferedReader BUFFERED_READER;
     private final BufferedWriter BUFFERED_WRITER;
 
-    private final InputStream OBJECT_INPUT_STREAM;
-    private final OutputStream OBJECT_OUTPUT_STREAM;
-
     private final RSAPrivateKey PRIVATE_KEY;
     private final RSAPublicKey PUBLIC_KEY;
 
@@ -71,27 +74,35 @@ public final class ServerInterface {
      */
     private ServerInterface(Context context) throws IOException {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        final Socket SOCKET, OBJECT_SOCKET, WRITE_SOCKET;
+        final Socket SOCKET, WRITE_SOCKET;
         final TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        final KeyPair key = getKeyPair();
+        final KeyPair key = getKeyPair(context);
 
         PRIVATE_KEY = (RSAPrivateKey) key.getPrivate();
         PUBLIC_KEY = (RSAPublicKey) key.getPublic();
 
-        LOCAL_NUMBER = tMgr.getLine1Number();
+        try {
+            byte[] test = decrypt(encryptMyOwnKey("Decryption successful".getBytes()));
+            Log.i("ServerInterface", "Test result: "+test[0]);
+            Log.i("ServerInterface", "Test result: "+new String(test));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        //LOCAL_NUMBER = tMgr.getLine1Number(); //use this in release
+        LOCAL_NUMBER = "1337"; //Genymotion special ;)
         SOCKET = new Socket(SERVER_IP, 997);
-        OBJECT_SOCKET = new Socket(SERVER_IP, 998);
         WRITE_SOCKET = new Socket(SERVER_IP, 999);
 
         INPUT_STREAM = new DataInputStream(SOCKET.getInputStream());
         OUTPUT_STREAM = new DataOutputStream(SOCKET.getOutputStream());
         BUFFERED_READER = new BufferedReader(new InputStreamReader(WRITE_SOCKET.getInputStream()));
         BUFFERED_WRITER = new BufferedWriter(new OutputStreamWriter(WRITE_SOCKET.getOutputStream()));
-        OBJECT_INPUT_STREAM = OBJECT_SOCKET.getInputStream();
-        OBJECT_OUTPUT_STREAM = OBJECT_SOCKET.getOutputStream();
 
 
         SERVER_KEY = getServerKey();
+        INPUT_STREAM.readFully(new byte[INPUT_STREAM.available()]);
         verify();
     }
 
@@ -100,56 +111,82 @@ public final class ServerInterface {
      */
 
 
-    private static KeyPair generateKeyPair(File keyFile) {
+    private static KeyPair generateKeyPair(File publicKeyFile, File privateKeyFile) {
+        Log.d("ServerInterface", "Generating a key pair");
         KeyPairGenerator keyGen;
         KeyPair key = null;
-        ObjectOutputStream oos;
 
-        if (keyFile.exists()) {
-            keyFile.delete();
+        if (publicKeyFile.exists()) {
+            publicKeyFile.delete();
+        }
+
+        if (privateKeyFile.exists()) {
+            privateKeyFile.delete();
         }
 
         try {
             keyGen = KeyPairGenerator.getInstance("RSA");
-            keyGen.initialize(4096);
+            keyGen.initialize(2048);
             key = keyGen.genKeyPair();
 
-            if (!keyFile.getParentFile().exists()) {
-                keyFile.getParentFile().mkdir();
+            if (!publicKeyFile.getParentFile().exists()) {
+                publicKeyFile.getParentFile().mkdirs();
             }
 
-            keyFile.createNewFile();
-            oos = new ObjectOutputStream(new FileOutputStream(keyFile));
-            oos.writeObject(key);
+            publicKeyFile.createNewFile();
+            privateKeyFile.createNewFile();
+            saveByteDataToFile(publicKeyFile, key.getPublic().getEncoded());
+            saveByteDataToFile(privateKeyFile, key.getPrivate().getEncoded());
         } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return key;
     }
 
-    private static KeyPair getKeyPair() {
-        final File keyFileDirectory = new File(".rsa/");
-        final File keyFile = new File(keyFileDirectory, "sikkr_key_pair");
-        KeyPair key = null;
+    private static void saveByteDataToFile(File file, byte[] data) throws  IOException {
+        DataOutputStream dos = new DataOutputStream(new FileOutputStream(file));
+        dos.write(data);
+        dos.flush();
+        dos.close();
+    }
 
-        if (keyFile.exists()) {
+    private static byte[] readByteDataFromFile(File file) throws IOException {
+        DataInputStream dis = new DataInputStream(new FileInputStream(file));
+        byte[] read = new byte[dis.available()];
+        dis.readFully(read);
+        return read;
+    }
+
+    private static KeyPair getKeyPair(Context context) {
+        final File keyFileDirectory = new File(context.getFilesDir(), "rsa/");
+        final File publicKeyFile = new File(keyFileDirectory, "sikkr_pub_key");
+        final File privateKeyFile = new File(keyFileDirectory, "sikkr_priv_key");
+        KeyPair key;
+
+        if (publicKeyFile.exists() && privateKeyFile.exists()) {
             try {
-                key = getKeyPairFromFile(keyFile);
+                key = getKeyPairFromFile(publicKeyFile, privateKeyFile);
             } catch (Exception e) {
-                key = generateKeyPair(keyFile);
+                key = generateKeyPair(publicKeyFile, privateKeyFile);
             }
         } else {
-            generateKeyPair(keyFile);
+            key = generateKeyPair(publicKeyFile, privateKeyFile);
         }
         return key;
     }
 
-    private static KeyPair getKeyPairFromFile(File keyFile) throws IOException, ClassNotFoundException {
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(keyFile));
-        Object readObject = ois.readObject();
-        ois.close();
-        return (KeyPair) readObject;
+    private static KeyPair getKeyPairFromFile(File publicKeyFile, File privateKeyFile) throws Exception {
+        Log.d("ServerInterface", "Getting the key pair from file");
+        byte[] publicKey = readByteDataFromFile(publicKeyFile);
+        byte[] privateKey = readByteDataFromFile(privateKeyFile);
+
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        RSAPublicKey pubKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(publicKey));
+        RSAPrivateKey privKey = (RSAPrivateKey) kf.generatePrivate(new PKCS8EncodedKeySpec(privateKey));
+        return new KeyPair(pubKey, privKey);
     }
 
     /**
@@ -157,7 +194,7 @@ public final class ServerInterface {
      */
     public static List<Message> getReceivedMessages() {
         try {
-            return singleton.getReceivedMessagesFromServer();
+            return getSingleton().getReceivedMessagesFromServer();
         } catch (Exception e) {
             return null;
         }
@@ -168,7 +205,7 @@ public final class ServerInterface {
      */
     public static List<Message> getSentMessages() {
         try {
-            return singleton.getSentMessagesFromServer();
+            return getSingleton().getSentMessagesFromServer();
         } catch (Exception e) {
             return null;
         }
@@ -180,12 +217,12 @@ public final class ServerInterface {
      * @param content the content of the message as a byte array.
      */
     public static void sendMessage(String number, byte[] content, int messageType) {
-        singleton.sendMessageToServer(number, content, messageType);
+        getSingleton().sendMessageToServer(number, content, messageType);
     }
 
     public static boolean serverHasClient(String number) {
         try {
-            return singleton.hasClient(number);
+            return getSingleton().hasClient(number);
         } catch (Exception e) {
             return false;
         }
@@ -196,6 +233,7 @@ public final class ServerInterface {
      * @param context a context from the SiKKr application.
      */
     public static void setupSingleton(Context context) {
+        Log.i("ServerInterface", "Setting up an interface to the server");
         if (context == null && singleton != null) {
             throw new UnsupportedOperationException("Cannot create instance of ServerInterface with a null context");
         } else {
@@ -204,6 +242,7 @@ public final class ServerInterface {
             } catch (Exception e) {
                 singleton = null;
                 Log.e("ServerInterface", "Could not create instance of singleton");
+                e.printStackTrace();
             }
         }
     }
@@ -233,14 +272,20 @@ public final class ServerInterface {
     }
 
     private byte[] decrypt(byte[] bytes) throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA/None/NoPadding");
+        Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
         cipher.init(Cipher.DECRYPT_MODE, PRIVATE_KEY);
         return cipher.doFinal(bytes);
     }
 
     private byte[] encrypt(byte[] bytes) throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA/None/NoPadding");
+        Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, SERVER_KEY);
+        return cipher.doFinal(bytes);
+    }
+
+    private byte[] encryptMyOwnKey(byte[] bytes) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, PUBLIC_KEY);
         return cipher.doFinal(bytes);
     }
 
@@ -300,16 +345,19 @@ public final class ServerInterface {
         return messages;
     }
 
-    private PublicKey getServerKey() {
+    private RSAPublicKey getServerKey() {
         try {
             writeLine("get_server_key");
-
-            ObjectInputStream ois = new ObjectInputStream(OBJECT_INPUT_STREAM);
-            return (PublicKey) ois.readObject();
+            int keyLength = INPUT_STREAM.readInt();
+            byte[] keyBytes = new byte[keyLength];
+            INPUT_STREAM.readFully(keyBytes);
+            return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
         } catch (IOException e) {
-
-        } catch (ClassNotFoundException e) {
-
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -323,12 +371,29 @@ public final class ServerInterface {
         }
     }
 
-    private void newClientVerification() throws ClassNotFoundException, IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(PUBLIC_KEY);
-        OBJECT_OUTPUT_STREAM.write(baos.toByteArray());
-        OBJECT_OUTPUT_STREAM.flush();
+    private void newClientVerification() throws Exception {
+        sendEncryptedDataToServer(PUBLIC_KEY.getEncoded());
+    }
+
+    private void sendEncryptedDataToServer(byte[]... bytes) throws Exception {
+        EncryptedMessage msg = new EncryptedMessage(bytes);
+        byte[] encryptedIV = encrypt(msg.iv);
+        byte[] encryptedKey = encrypt(msg.aeskey);
+
+        OUTPUT_STREAM.writeInt(encryptedIV.length);
+        OUTPUT_STREAM.writeInt(encryptedKey.length);
+        for (byte[] data : msg.encryptedBytes) {
+            OUTPUT_STREAM.writeInt(data.length);
+        }
+
+        OUTPUT_STREAM.write(encryptedIV);
+        OUTPUT_STREAM.write(encryptedKey);
+
+        for (byte[] data : msg.encryptedBytes) {
+            OUTPUT_STREAM.write(data);
+        }
+
+        OUTPUT_STREAM.flush();
     }
 
     private void sendMessageToServer(String number, byte[] content, int messageType) {
@@ -390,23 +455,31 @@ public final class ServerInterface {
     }
 
     private void useVerificationCode() throws Exception {
-
+        Log.i("ServerInterface", "Verifying using verification code");
         int ivLength = INPUT_STREAM.readInt();
         int keyLength = INPUT_STREAM.readInt();
         int length = INPUT_STREAM.readInt();
-        byte[] readBytes = new byte[length];
         byte[] recievedIV = new byte[ivLength], iv, encryptedIV;
         byte[] recievedKey = new byte[keyLength], key, encryptedKey;
-        byte[] decryptedBytes;
+        byte[] readBytes = new byte[length], decryptedBytes;
         EncryptedMessage message;
 
         INPUT_STREAM.readFully(recievedIV);
         INPUT_STREAM.readFully(recievedKey);
         INPUT_STREAM.readFully(readBytes);
 
+        Log.i("ServerInterface", "Received verification code");
+
         iv = decrypt(recievedIV);
         key = decrypt(recievedKey);
+
+        Log.i("ServerInterface", "Key: "+new String(key)+"\tiv"+new String(iv));
+
         decryptedBytes = aesDecrypt(readBytes, key, iv);
+
+
+        Log.i("ServerInterface", "Decrypted verification code");
+
         message = new EncryptedMessage(decryptedBytes);
         encryptedIV = encrypt(message.iv);
         encryptedKey = encrypt(message.aeskey);
@@ -419,6 +492,9 @@ public final class ServerInterface {
         OUTPUT_STREAM.write(encryptedKey);
         OUTPUT_STREAM.write(message.encryptedBytes[0]);
         OUTPUT_STREAM.flush();
+
+
+        Log.i("ServerInterface", "Send our reply to the verification code");
     }
 
     private void verify() {
@@ -434,7 +510,7 @@ public final class ServerInterface {
                 default:
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
