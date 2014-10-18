@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,10 +29,7 @@ import java.util.Set;
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.ListableMessage;
 import edu.chalmers.sikkr.backend.MessageNotSentException;
-import edu.chalmers.sikkr.backend.sms.OneSms;
-import edu.chalmers.sikkr.backend.sms.SmsConversation;
-import edu.chalmers.sikkr.backend.sms.TheInbox;
-import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.messages.Conversation;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
@@ -43,7 +38,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
  * @author Jesper Olsson
  */
 public class ConversationActivity extends Activity {
-    private SmsConversation thisConversation;
+    private Conversation thisConversation;
     private Set<ListableMessage> messageSet;
     List<ListableMessage> messages = new ArrayList<ListableMessage>();
     private VoiceMessageRecorder recorder;

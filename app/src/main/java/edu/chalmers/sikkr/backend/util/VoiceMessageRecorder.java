@@ -13,9 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.UUID;
 
 import edu.chalmers.sikkr.backend.VoiceMessage;
-import edu.chalmers.sikkr.backend.mms.MMS;
-
-import edu.chalmers.sikkr.backend.VoiceMessage;
+import edu.chalmers.sikkr.backend.messages.MMS;
 
 /**
  * A simple class for recording voice messages.

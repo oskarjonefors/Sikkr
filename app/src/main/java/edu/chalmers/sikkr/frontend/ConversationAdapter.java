@@ -12,12 +12,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import edu.chalmers.sikkr.R;
-import edu.chalmers.sikkr.backend.sms.OneSms;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
+import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 
 /**

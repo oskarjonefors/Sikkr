@@ -5,19 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
-import android.provider.Telephony;
-import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -26,33 +20,26 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.koushikdutta.async.util.HashList;
 
 import java.util.ArrayList;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.ListableMessage;
 import edu.chalmers.sikkr.backend.SmsListener;
-import edu.chalmers.sikkr.backend.sms.OneSms;
-import edu.chalmers.sikkr.backend.sms.SmsConversation;
-import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
+import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.messages.Conversation;
+import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 
 /**
  * Activity for showing the sms inbox
  */
 public class SMS_Activity extends Activity {
-    private static ArrayList<SmsConversation> smsList;
+    private static ArrayList<Conversation> smsList;
     ArrayAdapter adapter;
 
     @Override
@@ -90,7 +77,7 @@ public class SMS_Activity extends Activity {
     }
 
     private void createSmsLayout() {
-        smsList = TheInbox.getInstance().getSmsInbox();
+        smsList = TheInbox.getInstance().getMessageInbox();
         LogUtility.writeLogFile("smLsiT", ""+smsList.size());
         adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
         ListView listV = (ListView) findViewById(R.id.listView);
@@ -153,7 +140,7 @@ public class SMS_Activity extends Activity {
     public class SmsViewAdapter extends ArrayAdapter {
 
         private final Context context;
-        private final List<SmsConversation> list;
+        private final List<Conversation> list;
         private final int layoutId;
 
         private SmsViewAdapter(Context context, int layoutId, List list) {
@@ -180,7 +167,7 @@ public class SMS_Activity extends Activity {
             }
 
             //get the current sms conversation
-            SmsConversation currentConv = list.get(i);
+            Conversation currentConv = list.get(i);
             Set<ListableMessage> messageSet = currentConv.getSmsList();
             List<ListableMessage> messageList = new ArrayList<ListableMessage>();
             messageList.addAll(messageSet);

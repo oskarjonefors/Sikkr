@@ -24,9 +24,7 @@ import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.Contact;
-import edu.chalmers.sikkr.backend.contact.ContactBook;
-import edu.chalmers.sikkr.backend.mms.MMSInbox;
-import edu.chalmers.sikkr.backend.sms.TheInbox;
+import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
@@ -249,17 +247,6 @@ public class StartActivity extends Activity {
             VoiceMessagePlayer.setupSingleton(params[0]);
             VoiceMessageRecorder.setupSingleton(params[0]);
             VoiceMessageSender.setupSingleton(params[0]);
-
-        try {
-                MMSInbox.setContext(params[0]);
-                MMSInbox.getSharedInstance().loadInbox();
-            } catch (Throwable t) {
-                final List<String> trace = new ArrayList<String>();
-                for (StackTraceElement el : t.getStackTrace()) {
-                    trace.add("" + el);
-                }
-                LogUtility.writeLogFile(TAG, trace.toArray(new String[trace.size()]));
-            }
             return true;
         }
 

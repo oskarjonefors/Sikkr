@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr.backend.mms;
+package edu.chalmers.sikkr.backend.messages;
 
 import android.net.Uri;
 
@@ -11,7 +11,7 @@ import edu.chalmers.sikkr.backend.VoiceMessage;
 /**
  * Created by Eric on 2014-10-02.
  */
-public class MMS extends AbstractMessage implements VoiceMessage{
+public class MMS extends AbstractMessage implements VoiceMessage {
 
 
     private final Calendar timestamp;
