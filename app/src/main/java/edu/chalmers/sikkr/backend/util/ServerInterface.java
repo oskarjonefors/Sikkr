@@ -40,7 +40,7 @@ import edu.chalmers.sikkr.backend.messages.Message;
  */
 public final class ServerInterface {
 
-    private final static String SERVER_IP = "192.168.1.104";
+    private final static String SERVER_IP = "46.239.104.32";
 
     /**
      * Singleton of ServerInterface
@@ -81,25 +81,19 @@ public final class ServerInterface {
         PRIVATE_KEY = (RSAPrivateKey) key.getPrivate();
         PUBLIC_KEY = (RSAPublicKey) key.getPublic();
 
-        try {
-            byte[] test = decrypt(encryptMyOwnKey("Decryption successful".getBytes()));
-            Log.i("ServerInterface", "Test result: "+test[0]);
-            Log.i("ServerInterface", "Test result: "+new String(test));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
         //LOCAL_NUMBER = tMgr.getLine1Number(); //use this in release
         LOCAL_NUMBER = "1337"; //Genymotion special ;)
         SOCKET = new Socket(SERVER_IP, 997);
         WRITE_SOCKET = new Socket(SERVER_IP, 999);
+
+        Log.i("ServerInterface", "Connection established with server");
 
         INPUT_STREAM = new DataInputStream(SOCKET.getInputStream());
         OUTPUT_STREAM = new DataOutputStream(SOCKET.getOutputStream());
         BUFFERED_READER = new BufferedReader(new InputStreamReader(WRITE_SOCKET.getInputStream()));
         BUFFERED_WRITER = new BufferedWriter(new OutputStreamWriter(WRITE_SOCKET.getOutputStream()));
 
+        Log.i("ServerInterface", "The streams to the server are open");
 
         SERVER_KEY = getServerKey();
         INPUT_STREAM.readFully(new byte[INPUT_STREAM.available()]);
@@ -283,12 +277,6 @@ public final class ServerInterface {
         return cipher.doFinal(bytes);
     }
 
-    private byte[] encryptMyOwnKey(byte[] bytes) throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, PUBLIC_KEY);
-        return cipher.doFinal(bytes);
-    }
-
     private List<Message> getReceivedMessagesFromServer() throws Exception {
         writeLine("get_received_messages");
         return getMessagesFromServer(false);
@@ -346,11 +334,14 @@ public final class ServerInterface {
     }
 
     private RSAPublicKey getServerKey() {
+        Log.i("ServerInterface", "Getting the server's public key");
         try {
             writeLine("get_server_key");
+            Log.i("ServerInterface", "We have asked for the public key, waiting for response");
             int keyLength = INPUT_STREAM.readInt();
             byte[] keyBytes = new byte[keyLength];
             INPUT_STREAM.readFully(keyBytes);
+            Log.i("ServerInterface", "We have received the public key from the server");
             return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
         } catch (IOException e) {
             e.printStackTrace();
@@ -376,6 +367,7 @@ public final class ServerInterface {
     }
 
     private void sendEncryptedDataToServer(byte[]... bytes) throws Exception {
+        Log.i("ServerInterface", "The server wants our public key");
         EncryptedMessage msg = new EncryptedMessage(bytes);
         byte[] encryptedIV = encrypt(msg.iv);
         byte[] encryptedKey = encrypt(msg.aeskey);
@@ -394,6 +386,7 @@ public final class ServerInterface {
         }
 
         OUTPUT_STREAM.flush();
+        Log.i("ServerInterface", "We gave the server our public key");
     }
 
     private void sendMessageToServer(String number, byte[] content, int messageType) {
@@ -500,6 +493,7 @@ public final class ServerInterface {
     private void verify() {
         try {
             writeLine("verify:"+LOCAL_NUMBER);
+            Log.i("ServerInterface", "Getting verification method");
             switch (getVerificationMethod()) {
                 case NEW_CLIENT:
                     newClientVerification();

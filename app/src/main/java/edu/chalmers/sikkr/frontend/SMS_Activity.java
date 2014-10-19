@@ -38,7 +38,7 @@ import edu.chalmers.sikkr.backend.messages.TheInbox;
  * Activity for showing the sms inbox
  */
 public class SMS_Activity extends Activity {
-    private static ArrayList<Conversation> smsList;
+    private static List<Conversation> smsList;
     ArrayAdapter adapter;
 
     @Override
