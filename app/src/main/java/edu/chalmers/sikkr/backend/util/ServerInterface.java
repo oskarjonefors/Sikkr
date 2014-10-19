@@ -86,8 +86,8 @@ public final class ServerInterface {
 
         //LOCAL_NUMBER = tMgr.getLine1Number(); //use this in release
         LOCAL_NUMBER = "1337"; //Genymotion special ;)
-        SOCKET = SSLSocketFactory.getDefault().createSocket(SERVER_IP, 997);
-        WRITE_SOCKET = SSLSocketFactory.getDefault().createSocket(SERVER_IP, 998);
+        SOCKET = new Socket(SERVER_IP, 997);
+        WRITE_SOCKET = new Socket(SERVER_IP, 998);
 
         Log.i("ServerInterface", "Connection established with server");
 
@@ -97,6 +97,12 @@ public final class ServerInterface {
         BUFFERED_WRITER = new BufferedWriter(new OutputStreamWriter(WRITE_SOCKET.getOutputStream()));
 
         Log.i("ServerInterface", "The streams to the server are open");
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         SERVER_KEY = getServerKey();
         INPUT_STREAM.readFully(new byte[INPUT_STREAM.available()]);
