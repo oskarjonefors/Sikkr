@@ -36,8 +36,8 @@ public class ServerThread extends Thread {
 		super("Server thread");
 		this.listener = listener;
 
-		this.socket = SSLServerSocketFactory.getDefault().createServerSocket(listener.getPort());
-		this.writeSocket = SSLServerSocketFactory.getDefault().createServerSocket(listener.getWritePort());
+		this.socket = new ServerSocket(listener.getPort());
+		this.writeSocket = new ServerSocket(listener.getWritePort());
 		this.readyClients = new HashSet<Client>();
 		
 		this.stateHolder = new StateHolder();
