@@ -68,6 +68,15 @@ public class VoiceMessageSender {
         singleton.setup(context);
     }
 
+    public void sendMessage(VoiceMessage vmsg, String receiverNbr)
+            throws MessageNotSentException, IllegalArgumentException {
+        if (ServerInterface.serverHasClient(receiverNbr)) {
+            ServerInterface.sendVoiceMessage(receiverNbr, vmsg);
+        } else {
+            sendMmsMessage(vmsg, receiverNbr);
+        }
+    }
+
     /**
      * Send the given VoiceMessage to the given number.
      * @param vmsg - The VoiceMessage to send.
@@ -75,7 +84,8 @@ public class VoiceMessageSender {
      * @throws MessageNotSentException - If the message could not be sent.
      * @throws IllegalArgumentException - If the receiver is not a valid one.
      */
-    public void sendMessage(VoiceMessage vmsg, String receiverNbr) throws MessageNotSentException, IllegalArgumentException {
+    public void sendMmsMessage(VoiceMessage vmsg, String receiverNbr)
+            throws MessageNotSentException, IllegalArgumentException {
         final Transaction sendTransaction = new Transaction(context, mmsSettings);
         final Message msg = new Message("Sikkr message", MessageUtils.fixNumber(receiverNbr));
 

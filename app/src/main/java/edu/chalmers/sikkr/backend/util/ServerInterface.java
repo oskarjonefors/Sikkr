@@ -34,6 +34,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import edu.chalmers.sikkr.backend.messages.Message;
+import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
  * Created by Eric on 2014-10-13.
@@ -212,6 +213,19 @@ public final class ServerInterface {
      */
     public static void sendMessage(String number, byte[] content, int messageType) {
         getSingleton().sendMessageToServer(number, content, messageType);
+    }
+
+    public static void sendTextMessage(String number, String text) {
+        sendMessage(number, text.getBytes(), Message.TYPE_TEXT);
+    }
+
+    public static void sendVoiceMessage(String number, VoiceMessage message) {
+        try {
+            byte[] content = readByteDataFromFile(new File(message.getFileUri().getPath()));
+            sendMessage(number, content, Message.TYPE_DATA);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static boolean serverHasClient(String number) {
