@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import edu.chalmers.sikkr.R;
-import edu.chalmers.sikkr.backend.ListableMessage;
+import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.messages.Conversation;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;

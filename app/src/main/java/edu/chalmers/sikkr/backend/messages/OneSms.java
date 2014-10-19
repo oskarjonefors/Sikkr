@@ -3,7 +3,6 @@ package edu.chalmers.sikkr.backend.messages;
 import java.util.Calendar;
 import java.util.Date;
 
-import edu.chalmers.sikkr.backend.AbstractMessage;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 
 /**

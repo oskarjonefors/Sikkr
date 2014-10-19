@@ -12,11 +12,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import edu.chalmers.sikkr.backend.util.ServerInterface;
+
 import static android.provider.BaseColumns._ID;
 import static android.provider.Telephony.BaseMmsColumns.DATE;
 import static android.provider.Telephony.Mms.Addr.ADDRESS;
 import static android.provider.Telephony.*;
-
 
 /**
  * Created by Jingis on 2014-09-27.
@@ -72,7 +73,7 @@ public class TheInbox {
                 conversation = map.get(address);
             }
 
-            mms = new MMS(timestamp, address, partURI);
+            mms = new MMS(timestamp, address, partURI, false);
             conversation.addMessage(mms);
             curPart.close();
         }
@@ -98,7 +99,7 @@ public class TheInbox {
 
             if (map.containsKey(address)) {
                 conversation = map.get(address);
-                mms = new MMS(timestamp, address, partURI);
+                mms = new MMS(timestamp, address, partURI, true);
                 conversation.addMessage(mms);
             }
 
@@ -137,7 +138,7 @@ public class TheInbox {
         cursor.close();
     }
 
-    private void collectSentSms(){
+    private void collectSentSms() {
         Uri uriToAndroidSentMessages = Uri.parse("content://sms/sent");
         Cursor cursor = context.getContentResolver().query(uriToAndroidSentMessages, null, null, null, null);
         while(cursor.moveToNext()){
@@ -159,11 +160,43 @@ public class TheInbox {
 
     }
 
+    private void collectWebMessages() {
+        List<Message> messages = ServerInterface.getReceivedMessages();
+        for (Message msg : messages) {
+            Conversation conversation;
+            if (!map.containsKey(msg.getSender())) {
+                conversation = new Conversation(msg.getSender(), "", msg.getTimestamp().getDisplayName(Calendar.DATE, Calendar.LONG,Locale.getDefault()),false);
+                map.put(msg.getSender(), conversation);
+                messageList.add(conversation);
+            } else {
+                conversation = map.get(msg.getSender());
+            }
+            conversation.addMessage(msg);
+        }
+    }
+
+    private void collectSentWebMessages() {
+        List<Message> messages = ServerInterface.getSentMessages();
+        for (Message msg : messages) {
+            Conversation conversation;
+            if (!map.containsKey(msg.getSender())) {
+                conversation = new Conversation(msg.getReceiver(), "", msg.getTimestamp().getDisplayName(Calendar.DATE, Calendar.LONG,Locale.getDefault()),true);
+                map.put(msg.getReceiver(), conversation);
+                messageList.add(conversation);
+            } else {
+                conversation = map.get(msg.getReceiver());
+            }
+            conversation.addMessage(msg);
+        }
+    }
+
     public List<Conversation> getMessageInbox() {
         collectMMS();
         collectSentMMS();
         collectSms();
         collectSentSms();
+        collectWebMessages();
+        collectSentWebMessages();
         return messageList;
     }
 

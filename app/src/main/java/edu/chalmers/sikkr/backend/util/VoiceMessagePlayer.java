@@ -6,7 +6,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import edu.chalmers.sikkr.backend.VoiceMessage;
+import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
  * Created by ivaldi on 2014-10-02.

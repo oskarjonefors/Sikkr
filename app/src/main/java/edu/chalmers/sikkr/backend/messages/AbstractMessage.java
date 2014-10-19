@@ -1,4 +1,4 @@
-package edu.chalmers.sikkr.backend;
+package edu.chalmers.sikkr.backend.messages;
 
 /**
  * Created by Jesper on 2014-10-15.

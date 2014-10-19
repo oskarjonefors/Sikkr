@@ -3,8 +3,6 @@ package edu.chalmers.sikkr.backend.messages;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.chalmers.sikkr.backend.ListableMessage;
-
 /**
  * Created by Jingis on 2014-10-03.
  */

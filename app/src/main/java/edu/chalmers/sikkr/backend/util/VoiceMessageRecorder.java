@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
-import edu.chalmers.sikkr.backend.VoiceMessage;
+import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 import edu.chalmers.sikkr.backend.messages.MMS;
 
 /**

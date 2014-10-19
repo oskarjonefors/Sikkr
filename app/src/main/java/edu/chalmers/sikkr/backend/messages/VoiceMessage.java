@@ -1,8 +1,6 @@
-package edu.chalmers.sikkr.backend;
+package edu.chalmers.sikkr.backend.messages;
 
 import android.net.Uri;
-
-import java.util.Calendar;
 
 /**
  * Created by ivaldi on 2014-10-01.

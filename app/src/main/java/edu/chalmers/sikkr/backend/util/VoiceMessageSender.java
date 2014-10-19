@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import edu.chalmers.sikkr.backend.MessageNotSentException;
-import edu.chalmers.sikkr.backend.VoiceMessage;
+import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
  * A class for sending voice messages as MMS messages. Utilizes the android-smsmms library:

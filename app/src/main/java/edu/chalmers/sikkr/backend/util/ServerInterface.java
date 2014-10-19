@@ -6,26 +6,19 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
@@ -39,6 +32,8 @@ import java.util.List;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import edu.chalmers.sikkr.backend.messages.Message;
 
 /**
  * Created by Eric on 2014-10-13.
@@ -55,6 +50,10 @@ public final class ServerInterface {
     /*
      * -------------------- Instance constants, mostly assigned in constructor. --------------------
      */
+
+
+    private final Context context;
+
     private final PublicKey SERVER_KEY;
     private final String LOCAL_NUMBER;
 
@@ -73,6 +72,7 @@ public final class ServerInterface {
      * @throws IOException if connectivity to the server cannot be resolved.
      */
     private ServerInterface(Context context) throws IOException {
+        this.context = context;
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         final Socket SOCKET, WRITE_SOCKET;
         final TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -291,15 +291,15 @@ public final class ServerInterface {
 
     private List<Message> getReceivedMessagesFromServer() throws Exception {
         writeLine("get_received_messages");
-        return getMessagesFromServer();
+        return getMessagesFromServer(false);
     }
 
     private List<Message> getSentMessagesFromServer() throws Exception {
         writeLine("get_sent_messages");
-        return getMessagesFromServer();
+        return getMessagesFromServer(true);
     }
 
-    private List<Message> getMessagesFromServer() throws Exception {
+    private List<Message> getMessagesFromServer(boolean sent) throws Exception {
         final List<Message> messages = new ArrayList<Message>();
         final int n;
 
@@ -338,7 +338,7 @@ public final class ServerInterface {
             time = INPUT_STREAM.readLong();
 
 
-            msg = new Message(senderNumber, receiverNumber, content, type, time);
+            msg = new Message(context, senderNumber, receiverNumber, content, type, time, sent);
             messages.add(msg);
         }
 
@@ -528,26 +528,6 @@ public final class ServerInterface {
 
     private enum VerificationType {
         NEW_CLIENT, VERIFICATION_CODE, INVALID;
-    }
-
-    public final static class Message {
-
-        public final String SENDER, RECIEVER;
-        public final byte[] CONTENT;
-        public final int TYPE;
-        public final long TIMESTAMP;
-
-        public final static int TYPE_TEXT = 1;
-        public final static int TYPE_DATA = 2;
-
-        private Message(final String SENDER, final String RECIEVER, final byte[] CONTENT,
-                       final int TYPE, final long TIMESTAMP) {
-            this.SENDER = SENDER;
-            this.RECIEVER = RECIEVER;
-            this.CONTENT = CONTENT;
-            this.TYPE = TYPE;
-            this.TIMESTAMP = TIMESTAMP;
-        }
     }
 
 }

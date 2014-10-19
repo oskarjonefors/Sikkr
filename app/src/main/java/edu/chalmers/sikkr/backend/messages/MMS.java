@@ -4,9 +4,7 @@ import android.net.Uri;
 
 import java.util.Calendar;
 
-import edu.chalmers.sikkr.backend.AbstractMessage;
-import edu.chalmers.sikkr.backend.ListableMessage;
-import edu.chalmers.sikkr.backend.VoiceMessage;
+import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 
 /**
  * Created by Eric on 2014-10-02.
@@ -17,11 +15,13 @@ public class MMS extends AbstractMessage implements VoiceMessage {
     private final Calendar timestamp;
     private final String sender;
     private final Uri part;
+    private final boolean sent;
 
-    public MMS(final Calendar timestamp, final String sender, final Uri part) {
+    public MMS(final Calendar timestamp, final String sender, final Uri part, final boolean sent) {
         this.timestamp = timestamp;
         this.sender = sender;
         this.part = part;
+        this.sent = sent;
     }
 
 
@@ -46,10 +46,11 @@ public class MMS extends AbstractMessage implements VoiceMessage {
     }
     @Override
     public void play(){
+        VoiceMessagePlayer.getSharedInstance().playMessage(this);
     }
     @Override
     public boolean isSent(){
-        return true;
+        return sent;
     }
     @Override
     public boolean isRead(){
