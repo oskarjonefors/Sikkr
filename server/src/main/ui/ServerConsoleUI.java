@@ -140,8 +140,7 @@ public final class ServerConsoleUI implements InformationListener {
 
 	@Override
 	public int getWritePort() {
-		// TODO Auto-generated method stub
-		return 999;
+		return 998;
 	}
 	
 }

@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.SSLServerSocketFactory;
+
 import main.util.InformationEvent;
 import main.util.InformationListener;
 
@@ -33,8 +35,9 @@ public class ServerThread extends Thread {
 	public ServerThread(InformationListener listener) throws IOException {
 		super("Server thread");
 		this.listener = listener;
-		this.socket = new ServerSocket(listener.getPort());
-		this.writeSocket = new ServerSocket(listener.getWritePort());
+
+		this.socket = SSLServerSocketFactory.getDefault().createServerSocket(listener.getPort());
+		this.writeSocket = SSLServerSocketFactory.getDefault().createServerSocket(listener.getWritePort());
 		this.readyClients = new HashSet<Client>();
 		
 		this.stateHolder = new StateHolder();
@@ -83,7 +86,7 @@ public class ServerThread extends Thread {
 	 */
 	
 	private final static class StateHolder {
-		public State state;
+		public ServerThread.State state;
 	}
 
 	private enum State {

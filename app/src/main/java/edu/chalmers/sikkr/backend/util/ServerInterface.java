@@ -32,6 +32,8 @@ import java.util.List;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 
 import edu.chalmers.sikkr.backend.messages.Message;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
@@ -84,8 +86,8 @@ public final class ServerInterface {
 
         //LOCAL_NUMBER = tMgr.getLine1Number(); //use this in release
         LOCAL_NUMBER = "1337"; //Genymotion special ;)
-        SOCKET = new Socket(SERVER_IP, 997);
-        WRITE_SOCKET = new Socket(SERVER_IP, 999);
+        SOCKET = SSLSocketFactory.getDefault().createSocket(SERVER_IP, 997);
+        WRITE_SOCKET = SSLSocketFactory.getDefault().createSocket(SERVER_IP, 998);
 
         Log.i("ServerInterface", "Connection established with server");
 

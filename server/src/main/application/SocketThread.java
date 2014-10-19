@@ -79,6 +79,7 @@ public class SocketThread extends Thread {
                 if (command == null) {
                     break;
                 }
+                listener.sendInformation(new InformationEvent(Level.INFO, "Received command: "+command));
 				if (command.toLowerCase().startsWith("verify:")) {
 					verify(command.replace("verify:", ""));
 				} else if (command.toLowerCase().equals("get_recieved_messages")) {
@@ -335,6 +336,7 @@ public class SocketThread extends Thread {
 	}
 
     private void sendServerKey() throws IOException {
+        listener.sendInformation(new InformationEvent(Level.INFO, "Sending public key to client"));
         byte[] key = listener.getPublicKey().getEncoded();
         outputStream.writeInt(key.length);
         outputStream.write(key);
