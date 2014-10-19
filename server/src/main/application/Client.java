@@ -1,5 +1,6 @@
 package main.application;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -35,9 +36,9 @@ public class Client {
 	}
 	
 	public boolean allSocketsOpen() {
-		return !socket.isClosed() && !writeSocket.isClosed();
+		return socket.isConnected() && writeSocket.isConnected();
 	}
-	
+
 	public InetAddress getInetAddress() {
 		return address;
 	}
@@ -82,4 +83,13 @@ public class Client {
 		}
 		return hashCode;
 	}
+
+    public void closeAllSockets() throws IOException {
+        if (!socket.isClosed()) {
+            socket.close();
+        }
+        if (!writeSocket.isClosed()) {
+            writeSocket.close();
+        }
+    }
 }

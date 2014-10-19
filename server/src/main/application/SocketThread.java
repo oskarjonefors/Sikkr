@@ -94,11 +94,14 @@ public class SocketThread extends Thread {
 					checkIfServerHasClient();
 				}
 			}
+            client.closeAllSockets();
 		} catch (Exception e) {
 			listener.sendInformation(new InformationEvent(e));
-			System.exit(0);
 		}
-	}
+
+        listener.sendInformation(new InformationEvent(Level.INFO, "Connection closed to client: "+client.getInetAddress()));
+
+    }
 	
 	public boolean isClientVerifiedContact() {
 		return verifiedClient;
