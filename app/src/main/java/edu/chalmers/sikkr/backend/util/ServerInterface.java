@@ -85,12 +85,22 @@ public final class ServerInterface implements ProgressListenable {
         final Socket SOCKET, WRITE_SOCKET;
         final TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         final KeyPair key = getKeyPair(context);
-        final String localnbr = tMgr.getLine1Number();
+        String localnbr = tMgr.getLine1Number();
 
         PRIVATE_KEY = (RSAPrivateKey) key.getPrivate();
         PUBLIC_KEY = (RSAPublicKey) key.getPublic();
 
-        LOCAL_NUMBER = localnbr != null && !localnbr.isEmpty() ? localnbr : "1337";
+
+        if (localnbr == null || localnbr.isEmpty()) {
+            localnbr = tMgr.getSubscriberId();
+        }
+        if (localnbr == null || localnbr.isEmpty()) {
+            localnbr = tMgr.getSimSerialNumber();
+        }
+        if (localnbr == null || localnbr.isEmpty()) {
+            localnbr = "1337";
+        }
+        LOCAL_NUMBER = localnbr;
         SOCKET = new Socket(SERVER_IP, 1123);
         WRITE_SOCKET = new Socket(SERVER_IP, 1124);
 
