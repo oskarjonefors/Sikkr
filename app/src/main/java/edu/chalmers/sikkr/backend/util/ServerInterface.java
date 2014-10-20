@@ -46,7 +46,7 @@ import edu.chalmers.sikkr.backend.messages.VoiceMessage;
  */
 public final class ServerInterface implements ProgressListenable {
 
-    private final static String SERVER_IP = "192.168.1.104";
+    private final static String SERVER_IP = "sikkr.ddns.net";
 
     /**
      * Singleton of ServerInterface
