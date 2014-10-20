@@ -43,7 +43,7 @@ import edu.chalmers.sikkr.backend.messages.VoiceMessage;
  */
 public final class ServerInterface {
 
-    private final static String SERVER_IP = "46.239.104.32";
+    private final static String SERVER_IP = "192.168.1.119";
 
     /**
      * Singleton of ServerInterface
@@ -80,12 +80,12 @@ public final class ServerInterface {
         final Socket SOCKET, WRITE_SOCKET;
         final TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         final KeyPair key = getKeyPair(context);
+        final String localnbr = tMgr.getLine1Number();
 
         PRIVATE_KEY = (RSAPrivateKey) key.getPrivate();
         PUBLIC_KEY = (RSAPublicKey) key.getPublic();
 
-        //LOCAL_NUMBER = tMgr.getLine1Number(); //use this in release
-        LOCAL_NUMBER = "1337"; //Genymotion special ;)
+        LOCAL_NUMBER = localnbr != null && !localnbr.isEmpty() ? localnbr : "1337";
         SOCKET = new Socket(SERVER_IP, 997);
         WRITE_SOCKET = new Socket(SERVER_IP, 998);
 

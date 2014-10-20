@@ -38,7 +38,7 @@ public class ServerThread extends Thread {
 
 		this.socket = new ServerSocket(listener.getPort());
 		this.writeSocket = new ServerSocket(listener.getWritePort());
-		this.readyClients = new HashSet<Client>();
+		this.readyClients = Collections.synchronizedSet(new HashSet<Client>());
 		
 		this.stateHolder = new StateHolder();
 		this.clients = Collections.synchronizedMap(new HashMap<InetAddress, Client>());
@@ -51,6 +51,7 @@ public class ServerThread extends Thread {
 	@Override
 	public void run() {
 		this.stateHolder.state = State.RUNNING;
+        HashSet<Client> tmp = new HashSet<>();
 		IndividualServerSocketThread standard = null;
 		IndividualServerSocketThread write = null;
 		while (stateHolder.state == State.RUNNING) {
@@ -67,7 +68,9 @@ public class ServerThread extends Thread {
 			try {
 				for (Client client : readyClients) {
 					client.startNewAssociatedThread(new SocketThread(client, listener));
+                    tmp.add(client);
 				}
+                readyClients.removeAll(tmp);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
