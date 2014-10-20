@@ -6,6 +6,8 @@ apply plugin: 'jacoco'
 apply plugin: 'findbugs'
 
 mainClassName = "src.main.application.ServerApplication"
+sourceCompability = 1.8
+targetCompability = 1.8
 
 sourceSets {
 
