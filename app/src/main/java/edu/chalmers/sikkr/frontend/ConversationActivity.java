@@ -169,12 +169,7 @@ public class ConversationActivity extends Activity {
      * @param v the view that called this method
      */
     public void sendMessage(View v){
-        VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
-        try {
-            sender.sendMessage(recorder.getVoiceMessage(), thisConversation.getAddress());
-        } catch (MessageNotSentException e) {
-            Log.e("ContactActivity", "Message not sent");
-        }
+        VoiceMessageSender.getSharedInstance().sendMessage(recorder.getVoiceMessage(), thisConversation.getAddress());
         hideButtons();
     }
 

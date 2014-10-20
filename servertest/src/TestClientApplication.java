@@ -174,12 +174,12 @@ public class TestClientApplication {
         byte[] receivedKey = new byte[keyLength], key, encryptedKey;
         byte[] decryptedBytes;
         EncryptedMessage message;
-		
-		LOG.log(Level.INFO, "Finished reading from server!");
-		inputStream.readFully(receivedIV);
-		inputStream.readFully(receivedKey);
+
+        LOG.log(Level.INFO, "Finished reading from server!");
+        inputStream.readFully(receivedIV);
+        inputStream.readFully(receivedKey);
         inputStream.readFully(readBytes);
-        
+
         iv = decrypt(receivedIV);
         key = decrypt(receivedKey);
         decryptedBytes = aesDecrypt(readBytes, key, iv);

@@ -54,35 +54,6 @@ public class Client {
 			started = true;
 		}
 	}
-	
-	public boolean equals(Object object) {
-		if (!object.getClass().equals(getClass())) {
-			return false;
-		}
-		Client client = (Client) object;
-		return socket.equals(client.getSocket())
-				&& writeSocket.equals(client.getWriteSocket())
-				&& address.equals(client.getInetAddress())
-				&& thread.equals(client.getAssociatedThread());
-	}
-	
-	public int hashCode() {
-		int hashCode = super.hashCode();
-		
-		if (socket != null) {
-			hashCode += 13*socket.hashCode();
-		}
-		if (writeSocket != null) {
-			hashCode += 23*writeSocket.hashCode();
-		}
-		if (address != null) {
-			hashCode += 5*address.hashCode();
-		}
-		if (thread != null) {
-			hashCode += 7*thread.hashCode();
-		}
-		return hashCode;
-	}
 
     public void closeAllSockets() throws IOException {
         if (!socket.isClosed()) {

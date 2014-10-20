@@ -68,13 +68,25 @@ public class VoiceMessageSender {
         singleton.setup(context);
     }
 
-    public void sendMessage(VoiceMessage vmsg, String receiverNbr)
-            throws MessageNotSentException, IllegalArgumentException {
-        if (ServerInterface.serverHasClient(receiverNbr)) {
-            ServerInterface.sendVoiceMessage(receiverNbr, vmsg);
-        } else {
-            sendMmsMessage(vmsg, receiverNbr);
-        }
+    public void sendMessage(final VoiceMessage vmsg, final String receiverNbr) throws IllegalArgumentException {
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    if (ServerInterface.serverHasClient(receiverNbr)) {
+                        ServerInterface.sendVoiceMessage(receiverNbr, vmsg);
+                    } else {
+                        sendMmsMessage(vmsg, receiverNbr);
+                    }
+                } catch (MessageNotSentException e) {
+                    Log.e("ContactActivity", "Message not sent");
+                }
+            }
+        };
+        Thread t = new Thread(runnable, "Message send thread");
+        t.start();
+
     }
 
     /**

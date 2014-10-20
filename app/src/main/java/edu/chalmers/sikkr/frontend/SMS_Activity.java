@@ -19,25 +19,34 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
 import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
 import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.messages.Conversation;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 
+
 /**
  * Activity for showing the sms inbox
  */
-public class SMS_Activity extends Activity {
+
+public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     private static List<Conversation> smsList;
     ArrayAdapter adapter;
 
@@ -76,11 +85,7 @@ public class SMS_Activity extends Activity {
     }
 
     private void createSmsLayout() {
-        smsList = TheInbox.getInstance().getMessageInbox();
-        LogUtility.writeLogFile("smLsiT", ""+smsList.size());
-        adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
-        ListView listV = (ListView) findViewById(R.id.listView);
-        listV.setAdapter(adapter);
+        TheInbox.getInstance().loadInbox(this);
     }
 
     //public static ArrayList<SmsConversation> getConversations(){
@@ -133,6 +138,16 @@ public class SMS_Activity extends Activity {
         if(contact.length() == 0)
             return number;
         return contact;
+    }
+
+    @Override
+    public void onDone() {
+        smsList = TheInbox.getInstance().getMessageInbox();
+        findViewById(R.id.inboxProgressBar).setVisibility(View.GONE);
+        LogUtility.writeLogFile("smLsiT", ""+smsList.size());
+        adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
+        ListView listV = (ListView) findViewById(R.id.listView);
+        listV.setAdapter(adapter);
     }
 
     //Inner adapter class
@@ -192,8 +207,7 @@ public class SMS_Activity extends Activity {
             holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
             holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             holder.contactName.setTag(i);
-            holder.date.setText(DateDiffUtility.callDateToString(Long.parseLong(list.get(i).getLatestDate())));
-
+            holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage[]) list.get(i).getSmsList().toArray())[0].getTimestamp().getTimeInMillis()));
             return view;
         }
     }

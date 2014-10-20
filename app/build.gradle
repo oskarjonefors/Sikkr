@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
 
-sourceCompability = 1.7
-
 android {
     compileSdkVersion 21
     buildToolsVersion '21.0.1'

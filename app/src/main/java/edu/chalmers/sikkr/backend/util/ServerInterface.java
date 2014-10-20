@@ -27,6 +27,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.crypto.Cipher;
@@ -35,15 +36,17 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 
+import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.messages.Message;
+import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
  * Created by Eric on 2014-10-13.
  */
-public final class ServerInterface {
+public final class ServerInterface implements ProgressListenable {
 
-    private final static String SERVER_IP = "192.168.1.119";
+    private final static String SERVER_IP = "192.168.1.104";
 
     /**
      * Singleton of ServerInterface
@@ -68,6 +71,8 @@ public final class ServerInterface {
 
     private final RSAPrivateKey PRIVATE_KEY;
     private final RSAPublicKey PUBLIC_KEY;
+
+    private final Collection<ProgressListener> listeners;
 
     /**
      * Creates a new ServerInterface.
@@ -107,6 +112,8 @@ public final class ServerInterface {
         SERVER_KEY = getServerKey();
         INPUT_STREAM.readFully(new byte[INPUT_STREAM.available()]);
         verify();
+
+        listeners = new ArrayList<>();
     }
 
     /*
@@ -276,6 +283,18 @@ public final class ServerInterface {
         }
     }
 
+    public static void addSingletonProgressListener(ProgressListener listener) {
+        singleton.addProgressListener(listener);
+    }
+
+    public static void removeSingletonProgressListener(ProgressListener listener) {
+        singleton.removeProgressListener(listener);
+    }
+
+    public static void notifySingletonListeners(double progress, String taskMsg) {
+        singleton.notifyListeners(progress, taskMsg);
+    }
+
     /*
      * -------------------- Instance methods -------------------------------------------------------
      */
@@ -317,6 +336,8 @@ public final class ServerInterface {
 
         n = INPUT_STREAM.readInt();
 
+        double step = 1D / (n * 8D);
+
         for (int i = 0; i < n; i++) {
             final int ivLength = INPUT_STREAM.readInt();
             final int keyLength = INPUT_STREAM.readInt();
@@ -352,6 +373,7 @@ public final class ServerInterface {
 
             msg = new Message(context, senderNumber, receiverNumber, content, type, time, sent);
             messages.add(msg);
+            notifyListeners(step, "Loading " + (sent ? "sent " : "incoming") + "web messages");
         }
 
         return messages;
@@ -542,6 +564,23 @@ public final class ServerInterface {
 
     private void writeLine(String string) throws IOException {
         writeLine(string, true);
+    }
+
+    @Override
+    public void addProgressListener(ProgressListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeProgressListener(ProgressListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public void notifyListeners(double progress, String taskMsg) {
+        for (ProgressListener listener : listeners) {
+            listener.notifyProgress(progress, "ServerInterface", taskMsg);
+        }
     }
 
     private enum VerificationType {

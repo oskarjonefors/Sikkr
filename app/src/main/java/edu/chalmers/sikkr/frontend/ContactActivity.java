@@ -135,24 +135,24 @@ public class ContactActivity extends Activity {
          cancelButton.setEnabled(false);
          cancelButton.setVisibility(View.GONE);
     }
-    private void hideButtons(){
+    private void hideButtons() {
         cancelButton.setVisibility(View.GONE);
         sendButton.setVisibility(View.GONE);
         cancelButton.setEnabled(false);
         sendButton.setEnabled(false);
         recordButton.setEnabled(true);
     }
-    public void sendTheMessage(View v){
-        VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
+    public void sendTheMessage(View v) {
         try {
-            sender.sendMessage(recorder.getVoiceMessage(), contact.getDefaultNumber());
-        } catch (MessageNotSentException e) {
+            VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
+            sender.sendMessage(recorder.getVoiceMessage(), contact.getMobilePhoneNumbers().get(0));
+        } catch (Exception e) {
             Log.e("ContactActivity", "Message not sent");
         }
         hideButtons();
     }
 
-    public void cancelTheMessage(View v){
+    public void cancelTheMessage(View v) {
         recorder.discardRecording();
         hideButtons();
     }
