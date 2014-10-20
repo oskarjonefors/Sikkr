@@ -82,8 +82,8 @@ public class SocketThread extends Thread {
                 listener.sendInformation(new InformationEvent(Level.INFO, "Received command: "+command));
 				if (command.toLowerCase().startsWith("verify:")) {
 					verify(command.replace("verify:", ""));
-				} else if (command.toLowerCase().equals("get_recieved_messages")) {
-					sendRecievedMessages();
+				} else if (command.toLowerCase().equals("get_received_messages")) {
+					sendReceivedMessages();
 				} else if (command.toLowerCase().equals("get_sent_messages")) {
 					sendSentMessages();
 				} else if (command.toLowerCase().equals("send_message")) {
@@ -207,7 +207,7 @@ public class SocketThread extends Thread {
 		return aesDecrypt(answer, decryptedKey, decryptedIV);
 	}
 	
-	private void sendRecievedMessages() throws Exception {
+	private void sendReceivedMessages() throws Exception {
 		if (verifiedClient && contact != null) {
 			sendMessagesToClient(contact.recievedMessages);
 		}
@@ -259,6 +259,8 @@ public class SocketThread extends Thread {
 			
 			contact = new Contact(number, askForPublicKey());
 			listener.addContact(contact);
+            verifiedClient = true;
+            listener.sendInformation(new InformationEvent(Level.INFO, "Added new client!"));
 		} else if (verifyContact(c)) {
 			listener.sendInformation(new InformationEvent(Level.INFO, "Client verified: "+client.getInetAddress()+" as "+c.getNumber()));
 			contact = c;

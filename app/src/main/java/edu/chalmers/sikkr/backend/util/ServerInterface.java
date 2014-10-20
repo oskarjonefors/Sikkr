@@ -199,6 +199,7 @@ public final class ServerInterface {
         try {
             return getSingleton().getReceivedMessagesFromServer();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -210,6 +211,7 @@ public final class ServerInterface {
         try {
             return getSingleton().getSentMessagesFromServer();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

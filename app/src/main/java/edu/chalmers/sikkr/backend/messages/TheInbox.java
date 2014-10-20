@@ -162,31 +162,35 @@ public class TheInbox {
 
     private void collectWebMessages() {
         List<Message> messages = ServerInterface.getReceivedMessages();
-        for (Message msg : messages) {
-            Conversation conversation;
-            if (!map.containsKey(msg.getSender())) {
-                conversation = new Conversation(msg.getSender(), "", msg.getTimestamp().getDisplayName(Calendar.DATE, Calendar.LONG,Locale.getDefault()),false);
-                map.put(msg.getSender(), conversation);
-                messageList.add(conversation);
-            } else {
-                conversation = map.get(msg.getSender());
+        if (!messages.isEmpty()) {
+            for (Message msg : messages) {
+                Conversation conversation;
+                if (!map.containsKey(msg.getSender())) {
+                    conversation = new Conversation(msg.getSender(), "", msg.getTimestamp().getDisplayName(Calendar.DATE, Calendar.LONG, Locale.getDefault()), false);
+                    map.put(msg.getSender(), conversation);
+                    messageList.add(conversation);
+                } else {
+                    conversation = map.get(msg.getSender());
+                }
+                conversation.addMessage(msg);
             }
-            conversation.addMessage(msg);
         }
     }
 
     private void collectSentWebMessages() {
         List<Message> messages = ServerInterface.getSentMessages();
-        for (Message msg : messages) {
-            Conversation conversation;
-            if (!map.containsKey(msg.getSender())) {
-                conversation = new Conversation(msg.getReceiver(), "", msg.getTimestamp().getDisplayName(Calendar.DATE, Calendar.LONG,Locale.getDefault()),true);
-                map.put(msg.getReceiver(), conversation);
-                messageList.add(conversation);
-            } else {
-                conversation = map.get(msg.getReceiver());
+        if (!messages.isEmpty()) {
+            for (Message msg : messages) {
+                Conversation conversation;
+                if (!map.containsKey(msg.getSender())) {
+                    conversation = new Conversation(msg.getReceiver(), "", msg.getTimestamp().getDisplayName(Calendar.DATE, Calendar.LONG, Locale.getDefault()), true);
+                    map.put(msg.getReceiver(), conversation);
+                    messageList.add(conversation);
+                } else {
+                    conversation = map.get(msg.getReceiver());
+                }
+                conversation.addMessage(msg);
             }
-            conversation.addMessage(msg);
         }
     }
 
