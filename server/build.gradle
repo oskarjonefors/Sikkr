@@ -2,17 +2,9 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
-mainClassName = "src.main.application.ServerApplication"
+mainClassName = "main.application.ServerApplication"
 
-sourceSets {
-
-	main {
-		java {
-			srcDir 'src'
-		}
-	}
-
-}
+sourceSets.main.java.srcDirs = ['src']
 
 repositories {
     mavenCentral()
