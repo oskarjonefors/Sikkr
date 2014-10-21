@@ -219,6 +219,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
             holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             holder.contactName.setTag(i);
             holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage[]) list.get(i).getSmsList().toArray())[0].getTimestamp().getTimeInMillis()));
+
             return view;
         }
     }
