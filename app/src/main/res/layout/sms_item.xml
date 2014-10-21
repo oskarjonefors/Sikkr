@@ -8,19 +8,10 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:id="@+id/imageButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:background="@drawable/play"
-        android:onClick="readMsg"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Recived:"
-        android:layout_toStartOf="@+id/date"
-        android:layout_alignTop="@+id/date"
-        android:layout_centerHorizontal="true" />
+        android:onClick="readMsg"
+        android:layout_below="@+id/divider"
+        android:layout_alignParentEnd="true" />
 
 
     <TextView
@@ -29,28 +20,28 @@
         android:text="12:31"
         android:id="@+id/date"
         android:textSize="20sp"
-        android:layout_above="@+id/divider"
-        android:layout_alignEnd="@+id/sender" />
+        android:layout_alignBottom="@+id/imageButton"
+        android:layout_toStartOf="@+id/imageButton" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nbr goes here"
         android:id="@+id/sender"
-        android:layout_toStartOf="@+id/imageButton"
-        android:textSize="35sp"
+        android:textSize="28sp"
         android:onClick="clickedText"
         android:clickable="true"
-        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/imageButton"
+        android:layout_below="@+id/divider"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/divider" />
+        android:layout_above="@+id/date" />
 
      <View
          android:layout_width="fill_parent"
          android:layout_height="5dp"
          android:background="@android:color/darker_gray"
-         android:layout_below="@+id/imageButton"
-         android:layout_alignParentStart="true"
-         android:id="@+id/divider" />
+         android:id="@+id/divider"
+         android:layout_alignParentTop="true"
+         android:layout_alignParentStart="true" />
 
 </RelativeLayout>

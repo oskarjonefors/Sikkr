@@ -46,13 +46,13 @@ public class TheInbox {
     private void collectSms() {
         Uri uriToAndroidInbox = Uri.parse("content://sms/inbox");
         Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
+        int counter = 0;
         while(cursor.moveToNext()) {
 
             SmsConversation conversation;
             OneSms sms;
 
             String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-            String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
             String msg = cursor.getString(cursor.getColumnIndexOrThrow("body"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
             String seen = cursor.getString(cursor.getColumnIndexOrThrow("seen"));
@@ -61,13 +61,15 @@ public class TheInbox {
             //If a sms conversation form this contact does not exist, create a new SmsConversation
             if(!map.containsKey(address)) {
                 //Toast.makeText(context, "Creating new conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
-                conversation = new SmsConversation(address, person, date, false);
+                conversation = new SmsConversation(address, date, false);
                 smsList.add(conversation);
                 map.put(address, conversation);
             } else {
                 //Toast.makeText(context, "Found existing conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
                 conversation = map.get(address);
             }
+            conversation.setCount(counter);
+            counter++;
             sms = new OneSms(msg, address, date, false);
             if(seen.equals("0") || seen.equals("0")){
                 sms.markAsUnread();
@@ -90,7 +92,6 @@ public class TheInbox {
             OneSms sms;
 
             String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-            String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
             String msg = cursor.getString(cursor.getColumnIndexOrThrow("body"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
 

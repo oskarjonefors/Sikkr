@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,10 +24,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.koushikdutta.async.util.HashList;
+
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,11 +43,13 @@ import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.sms.OneSms;
 import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.sms.TheInbox;
+import edu.chalmers.sikkr.backend.util.DateDiffUtility;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 
 public class SMS_Activity extends Activity {
     private static ArrayList<SmsConversation> smsList;
     ArrayAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,13 +138,6 @@ public class SMS_Activity extends Activity {
         return contact;
     }
 
-    public static String getPropperDate(String s) {
-        Long dateNbr = Long.parseLong(s);
-        Date date = new Date(dateNbr);
-        return new SimpleDateFormat("EEE, MMM d, ''yy").format(date);
-
-    }
-
     //Inner adapter class
     public class SmsViewAdapter extends ArrayAdapter {
 
@@ -173,8 +175,10 @@ public class SMS_Activity extends Activity {
             messageList.addAll(messageSet);
             Collections.sort(messageList);
             ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
+
             //Link an sms to the playbutton
             int counter = messageList.size() -1;
+
             while(messageList.get(counter).isSent()){
                 counter = counter - 1;
             }
@@ -183,14 +187,15 @@ public class SMS_Activity extends Activity {
             }else{
                 tryButton.setBackgroundResource(R.drawable.play);
             }
+
+            //Link an sms to the playbutton
             view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
 
             //set the correct data of the element
             holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
             holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             holder.contactName.setTag(i);
-            holder.date.setText(getPropperDate(list.get(i).getLatestDate()));
-
+            holder.date.setText(DateDiffUtility.callDateToString(Long.parseLong(list.get(i).getLatestDate())));
 
             return view;
         }
@@ -199,6 +204,7 @@ public class SMS_Activity extends Activity {
     static class ViewHolder {
         TextView contactName;
         TextView date;
+
     }
 }
 
