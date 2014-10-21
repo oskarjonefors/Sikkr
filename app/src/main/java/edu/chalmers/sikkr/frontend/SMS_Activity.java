@@ -180,6 +180,10 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
             View view = v;
             final ViewHolder holder;
 
+            if (i < 0 || i >= list.size()) {
+                return null;
+            }
+
             if (view == null) {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 view = inflater.inflate(layoutId, viewGroup, false);
