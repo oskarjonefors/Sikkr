@@ -42,7 +42,4 @@ public class SmsConversation{
     public void setCount(int x) {
         count = x;
     }
-    public int getCount() {
-        return count;
-    }
 }
