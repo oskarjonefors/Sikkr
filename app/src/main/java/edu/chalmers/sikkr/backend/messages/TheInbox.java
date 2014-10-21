@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
@@ -72,8 +73,10 @@ public class TheInbox implements ProgressListenable {
 
                 curPart.moveToFirst();
                 partURI = Uri.parse("content://mms/part/" + curPart.getString(0));
-                timestamp = new GregorianCalendar();
-                timestamp.setTimeInMillis(cursor.getLong(cursor.getColumnIndexOrThrow("date")));
+
+                Date thisDate = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
+                timestamp = Calendar.getInstance();
+                timestamp.setTime(thisDate);
 
                 if (!map.containsKey(address)) {
                     conversation = new Conversation(address);
@@ -110,8 +113,10 @@ public class TheInbox implements ProgressListenable {
 
                 curPart.moveToFirst();
                 partURI = Uri.parse("content://mms/part/" + curPart.getString(0));
-                timestamp = new GregorianCalendar();
-                timestamp.setTimeInMillis(cursor.getLong(cursor.getColumnIndexOrThrow("date")));
+
+                Date thisDate = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
+                timestamp = Calendar.getInstance();
+                timestamp.setTime(thisDate);
 
                 if (!map.containsKey(address)) {
                     conversation = new Conversation(address);
