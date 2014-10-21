@@ -101,6 +101,16 @@ public class SikkrContact implements Contact {
 
     @Override
     public int compareTo(Contact another) {
+        if (another == null) {
+            return 1;
+        }
+        if (isFavorite() && !another.isFavorite()) {
+            return -1;
+        }
+        if (!isFavorite() && another.isFavorite()) {
+            return 1;
+        }
+
         int compare = name.compareTo(another.getName());
         return compare == 0 ? id.compareTo(another.getID()) : compare;
     }
