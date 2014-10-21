@@ -203,7 +203,7 @@ public class TheInbox implements ProgressListenable {
 
     }
 
-    private void collectWebMessages() {
+    private void collectWebMessages() throws Exception {
         List<Message> messages = ServerInterface.getReceivedMessages();
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * 8D);
@@ -224,7 +224,7 @@ public class TheInbox implements ProgressListenable {
         }
     }
 
-    private void collectSentWebMessages() {
+    private void collectSentWebMessages() throws Exception {
         List<Message> messages = ServerInterface.getSentMessages();
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * 8D);
@@ -298,7 +298,7 @@ public class TheInbox implements ProgressListenable {
                 collectSentSms();
                 collectWebMessages();
                 collectSentWebMessages();
-            } catch (Exception e) {
+            } catch (Exception e ) {
                 e.printStackTrace();
                 StackTraceElement[] trace = e.getStackTrace();
                 String[] stacktrace = new String[trace.length + 1];

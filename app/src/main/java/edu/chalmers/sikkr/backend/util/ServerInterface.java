@@ -212,25 +212,15 @@ public final class ServerInterface implements ProgressListenable {
     /**
      * @return a list of recieved messages from the server.
      */
-    public static List<Message> getReceivedMessages() {
-        try {
-            return getSingleton().getReceivedMessagesFromServer();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static List<Message> getReceivedMessages() throws Exception {
+        return getSingleton().getReceivedMessagesFromServer();
     }
 
     /**
      * @return a list of sent messages from the server.
      */
-    public static List<Message> getSentMessages() {
-        try {
-            return getSingleton().getSentMessagesFromServer();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static List<Message> getSentMessages() throws Exception {
+        return getSingleton().getSentMessagesFromServer();
     }
 
     /**

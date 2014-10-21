@@ -85,7 +85,18 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     }
 
     private void createSmsLayout() {
-        TheInbox.getInstance().loadInbox(this);
+        try {
+            TheInbox.getInstance().loadInbox(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            StackTraceElement[] trace = e.getStackTrace();
+            String[] stacktrace = new String[trace.length + 1];
+            stacktrace[0] = e.getLocalizedMessage();
+            for (int i = 1; i < stacktrace.length + 1; i++) {
+                stacktrace[i] = trace[i].toString();
+            }
+            LogUtility.writeLogFile("load inbox", true, stacktrace);
+        }
     }
 
     //public static ArrayList<SmsConversation> getConversations(){
