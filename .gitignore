@@ -134,5 +134,5 @@ gradle-app.setting
 contacts.xml
 messages.xml
 contacts/*
-messages/*
+messages/*.msg
 key

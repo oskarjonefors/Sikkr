@@ -49,7 +49,6 @@ public final class FileUtility {
 						&& reader.getName().getLocalPart() == "Contact") {
 					String number = reader.getAttributeValue(0); //Number
 					RSAPublicKey key = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(getPublicKeyFromFile("contacts/" + number + ".key")));
-                    Logger.getGlobal().info("Found contact "+number+" with key: ");
                     Logger.getGlobal().info(new String(key.getEncoded()));
                     Contact contact = new Contact(number, key);
 					contacts.add(contact);
@@ -73,7 +72,6 @@ public final class FileUtility {
 					long time = Long.parseLong(reader.getAttributeValue(3)); //Timestamp
 					String path = reader.getAttributeValue(4); //Content path
 					messages.add(new Message(getMessageContent(path), sender, reciever, type, time));
-					Logger.getGlobal().info("Found message from "+sender+" to "+reciever);
 				}
 			}
 		}
@@ -81,7 +79,7 @@ public final class FileUtility {
 	}
 	
 	private static byte[] getMessageContent(String path) throws Exception {
-		DataInputStream dis = new DataInputStream(new FileInputStream("messages/"+path));
+		DataInputStream dis = new DataInputStream(new FileInputStream("messages/"+path+".msg"));
 		byte[] read = new byte[dis.available()];
 		dis.readFully(read);
 		dis.close();
@@ -126,7 +124,7 @@ public final class FileUtility {
 				contentDir.mkdir();
 			}
 			
-			contentFile = new File(contentDir, path);
+			contentFile = new File(contentDir, path + ".msg");
 			DataOutputStream dos = new DataOutputStream(new FileOutputStream(contentFile));
 			dos.write(message.getContent());
 			dos.flush();
