@@ -95,7 +95,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
             for (int i = 1; i < stacktrace.length + 1; i++) {
                 stacktrace[i] = trace[i].toString();
             }
-            LogUtility.writeLogFile("load inbox", true, stacktrace);
+            LogUtility.writeLogFile("load_inbox_throws", true, stacktrace);
         }
     }
 
