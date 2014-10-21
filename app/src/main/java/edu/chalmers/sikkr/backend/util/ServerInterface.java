@@ -91,8 +91,8 @@ public final class ServerInterface implements ProgressListenable {
         PUBLIC_KEY = (RSAPublicKey) key.getPublic();
 
         LOCAL_NUMBER = localnbr != null && !localnbr.isEmpty() ? localnbr : "1337";
-        SOCKET = new Socket(SERVER_IP, 997);
-        WRITE_SOCKET = new Socket(SERVER_IP, 998);
+        SOCKET = new Socket(SERVER_IP, 1123);
+        WRITE_SOCKET = new Socket(SERVER_IP, 1124);
 
         Log.i("ServerInterface", "Connection established with server");
 

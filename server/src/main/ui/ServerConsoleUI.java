@@ -104,8 +104,13 @@ public final class ServerConsoleUI implements InformationListener {
 	
 	@Override
 	public final int getPort() {
-		return 997;
+		return 1123;
 	}
+
+    @Override
+    public int getWritePort() {
+        return 1124;
+    }
 
 	@Override
 	public final RSAPublicKey getPublicKey() {
@@ -138,9 +143,6 @@ public final class ServerConsoleUI implements InformationListener {
 		logger = Logger.getGlobal();
 	}
 
-	@Override
-	public int getWritePort() {
-		return 998;
-	}
+
 	
 }
