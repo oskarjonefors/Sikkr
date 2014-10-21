@@ -17,6 +17,7 @@ import java.util.TreeMap;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.ProgressListenable;
+import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
 
@@ -299,6 +300,13 @@ public class TheInbox implements ProgressListenable {
                 collectSentWebMessages();
             } catch (Exception e) {
                 e.printStackTrace();
+                StackTraceElement[] trace = e.getStackTrace();
+                String[] stacktrace = new String[trace.length + 1];
+                stacktrace[0] = e.getLocalizedMessage();
+                for (int i = 1; i < stacktrace.length + 1; i++) {
+                    stacktrace[i] = trace[i].toString();
+                }
+                LogUtility.writeLogFile("load inbox", true, stacktrace);
                 return false;
             }
             return true; //If successful
