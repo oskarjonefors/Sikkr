@@ -51,11 +51,11 @@ public class ContactActivity extends Activity {
         switch (recorder.getRecordingState()) {
             case RESET:
                 recorder.startRecording();
-                btn.setText("Stop recording...");
+                btn.setText(R.string.stop_recording + "...");
                 break;
             case RECORDING:
                 recorder.stopRecording();
-                btn.setText("Send");
+                btn.setText(R.string.send);
                 break;
             case STOPPED:
                 VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
@@ -64,7 +64,7 @@ public class ContactActivity extends Activity {
                 } catch (MessageNotSentException e) {
                     Log.e("ContactActivity", "Message not sent");
                 }
-                btn.setText("Record");
+                btn.setText(R.string.record);
                 break;
         }
     }

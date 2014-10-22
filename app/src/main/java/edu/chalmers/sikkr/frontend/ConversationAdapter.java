@@ -35,7 +35,6 @@ public class ConversationAdapter extends ArrayAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
-        LogUtility.writeLogFile("adapter", "Kom till adaptern");
         View view = convertView;
         final ViewHolder holder;
         if(view == null) {

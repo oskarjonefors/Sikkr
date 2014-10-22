@@ -2,12 +2,14 @@
 <resources>
 
     <string name="app_name">Sikkr</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="lastCall">Samtal</string>
-    <string name="favCont">Favoriter</string>
-    <string name="contBook">Kontakter</string>
-    <string name="message">Meddelanden</string>
+    <string name="lastCall">Calls</string>
+    <string name="favCont">Favorites</string>
+    <string name="contBook">Contacts</string>
+    <string name="message">Messages</string>
+    <string name="stop_recording">Stop recording</string>
+    <string name="send">Send</string>
+    <string name="record">Record</string>
     <string name="title_activity_conversation">ConversationActivity</string>
     <string name="title_activity_latest_calls">LatestCallsActivity</string>
     <string-array name="clipart_list">
