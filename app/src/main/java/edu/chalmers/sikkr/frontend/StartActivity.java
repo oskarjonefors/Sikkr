@@ -121,16 +121,16 @@ public class StartActivity extends Activity {
      * Will redirect user to the selected activity
      */
     private void selectFunctionality() {
-        if (text.equals(R.string.one) || text.contains(R.string.calls)) {
+        if (text.equals(getText(R.string.one)) || text.contains(getText(R.string.calls))) {
             intent = new Intent(this, LatestCallsActivity.class);
             startActivity(intent);
-        } else if (text.equals(R.string.two) || text.contains(R.string.favorites)) {
+        } else if (text.equals(getText(R.string.two)) || text.contains(getText(R.string.favorites))) {
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);
-        } else if (text.equals(R.string.three) || text.contains(R.string.messages) {
+        } else if (text.equals(getText(R.string.three)) || text.contains(getText(R.string.messages))) {
             intent = new Intent(this, SMS_Activity.class);
             startActivity(intent);
-        } else if (text.equals(R.string.four) || text.contains(R.string.contacts)) {
+        } else if (text.equals(getText(R.string.four)) || text.contains(getText(R.string.contacts))) {
             words = text.split(" ");
             if (words.length > 1) {
                 intent = new Intent(this, ContactGridActivity.class);
@@ -153,7 +153,7 @@ public class StartActivity extends Activity {
         final ContactBook cb = ContactBook.getSharedInstance();
         words = text.split(" ");
         try {
-            if (words[0].contains(R.string.call)) {
+            if (words[0].contains(getText(R.string.call))) {
                 intent = new Intent(Intent.ACTION_CALL);
                 String searchString = "";
                 for (int i = 1; i < words.length; i++) {
