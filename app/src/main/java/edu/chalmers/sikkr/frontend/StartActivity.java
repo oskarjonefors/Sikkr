@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -103,10 +104,12 @@ public class StartActivity extends Activity {
         if (requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (matches.size() > 0) {
-                if (getDifference(matches.get(0), getString(R.string.call)) <= 1) {
-                    callContactByName(matches.get(0));
+                String firstLine = matches.get(0);
+                String firstWord = firstLine.split(" ")[0];
+                if (getDifference(firstWord, getString(R.string.call)) <= 2) {
+                    callContactByName(firstLine.split(" ", 2)[1]);
                 } else {
-                    selectFunctionality(matches.get(0));
+                    selectFunctionality(firstLine);
                 }
             }
         } else if (requestCode == MY_TTS_CHECK_CODE) {
