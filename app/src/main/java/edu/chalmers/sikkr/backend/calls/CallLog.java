@@ -79,7 +79,9 @@ public class CallLog {
 
     private boolean isCallDuplicate(String callNumber) {
         for(OneCall call : callList) {
-            if(callNumber == call.getCallNumber()) {
+            Log.i("Iterating", "Callnbr: " + callNumber + ". Listnbr:" + call.getCallNumber());
+            if(callNumber.equals(call.getCallNumber())) {
+                Log.i("Iterating", "Call numbers are equal");
                 return true;
             }
         }
