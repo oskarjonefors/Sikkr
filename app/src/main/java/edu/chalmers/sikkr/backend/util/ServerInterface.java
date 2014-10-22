@@ -131,17 +131,21 @@ public final class ServerInterface implements ProgressListenable {
      */
 
 
-    private static KeyPair generateKeyPair(File publicKeyFile, File privateKeyFile) {
+    private static KeyPair generateKeyPair(File publicKeyFile, File privateKeyFile) throws IOException {
         Log.d("ServerInterface", "Generating a key pair");
         KeyPairGenerator keyGen;
         KeyPair key = null;
 
         if (publicKeyFile.exists()) {
-            publicKeyFile.delete();
+            if (!publicKeyFile.delete()) {
+                throw new IOException("Could not delete existing public key file");
+            }
         }
 
         if (privateKeyFile.exists()) {
-            privateKeyFile.delete();
+            if (!privateKeyFile.delete()) {
+                throw new IOException("Could not delete existing private key file");
+            }
         }
 
         try {
@@ -150,16 +154,22 @@ public final class ServerInterface implements ProgressListenable {
             key = keyGen.genKeyPair();
 
             if (!publicKeyFile.getParentFile().exists()) {
-                publicKeyFile.getParentFile().mkdirs();
+                if (!publicKeyFile.getParentFile().mkdirs()) {
+                    throw new IOException("Could not create rsa key folder");
+                }
             }
 
-            publicKeyFile.createNewFile();
-            privateKeyFile.createNewFile();
+            if (!publicKeyFile.createNewFile()) {
+                throw new IOException("Could not create public key file");
+            }
+
+            if (!privateKeyFile.createNewFile()) {
+                throw new IOException("Could not create public key file");
+            }
+
             saveByteDataToFile(publicKeyFile, key.getPublic().getEncoded());
             saveByteDataToFile(privateKeyFile, key.getPrivate().getEncoded());
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -180,7 +190,7 @@ public final class ServerInterface implements ProgressListenable {
         return read;
     }
 
-    private static KeyPair getKeyPair(Context context) {
+    private static KeyPair getKeyPair(Context context)  throws IOException {
         final File keyFileDirectory = new File(context.getFilesDir(), "rsa/");
         final File publicKeyFile = new File(keyFileDirectory, "sikkr_pub_key");
         final File privateKeyFile = new File(keyFileDirectory, "sikkr_priv_key");
@@ -232,6 +242,7 @@ public final class ServerInterface implements ProgressListenable {
         getSingleton().sendMessageToServer(number, content, messageType);
     }
 
+    @SuppressWarnings("unused")
     public static void sendTextMessage(String number, String text) {
         sendMessage(number, text.getBytes(), Message.TYPE_TEXT);
     }
@@ -287,12 +298,9 @@ public final class ServerInterface implements ProgressListenable {
         singleton.addProgressListener(listener);
     }
 
+    @SuppressWarnings("unused")
     public static void removeSingletonProgressListener(ProgressListener listener) {
         singleton.removeProgressListener(listener);
-    }
-
-    public static void notifySingletonListeners(double progress, String taskMsg) {
-        singleton.notifyListeners(progress, taskMsg);
     }
 
     /*
@@ -331,7 +339,7 @@ public final class ServerInterface implements ProgressListenable {
     }
 
     private List<Message> getMessagesFromServer(boolean sent) throws Exception {
-        final List<Message> messages = new ArrayList<Message>();
+        final List<Message> messages = new ArrayList<>();
         final int n;
 
         n = INPUT_STREAM.readInt();
@@ -389,11 +397,7 @@ public final class ServerInterface implements ProgressListenable {
             INPUT_STREAM.readFully(keyBytes);
             Log.i("ServerInterface", "We have received the public key from the server");
             return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
         return null;
@@ -445,7 +449,7 @@ public final class ServerInterface implements ProgressListenable {
             OUTPUT_STREAM.writeInt(encryptedKey.length);
             OUTPUT_STREAM.writeInt(message.encryptedBytes[0].length);
             OUTPUT_STREAM.writeInt(message.encryptedBytes[1].length);
-            OUTPUT_STREAM.writeInt(1);
+            OUTPUT_STREAM.writeInt(messageType);
             OUTPUT_STREAM.writeLong(1000);
             OUTPUT_STREAM.write(encryptedIV);
             OUTPUT_STREAM.write(encryptedKey);
@@ -454,6 +458,7 @@ public final class ServerInterface implements ProgressListenable {
             OUTPUT_STREAM.flush();
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -478,17 +483,17 @@ public final class ServerInterface implements ProgressListenable {
         keyLength = INPUT_STREAM.readInt();
         answerLength = INPUT_STREAM.readInt();
 
-        iv = new byte[ivLength];
-        key = new byte[keyLength];
+        answerIv = new byte[ivLength];
+        answerKey = new byte[keyLength];
         answer = new byte[answerLength];
 
-        INPUT_STREAM.readFully(iv);
-        INPUT_STREAM.readFully(key);
+        INPUT_STREAM.readFully(answerIv);
+        INPUT_STREAM.readFully(answerKey);
         INPUT_STREAM.readFully(answer);
 
-        iv = decrypt(iv);
-        key = decrypt(key);
-        answer = aesDecrypt(answer, key, iv);
+        answerIv = decrypt(answerIv);
+        answerKey = decrypt(answerKey);
+        answer = aesDecrypt(answer, answerKey, answerIv);
 
         return Boolean.parseBoolean(new String(answer));
     }
@@ -584,7 +589,7 @@ public final class ServerInterface implements ProgressListenable {
     }
 
     private enum VerificationType {
-        NEW_CLIENT, VERIFICATION_CODE, INVALID;
+        NEW_CLIENT, VERIFICATION_CODE, INVALID
     }
 
 }
