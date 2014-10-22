@@ -65,5 +65,7 @@
         <item>clpa50</item>
     </string-array>
     <color name="background_color">#ECEAE0</color>
+    <color name="light_yellow">#CCFF00</color>
+    <color name = "blue">#abcaf0</color>
 
 </resources>
