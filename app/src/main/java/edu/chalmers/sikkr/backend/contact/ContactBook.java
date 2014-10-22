@@ -331,9 +331,7 @@ public class ContactBook implements ProgressListenable {
 
         @Override
         public int compare(Contact o1, Contact o2) {
-            long p1 = o1.getPriority();
-            long p2 = o2.getPriority();
-            return Long.compare(p1, p2) * -1;
+            return Long.compare(o2.getPriority(), o1.getPriority());
         }
 
     }
