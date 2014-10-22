@@ -16,8 +16,8 @@
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:id="@+id/conversation_record"
             android:background ="@drawable/redrec"
             android:layout_alignParentBottom="true"
@@ -51,15 +51,6 @@
             android:id="@+id/conversation_list"
             android:layout_above="@id/conversation_record"
             />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Recording..."
-            android:id="@+id/rectext"
-            android:layout_alignBottom="@+id/conversation_record"
-            android:layout_centerHorizontal="true"
-            android:textColor="#ffff001a" />
 
 
     </RelativeLayout>

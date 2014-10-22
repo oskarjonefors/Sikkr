@@ -101,13 +101,12 @@ public class ConversationActivity extends Activity {
         sendButton = (ImageButton) findViewById(R.id.conversation_send);
         cancelButton = (ImageButton) findViewById(R.id.conversation_cancel);
         recordButton = (ImageButton) findViewById(R.id.conversation_record);
-        recText = (TextView) findViewById(R.id.rectext);
         recordButton.setVisibility(View.VISIBLE);
         sendButton.setVisibility(View.GONE);
         sendButton.setEnabled(false);
         cancelButton.setEnabled(false);
         cancelButton.setVisibility(View.GONE);
-        recText.setVisibility(View.GONE);
+
 
     }
 
@@ -137,7 +136,6 @@ public class ConversationActivity extends Activity {
             case RESET:
                 recorder.startRecording();
                 recordButton.setBackgroundResource(R.drawable.stop_record);
-                recText.setVisibility(View.VISIBLE);
                 break;
             case RECORDING:
                 recorder.stopRecording();
@@ -147,7 +145,6 @@ public class ConversationActivity extends Activity {
                 sendButton.setEnabled(true);
                 cancelButton.setEnabled(true);
                 recordButton.setEnabled(false);
-                recText.setVisibility(View.GONE);
                 break;
         }
     }
