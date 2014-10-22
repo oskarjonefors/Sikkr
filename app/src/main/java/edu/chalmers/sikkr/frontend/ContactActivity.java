@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class ContactActivity extends Activity {
 
     private Contact contact;
     private VoiceMessageRecorder recorder;
+
     public void buttonClick(View view) {
         //Brings out the phone dialer
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
@@ -37,17 +39,17 @@ public class ContactActivity extends Activity {
         //contact.getPhoneNumbers().get(0)))
         //Sets the data for which number to call
         phoneIntent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
-        try{
+        try {
             startActivity(phoneIntent);
             finish();
-            Log.i("Finished making a call","");
-        }catch(ActivityNotFoundException e){
-            Log.v("Exception ocurred, could not make a call","");
+            Log.i("Finished making a call", "");
+        } catch (ActivityNotFoundException e) {
+            Log.v("Exception ocurred, could not make a call", "");
         }
     }
 
     public void voiceInteraction(View view) {
-        final Button btn = (Button)findViewById(R.id.recordButton);
+        final Button btn = (Button) findViewById(R.id.recordButton);
         switch (recorder.getRecordingState()) {
             case RESET:
                 recorder.startRecording();
@@ -73,12 +75,13 @@ public class ContactActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_contact);
 
         //This makes us able to use the TextView defined in the .xml and change it from here
-        final TextView contactName = (TextView)findViewById(R.id.contactName);
-        final TextView contactNumber = (TextView)findViewById(R.id.contactNumber);
-        final ImageView contactPicture = (ImageView)findViewById(R.id.contactPicture);
+        final TextView contactName = (TextView) findViewById(R.id.contactName);
+        final TextView contactNumber = (TextView) findViewById(R.id.contactNumber);
+        final ImageView contactPicture = (ImageView) findViewById(R.id.contactPicture);
 
 
         //Gets the shared instance ContactBook
@@ -100,25 +103,5 @@ public class ContactActivity extends Activity {
 
         recorder = VoiceMessageRecorder.getSharedInstance();
 
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.contact, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
