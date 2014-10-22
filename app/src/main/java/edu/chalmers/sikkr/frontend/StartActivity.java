@@ -161,7 +161,7 @@ public class StartActivity extends Activity {
             }
 
         } else {
-            TextToSpeechUtility
+            TextToSpeechUtility.readAloud(getString(R.string.unknown_command));
         }
 
     }
