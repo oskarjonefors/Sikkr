@@ -16,6 +16,7 @@
     <string name="four">fyra</string>
     <string name="call">ring</string>
     <string name="calling">ringer</string>
+    <string name="entering">går in på</string>
     <string name="found_no_contact">Hittade inte kontakt</string>
     <string name="title_activity_conversation">ConversationActivity</string>
     <string name="title_activity_latest_calls">LatestCallsActivity</string>

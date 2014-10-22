@@ -17,6 +17,7 @@
     <string name="call">call</string>
     <string name="calling">calling</string>
     <string name="found_no_contact">Found no matching contact.</string>
+    <string name="entering">entering</string>
     <string name="title_activity_conversation">ConversationActivity</string>
     <string name="title_activity_latest_calls">LatestCallsActivity</string>
     <string-array name="clipart_list" translatable="false">

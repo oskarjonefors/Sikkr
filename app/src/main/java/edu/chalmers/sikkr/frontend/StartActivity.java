@@ -105,7 +105,7 @@ public class StartActivity extends Activity {
             if (matches.size() > 0) {
                 String firstLine = matches.get(0);
                 String firstWord = firstLine.split(" ")[0];
-                if (getDifference(firstWord, getString(R.string.call)) <= 2) {
+                if (getDifference(firstWord, getString(R.string.call)) <= 2 && firstLine.split(" ").length > 1) {
                     callContactByName(firstLine.split(" ", 2)[1]);
                     LogUtility.writeLogFile("onActivityResult", true, firstLine.split(" ", 2)[1]);
                 } else {
@@ -129,12 +129,15 @@ public class StartActivity extends Activity {
      */
     private void selectFunctionality(String text) {
         if (getDifference(text, getString(R.string.one)) <= 1 || getDifference(text, getString(R.string.calls)) <= 2) {
+            TextToSpeechUtility.readAloud(getString(R.string.entering) + " " + getString(R.string.calls));
             intent = new Intent(this, LatestCallsActivity.class);
             startActivity(intent);
         } else if (getDifference(text, getString(R.string.two)) <= 1 || getDifference(text, getString(R.string.favorites)) <= 2) {
+            TextToSpeechUtility.readAloud(getString(R.string.entering) + " " + getString(R.string.favorites));
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);
         } else if (getDifference(text, getString(R.string.three)) <= 1 || getDifference(text, getString(R.string.messages)) <= 2) {
+            TextToSpeechUtility.readAloud(getString(R.string.entering) + " " + getString(R.string.messages));
             intent = new Intent(this, SMS_Activity.class);
             startActivity(intent);
         } else if (getDifference(text, getString(R.string.four)) <= 1 || getDifference(text, getString(R.string.contacts)) <= 2) {
@@ -144,6 +147,7 @@ public class StartActivity extends Activity {
                 intent.putExtra("initial_letter", words[1].charAt(0));
                 startActivity(intent);
             } else {
+                TextToSpeechUtility.readAloud(getString(R.string.entering) + " " + getString(R.string.contacts));
                 intent  = new Intent(this, ContactBookActivity.class);
                 startActivity(intent);
             }
