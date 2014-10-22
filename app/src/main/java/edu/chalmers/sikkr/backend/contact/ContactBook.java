@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -275,6 +277,39 @@ public class ContactBook implements ProgressListenable {
         return favSet;
     }
 
+    public List<Contact> getTopContacts(int nbrOfContacts) {
+        final List<Contact> topList = new ArrayList<Contact>();
+        final List<Contact> favList = new ArrayList<Contact>();
+        favList.addAll(getFavoriteContacts());
+        Collections.sort(favList, new PriorityComparator());
+
+        if (favList.size() >= nbrOfContacts) {
+            for (int i = 0; i < nbrOfContacts; i++) {
+                topList.add(favList.iterator().next());
+            }
+            return topList;
+        } else {
+            for (Contact contact : favList) {
+                topList.add(contact);
+            }
+
+            final List<Contact> allList = new ArrayList<Contact>();
+            allList.addAll(getContacts());
+
+            Collections.sort(allList, new PriorityComparator());
+            int emptySlots = Math.min(nbrOfContacts - topList.size(), allList.size());
+
+            for(int i = 0; i < emptySlots; i++) {
+                if (!topList.contains(allList.get(i))) {
+                    topList.add(allList.get(i));
+                }
+            }
+
+            Collections.sort(topList, new PriorityComparator());
+            return topList;
+        }
+    }
+
     @Override
     public void addProgressListener(ProgressListener listener) {
         listeners.add(listener);
@@ -290,5 +325,16 @@ public class ContactBook implements ProgressListenable {
         for (ProgressListener listener : listeners) {
             listener.notifyProgress(progress, "Contact Book", taskMsg);
         }
+    }
+
+    private static class PriorityComparator implements Comparator<Contact> {
+
+        @Override
+        public int compare(Contact o1, Contact o2) {
+            long p1 = o1.getPriority();
+            long p2 = o2.getPriority();
+            return Long.compare(p1, p2) * -1;
+        }
+
     }
 }

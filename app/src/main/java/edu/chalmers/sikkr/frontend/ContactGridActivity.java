@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -28,12 +29,12 @@ public class ContactGridActivity extends Activity {
 
         final ContactBook book = ContactBook.getSharedInstance();
         final Bundle bundle = getIntent().getExtras();
-        final Set<Contact> contacts;
+        final Collection<Contact> contacts;
 
         if(bundle != null && bundle.containsKey("initial_letter")) {
             contacts = book.getContacts(bundle.getChar("initial_letter"));
         } else {
-            contacts = book.getFavoriteContacts();
+            contacts = book.getTopContacts(10);
         }
 
         final List<Contact> contactList = new ArrayList<Contact>();
