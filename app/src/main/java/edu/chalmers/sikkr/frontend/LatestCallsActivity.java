@@ -35,11 +35,7 @@ public class LatestCallsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        //Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_latest_calls);
@@ -99,7 +95,7 @@ public class LatestCallsActivity extends Activity {
                 holder = (ViewHolder) view.getTag();
             }
 
-            if (contactID != null) {
+            if (contactID != null && ContactBook.getSharedInstance().getContact(contactID) != null) {
                 holder.contact = ContactBook.getSharedInstance().getContact(contactID);
                 holder.name.setText(holder.contact.getName());
 

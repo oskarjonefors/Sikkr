@@ -1,14 +1,7 @@
 package edu.chalmers.sikkr.backend.util;
-
-import android.util.Log;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import edu.chalmers.sikkr.backend.calls.CallLog;
-import edu.chalmers.sikkr.backend.calls.OneCall;
 
 /**
  * Created by Armand on 2014-10-14.
@@ -16,8 +9,6 @@ import edu.chalmers.sikkr.backend.calls.OneCall;
  * Takes in  a calldate in Milliseconds and through the method callDatetoString returns the time difference between right now and the time of the phonecall.
  */
 public final class DateDiffUtility {
-
-
 
     private DateDiffUtility() {
         throw new UnsupportedOperationException("Cannot create instance of this class");
@@ -36,7 +27,6 @@ public final class DateDiffUtility {
 
         if ((timeDays /7 ) >= 1) {
 
-
             if ((timeDays/7) <= 4) {
                 return (timeDays/7) + " w";
             }
@@ -53,8 +43,11 @@ public final class DateDiffUtility {
 
             return timeMinutes + " min";
 
+        } else if ((timeMinutes / 5 ) < 1) {
+
+            return "Just Now";
         }
 
-        return "Just Now";
+        return "Long ago";
     }
 }
