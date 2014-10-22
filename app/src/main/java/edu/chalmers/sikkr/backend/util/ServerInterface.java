@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -33,12 +34,9 @@ import java.util.List;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocketFactory;
 
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.messages.Message;
-import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
@@ -47,6 +45,8 @@ import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 public final class ServerInterface implements ProgressListenable {
 
     private final static String SERVER_IP = "sikkr.ddns.net";
+    private final static int standardPort = 1123;
+    private final static int writePort = 1124;
 
     /**
      * Singleton of ServerInterface
@@ -101,8 +101,8 @@ public final class ServerInterface implements ProgressListenable {
             localnbr = "1337";
         }
         LOCAL_NUMBER = localnbr;
-        SOCKET = new Socket(SERVER_IP, 1123);
-        WRITE_SOCKET = new Socket(SERVER_IP, 1124);
+        SOCKET = new Socket(SERVER_IP, standardPort);
+        WRITE_SOCKET = new Socket(SERVER_IP, writePort);
 
         Log.i("ServerInterface", "Connection established with server");
 
@@ -114,12 +114,13 @@ public final class ServerInterface implements ProgressListenable {
         Log.i("ServerInterface", "The streams to the server are open");
 
         try {
-            Thread.sleep(500);
+            final int waitDuration = 500; //Milliseconds
+            Thread.sleep(waitDuration);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        SERVER_KEY = getServerKey();
+        SERVER_KEY = (PublicKey) getServerKey();
         INPUT_STREAM.readFully(new byte[INPUT_STREAM.available()]);
         verify();
 
@@ -135,6 +136,7 @@ public final class ServerInterface implements ProgressListenable {
         Log.d("ServerInterface", "Generating a key pair");
         KeyPairGenerator keyGen;
         KeyPair key = null;
+        final int keySize = 4096;
 
         if (publicKeyFile.exists()) {
             if (!publicKeyFile.delete()) {
@@ -150,7 +152,7 @@ public final class ServerInterface implements ProgressListenable {
 
         try {
             keyGen = KeyPairGenerator.getInstance("RSA");
-            keyGen.initialize(2048);
+            keyGen.initialize(keySize);
             key = keyGen.genKeyPair();
 
             if (!publicKeyFile.getParentFile().exists()) {
@@ -309,7 +311,7 @@ public final class ServerInterface implements ProgressListenable {
 
     private byte[] aesDecrypt(byte[] data, byte[] key, byte[] iv) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        SecretKeySpec kSpec = new SecretKeySpec(key, "AES/CBC/PKCS5Padding");
+        Key kSpec = new SecretKeySpec(key, "AES/CBC/PKCS5Padding");
 
         cipher.init(Cipher.DECRYPT_MODE, kSpec, new IvParameterSpec(iv));
         return cipher.doFinal(data);
@@ -340,11 +342,12 @@ public final class ServerInterface implements ProgressListenable {
 
     private List<Message> getMessagesFromServer(boolean sent) throws Exception {
         final List<Message> messages = new ArrayList<>();
-        final int n;
+        final int n = INPUT_STREAM.readInt();
+        final double numberOfOperations = 8D;
 
-        n = INPUT_STREAM.readInt();
 
-        double step = 1D / (n * 8D);
+
+        double step = 1D / (n * numberOfOperations);
 
         for (int i = 0; i < n; i++) {
             final int ivLength = INPUT_STREAM.readInt();
@@ -387,7 +390,7 @@ public final class ServerInterface implements ProgressListenable {
         return messages;
     }
 
-    private RSAPublicKey getServerKey() {
+    private Key getServerKey() {
         Log.i("ServerInterface", "Getting the server's public key");
         try {
             writeLine("get_server_key");
@@ -396,7 +399,7 @@ public final class ServerInterface implements ProgressListenable {
             byte[] keyBytes = new byte[keyLength];
             INPUT_STREAM.readFully(keyBytes);
             Log.i("ServerInterface", "We have received the public key from the server");
-            return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
+            return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
@@ -559,16 +562,16 @@ public final class ServerInterface implements ProgressListenable {
         }
     }
 
-    private void writeLine(String string, boolean flush) throws IOException {
-        BUFFERED_WRITER.append(string);
+    private void writeLine(CharSequence line, boolean flush) throws IOException {
+        BUFFERED_WRITER.append(line);
         BUFFERED_WRITER.newLine();
         if (flush) {
             BUFFERED_WRITER.flush();
         }
     }
 
-    private void writeLine(String string) throws IOException {
-        writeLine(string, true);
+    private void writeLine(CharSequence line) throws IOException {
+        writeLine(line, true);
     }
 
     @Override
