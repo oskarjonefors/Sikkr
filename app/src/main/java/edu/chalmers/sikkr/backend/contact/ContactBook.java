@@ -69,6 +69,8 @@ public class ContactBook implements ProgressListenable {
     private void setup(Context context) {
         this.context = context;
         contacts.clear();
+
+        /* This tool assigns display pictures to the contacts who do not have display pictures */
         clipartUtility = new ClipartUtility(context);
         final Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
 
