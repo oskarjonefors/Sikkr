@@ -41,13 +41,10 @@ public class MMS extends AbstractMessage implements VoiceMessage {
     }
 
     @Override
-    public String getMessage(){
-        return "";
-    }
-    @Override
     public void play(){
         VoiceMessagePlayer.getSharedInstance().playMessage(this);
     }
+
     @Override
     public boolean isSent(){
         return sent;

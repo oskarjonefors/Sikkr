@@ -107,11 +107,6 @@ public final class Message extends AbstractMessage implements VoiceMessage {
     }
 
     @Override
-    public String getMessage() {
-        return TYPE == TYPE_TEXT ? new String(CONTENT) : "";
-    }
-
-    @Override
     public boolean isSent() {
         return sent;
     }

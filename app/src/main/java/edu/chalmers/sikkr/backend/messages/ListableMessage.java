@@ -25,8 +25,6 @@ public interface ListableMessage extends Comparable<ListableMessage> {
 
     void play();
 
-    String getMessage();
-
     @Override
     int compareTo(ListableMessage other);
 

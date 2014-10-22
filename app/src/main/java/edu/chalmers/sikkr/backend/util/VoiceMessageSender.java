@@ -69,15 +69,19 @@ public class VoiceMessageSender {
     }
 
     public void sendMessage(final VoiceMessage vmsg, final String receiverNbr) throws IllegalArgumentException {
-        Runnable runnable = () -> {
-            try {
-                if (ServerInterface.serverHasClient(receiverNbr)) {
-                    ServerInterface.sendVoiceMessage(receiverNbr, vmsg);
-                } else {
-                    sendMmsMessage(vmsg, receiverNbr);
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    if (ServerInterface.serverHasClient(receiverNbr)) {
+                        ServerInterface.sendVoiceMessage(receiverNbr, vmsg);
+                    } else {
+                        sendMmsMessage(vmsg, receiverNbr);
+                    }
+                } catch (MessageNotSentException e) {
+                    Log.e("ContactActivity", "Message not sent");
                 }
-            } catch (MessageNotSentException e) {
-                Log.e("ContactActivity", "Message not sent");
             }
         };
         Thread t = new Thread(runnable, "Message send thread");
