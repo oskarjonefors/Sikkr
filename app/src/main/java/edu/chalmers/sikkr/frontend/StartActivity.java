@@ -8,15 +8,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.SmsListener;
@@ -33,6 +34,7 @@ import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
+import static edu.chalmers.sikkr.backend.util.FuzzySearchUtility.*;
 
 
 
@@ -42,7 +44,6 @@ public class StartActivity extends Activity {
     private ArrayList<String> matches;
     private final static int MY_TTS_CHECK_CODE = 1337;
 
-    private String text;
     private Intent intent;
     private String[] words;
     private Contact contact;
@@ -102,9 +103,11 @@ public class StartActivity extends Activity {
         if (requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (matches.size() > 0) {
-                text = matches.get(0);
-                callContactByName();
-                selectFunctionality();
+                if (getDifference(matches.get(0), getString(R.string.call)) <= 1) {
+                    callContactByName(matches.get(0));
+                } else {
+                    selectFunctionality(matches.get(0));
+                }
             }
         } else if (requestCode == MY_TTS_CHECK_CODE) {
             if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
@@ -114,7 +117,6 @@ public class StartActivity extends Activity {
                 installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
                 startActivity(installIntent);
             }
-
         }
     }
 
@@ -122,17 +124,17 @@ public class StartActivity extends Activity {
      * Method to check if voice recognition was used to select functionality
      * Will redirect user to the selected activity
      */
-    private void selectFunctionality() {
-        if (text.equals(getText(R.string.one)) || text.contains(getText(R.string.calls))) {
+    private void selectFunctionality(String text) {
+        if (text.equals(getText(R.string.one)) || text.contains(getString(R.string.calls).toLowerCase())) {
             intent = new Intent(this, LatestCallsActivity.class);
             startActivity(intent);
-        } else if (text.equals(getText(R.string.two)) || text.contains(getText(R.string.favorites))) {
+        } else if (text.equals(getText(R.string.two)) || text.contains(getString(R.string.favorites).toLowerCase())) {
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);
-        } else if (text.equals(getText(R.string.three)) || text.contains(getText(R.string.messages))) {
+        } else if (text.equals(getText(R.string.three)) || text.contains(getString(R.string.messages).toLowerCase())) {
             intent = new Intent(this, SMS_Activity.class);
             startActivity(intent);
-        } else if (text.equals(getText(R.string.four)) || text.contains(getText(R.string.contacts))) {
+        } else if (text.equals(getText(R.string.four)) || text.contains(getString(R.string.contacts).toLowerCase())) {
             words = text.split(" ");
             if (words.length > 1) {
                 intent = new Intent(this, ContactGridActivity.class);
@@ -151,7 +153,7 @@ public class StartActivity extends Activity {
      * Method to check if voice recognition was used to make a call
      * Will try to call contact that best matches the input.
      */
-    private void callContactByName() {
+    private void callContactByName(String text) {
         final ContactBook cb = ContactBook.getSharedInstance();
         words = text.split(" ");
         try {

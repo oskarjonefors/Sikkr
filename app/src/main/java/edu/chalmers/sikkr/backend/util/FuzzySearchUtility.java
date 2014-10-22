@@ -77,6 +77,10 @@ public class FuzzySearchUtility {
         return results;
     }
 
+    public static int getDifference(String s, String t) {
+        return StringUtils.getLevenshteinDistance(s.toLowerCase(), t.toLowerCase());
+    }
+
     static class SearchResult implements Comparable<SearchResult> {
         String name;
         int match;
@@ -86,4 +90,5 @@ public class FuzzySearchUtility {
             return Integer.compare(match, another.match);
         }
     }
+
 }

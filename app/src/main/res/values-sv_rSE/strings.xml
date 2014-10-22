@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Sikkr</string>
     <string name="action_settings">Inställningar</string>
     <string name="calls">Samtal</string>
@@ -17,4 +18,5 @@
     <string name="calling">ringer</string>
     <string name="title_activity_conversation">ConversationActivity</string>
     <string name="title_activity_latest_calls">LatestCallsActivity</string>
+
 </resources>
