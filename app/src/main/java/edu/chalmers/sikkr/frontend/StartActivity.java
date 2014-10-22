@@ -42,7 +42,6 @@ import static edu.chalmers.sikkr.backend.util.FuzzySearchUtility.*;
 
 
 public class StartActivity extends Activity {
-    private ArrayList<String> matches;
     private final static int MY_TTS_CHECK_CODE = 1337;
 
     private Intent intent;
@@ -110,7 +109,7 @@ public class StartActivity extends Activity {
                     callContactByName(firstLine.split(" ", 2)[1]);
                     LogUtility.writeLogFile("onActivityResult", true, firstLine.split(" ", 2)[1]);
                 } else {
-                    selectFunctionality(firstLine);
+                    selectFunctionality(firstWord);
                 }
             }
         } else if (requestCode == MY_TTS_CHECK_CODE) {
@@ -129,16 +128,16 @@ public class StartActivity extends Activity {
      * Will redirect user to the selected activity
      */
     private void selectFunctionality(String text) {
-        if (text.equals(getText(R.string.one)) || text.contains(getString(R.string.calls).toLowerCase())) {
+        if (getDifference(text, getString(R.string.one)) <= 1 || getDifference(text, getString(R.string.calls)) <= 2) {
             intent = new Intent(this, LatestCallsActivity.class);
             startActivity(intent);
-        } else if (text.equals(getText(R.string.two)) || text.contains(getString(R.string.favorites).toLowerCase())) {
+        } else if (getDifference(text, getString(R.string.two)) <= 1 || getDifference(text, getString(R.string.favorites)) <= 2) {
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);
-        } else if (text.equals(getText(R.string.three)) || text.contains(getString(R.string.messages).toLowerCase())) {
+        } else if (getDifference(text, getString(R.string.three)) <= 1 || getDifference(text, getString(R.string.messages)) <= 2) {
             intent = new Intent(this, SMS_Activity.class);
             startActivity(intent);
-        } else if (text.equals(getText(R.string.four)) || text.contains(getString(R.string.contacts).toLowerCase())) {
+        } else if (getDifference(text, getString(R.string.four)) <= 1 || getDifference(text, getString(R.string.contacts)) <= 2) {
             words = text.split(" ");
             if (words.length > 1) {
                 intent = new Intent(this, ContactGridActivity.class);
