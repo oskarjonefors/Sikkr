@@ -87,6 +87,12 @@ public class ConversationActivity extends Activity {
         registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
 
+    public void onPause(){
+        super.onPause();
+            recorder.stopRecording();
+            recorder.discardRecording();
+    }
+
     private void setButtonVisability() {
         sendButton = (ImageButton) findViewById(R.id.conversation_send);
         cancelButton = (ImageButton) findViewById(R.id.conversation_cancel);
