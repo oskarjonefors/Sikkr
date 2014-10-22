@@ -37,13 +37,19 @@
              android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
+         <Space
+            android:id="@+id/start_screen_bottom_space"
+            android:layout_width="20dp"
+            android:layout_height="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
         <Button
              android:onClick="buttonClick"
              android:layout_gravity="center"
              android:layout_width="150dp"
-             android:layout_height="120dp"
-             android:text="Call"
+             android:layout_height="150dp"
              android:id="@+id/callButton"
+             android:background ="@drawable/call_icon"
             />
 
 
