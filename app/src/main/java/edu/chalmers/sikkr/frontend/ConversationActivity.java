@@ -47,7 +47,6 @@ public class ConversationActivity extends Activity {
     private ImageButton cancelButton;
     private ImageButton recordButton;
     ArrayAdapter adapter;
-    private TextView recText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,7 @@ public class ConversationActivity extends Activity {
                     String phoneNbr = smsMessage.getOriginatingAddress();
                     String date = String.valueOf(smsMessage.getTimestampMillis());
                     OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
-                    ArrayList<SmsConversation> list = SMS_Activity.getConversations();
+                    ArrayList<SmsConversation> list = TheInbox.getInstance().getSmsInbox();
                     for(int i = 0;i<list.size();i++){
                         if(phoneNbr.equals(list.get(i).getAddress())){
                             sms.markAsUnread();
