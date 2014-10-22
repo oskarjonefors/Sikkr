@@ -9,8 +9,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -50,6 +48,10 @@ public class LatestCallsActivity extends Activity {
         ArrayAdapter adapter = new LatestCallItemAdapter(this, R.layout.latest_call_item, callList);
         ListView listV = (ListView) findViewById(R.id.listView);
         listV.setAdapter(adapter);
+    }
+
+    public void buttonClick(View view) {
+
     }
 
     private static class ViewHolder {
@@ -103,6 +105,8 @@ public class LatestCallsActivity extends Activity {
                     holder.contactDrawable = new BitmapDrawable(getResources(), holder.contact.getPhoto());
                     holder.contactImage.setImageDrawable(holder.contactDrawable);
                 }
+
+                view.setOnClickListener(new ContactGridClickListener(holder.contact));
 
             } else {
                 holder.name.setText(list.get(i).getCallNumber());
