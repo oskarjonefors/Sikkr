@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -46,20 +47,16 @@ public class ConversationActivity extends Activity {
     private ImageButton cancelButton;
     private ImageButton recordButton;
     ArrayAdapter adapter;
+    private TextView recText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
         createConversationLayout();
+        setButtonVisability();
         recorder = VoiceMessageRecorder.getSharedInstance();
-        sendButton = (ImageButton) findViewById(R.id.conversation_send);
-        cancelButton = (ImageButton) findViewById(R.id.conversation_cancel);
-        recordButton = (ImageButton) findViewById(R.id.conversation_record);
-        recordButton.setVisibility(View.VISIBLE);
-        sendButton.setVisibility(View.GONE);
-        sendButton.setEnabled(false);
-        cancelButton.setEnabled(false);
-        cancelButton.setVisibility(View.GONE);
         adapter.setNotifyOnChange(true);
 
         BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
@@ -90,6 +87,20 @@ public class ConversationActivity extends Activity {
         registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
 
+    private void setButtonVisability() {
+        sendButton = (ImageButton) findViewById(R.id.conversation_send);
+        cancelButton = (ImageButton) findViewById(R.id.conversation_cancel);
+        recordButton = (ImageButton) findViewById(R.id.conversation_record);
+        recText = (TextView) findViewById(R.id.rectext);
+        recordButton.setVisibility(View.VISIBLE);
+        sendButton.setVisibility(View.GONE);
+        sendButton.setEnabled(false);
+        cancelButton.setEnabled(false);
+        cancelButton.setVisibility(View.GONE);
+        recText.setVisibility(View.GONE);
+
+    }
+
     public void createConversationLayout(){
         final Bundle bundle = getIntent().getExtras();
         if(bundle!=null && bundle.containsKey("position") && bundle.containsKey("name")){
@@ -116,15 +127,17 @@ public class ConversationActivity extends Activity {
             case RESET:
                 recorder.startRecording();
                 recordButton.setBackgroundResource(R.drawable.stop_record);
+                recText.setVisibility(View.VISIBLE);
                 break;
             case RECORDING:
                 recorder.stopRecording();
-                recordButton.setBackgroundResource(R.drawable.start_record);
+                recordButton.setBackgroundResource(R.drawable.redrec);
                 sendButton.setVisibility(View.VISIBLE);
                 cancelButton.setVisibility(View.VISIBLE);
                 sendButton.setEnabled(true);
                 cancelButton.setEnabled(true);
                 recordButton.setEnabled(false);
+                recText.setVisibility(View.GONE);
                 break;
         }
     }
