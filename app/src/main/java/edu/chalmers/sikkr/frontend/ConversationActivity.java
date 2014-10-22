@@ -112,8 +112,7 @@ public class ConversationActivity extends Activity {
 
     public void createConversationLayout(){
         final Bundle bundle = getIntent().getExtras();
-        if(bundle!=null && bundle.containsKey("position") && bundle.containsKey("name")){
-            //thisConversation = SMS_Activity.getConversations().get(bundle.getInt("position"));
+        if(bundle!=null && bundle.containsKey("number") && bundle.containsKey("name")){
             thisConversation = TheInbox.getInstance().getConversation(bundle.getString("number"));
             TextView tv = (TextView)findViewById(R.id.conversation_name);
             tv.setText(bundle.getString("name"));
