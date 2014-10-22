@@ -105,6 +105,9 @@ public class StartActivity extends Activity {
             if (matches.size() > 0) {
                 String firstLine = matches.get(0);
                 String firstWord = firstLine.split(" ")[0];
+
+                LogUtility.writeLogFile("onActivityResult", true, firstLine);
+
                 if (getDifference(firstWord, getString(R.string.call)) <= 2 && firstLine.split(" ").length > 1) {
                     callContactByName(firstLine.split(" ", 2)[1]);
                     LogUtility.writeLogFile("onActivityResult", true, firstLine.split(" ", 2)[1]);
@@ -130,6 +133,9 @@ public class StartActivity extends Activity {
      * Will redirect user to the selected activity
      */
     private void selectFunctionality(String text) {
+
+        LogUtility.writeLogFile("selectFunctionality", true, text);
+
         if (getDifference(text, getString(R.string.one)) <= 1 || getDifference(text, getString(R.string.calls)) <= 2) {
             TextToSpeechUtility.readAloud(getString(R.string.entering) + " " + getString(R.string.calls));
             intent = new Intent(this, LatestCallsActivity.class);
@@ -146,7 +152,7 @@ public class StartActivity extends Activity {
             words = text.split(" ");
             if (words.length > 1) {
                 intent = new Intent(this, ContactGridActivity.class);
-                intent.putExtra("initial_letter", words[1].charAt(0));
+                intent.putExtra("initial_letter", words[1].toLowerCase().charAt(0));
                 startActivity(intent);
             } else {
                 TextToSpeechUtility.readAloud(getString(R.string.entering) + " " + getString(R.string.contacts));
@@ -154,6 +160,8 @@ public class StartActivity extends Activity {
                 startActivity(intent);
             }
 
+        } else {
+            TextToSpeechUtility
         }
 
     }
