@@ -163,7 +163,9 @@ public class StartActivity extends Activity {
             intent = new Intent(Intent.ACTION_CALL);
             contact = cb.getClosestMatch(text);
 
-            if (contact != null) {
+            if (contact == null) {
+                TextToSpeechUtility.readAloud(getString(R.string.found_no_contact));
+            } else {
                 if (contact.getDefaultNumber() != null && contact.getName() != null) {
                     intent.setData(Uri.parse("tel:" + contact.getDefaultNumber()));
                     TextToSpeechUtility.readAloud(getString(R.string.calling) + " " + contact.getName());
