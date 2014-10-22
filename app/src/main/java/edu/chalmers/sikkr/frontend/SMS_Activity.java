@@ -60,7 +60,30 @@ public class SMS_Activity extends Activity {
 
         setContentView(R.layout.sms_layout);
         createSmsLayout();
-        BroadcastReceiver receiver = new SmsListener(this);
+        BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
+                    String messageBody = smsMessage.getMessageBody();
+                    String phoneNbr = smsMessage.getOriginatingAddress();
+                    String date = String.valueOf(smsMessage.getTimestampMillis());
+                    OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
+                    ArrayList<SmsConversation> list = TheInbox.getInstance().getSmsInbox();
+
+                    for (int i = 0; i < list.size(); i++) {
+                        if (phoneNbr.equals(list.get(i).getAddress())) {
+                            sms.markAsUnread();
+                            list.get(i).addSms(sms);
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                adapter.setNotifyOnChange(true);
+
+            }
+        };
+
+        registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
 
     private void createSmsLayout() {
