@@ -53,7 +53,6 @@ public class StartActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reciever = new SmsListener(this);
-        LogUtility.writeLogFile(TAG, true, "Works before the initializer.");
         new Initializer().execute(this);
     }
 
@@ -122,16 +121,16 @@ public class StartActivity extends Activity {
      * Will redirect user to the selected activity
      */
     private void selectFunctionality() {
-        if (text.equals("1") || text.contains("senast")) {
+        if (text.equals(getText(R.string.one)) || text.contains(getText(R.string.calls))) {
             intent = new Intent(this, LatestCallsActivity.class);
             startActivity(intent);
-        } else if (text.equals("2") || text.contains("favor")) {
+        } else if (text.equals(getText(R.string.two)) || text.contains(getText(R.string.favorites))) {
             intent = new Intent(this, ContactGridActivity.class);
             startActivity(intent);
-        } else if (text.equals("3") || text.contains("med") || text.contains("inkorg") || text.contains("sm")) {
+        } else if (text.equals(getText(R.string.three)) || text.contains(getText(R.string.messages))) {
             intent = new Intent(this, SMS_Activity.class);
             startActivity(intent);
-        } else if (text.equals("4") || text.contains("bok") || text.contains("kontakt")) {
+        } else if (text.equals(getText(R.string.four)) || text.contains(getText(R.string.contacts))) {
             words = text.split(" ");
             if (words.length > 1) {
                 intent = new Intent(this, ContactGridActivity.class);
@@ -154,7 +153,7 @@ public class StartActivity extends Activity {
         final ContactBook cb = ContactBook.getSharedInstance();
         words = text.split(" ");
         try {
-            if (words[0].contains("ing")) {
+            if (words[0].contains(getText(R.string.call))) {
                 intent = new Intent(Intent.ACTION_CALL);
                 String searchString = "";
                 for (int i = 1; i < words.length; i++) {
@@ -165,7 +164,7 @@ public class StartActivity extends Activity {
             if (contact != null) {
                 if (contact.getDefaultNumber() != null && contact.getName() != null) {
                     intent.setData(Uri.parse("tel:" + contact.getDefaultNumber()));
-                    TextToSpeechUtility.readAloud("ringer " + contact.getName());
+                    TextToSpeechUtility.readAloud(R.string.calling + " " + contact.getName());
                     while (TextToSpeechUtility.isSpeaking()) {
                         Thread.sleep(100);
                     }

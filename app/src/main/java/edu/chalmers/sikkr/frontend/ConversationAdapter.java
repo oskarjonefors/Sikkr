@@ -17,6 +17,7 @@ import java.util.List;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.sms.OneSms;
+import edu.chalmers.sikkr.backend.util.DateDiffUtility;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 
 /**
@@ -42,6 +43,7 @@ public class ConversationAdapter extends ArrayAdapter {
             view = inflater.inflate(layoutId, parent, false);
             holder = new ViewHolder();
             holder.message = (TextView)view.findViewById(R.id.conversation_message);
+
             holder.playButton=(ImageButton)view.findViewById(R.id.conversation_icon);
             view.setTag(holder);
 
@@ -82,7 +84,7 @@ public class ConversationAdapter extends ArrayAdapter {
         }else{
             holder.playButton.setBackgroundResource(R.drawable.play);
         }
-        holder.message.setText(new SimpleDateFormat("EEE, MMM d, ''yy").format(list.get(position).getTimestamp().getTime()));
+        holder.message.setText(DateDiffUtility.callDateToString(Long.parseLong(list.get(position).getDate())));
         holder.playButton.setTag(list.get(position));
         return view;
     }
