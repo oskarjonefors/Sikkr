@@ -7,12 +7,12 @@ import android.content.IntentFilter;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import edu.chalmers.sikkr.backend.sms.OneSms;
-import edu.chalmers.sikkr.backend.sms.SmsConversation;
-import edu.chalmers.sikkr.backend.sms.TheInbox;
-import edu.chalmers.sikkr.frontend.SMS_Activity;
+
+import edu.chalmers.sikkr.backend.messages.Conversation;
+import edu.chalmers.sikkr.backend.messages.OneSms;
+import edu.chalmers.sikkr.backend.messages.TheInbox;
 
 /**
  * Created by Jesper on 2014-10-17.
@@ -31,12 +31,12 @@ public class SmsListener extends BroadcastReceiver {
                 String messageBody = smsMessage.getMessageBody();
                 String phoneNbr = smsMessage.getOriginatingAddress();
                 String date = String.valueOf(smsMessage.getTimestampMillis());
-                OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
-                ArrayList<SmsConversation> list = TheInbox.getInstance().getSmsInbox();
+                OneSms sms = new OneSms(messageBody, date, false);
+                List<Conversation> list = TheInbox.getInstance().getMessageInbox();
                 for(int i = 0;i<list.size();i++){
                     if(phoneNbr.equals(list.get(i).getAddress())){
                         sms.markAsUnread();
-                        list.get(i).addSms(sms);
+                        list.get(i).addMessage(sms);
                     }
                 }
             }

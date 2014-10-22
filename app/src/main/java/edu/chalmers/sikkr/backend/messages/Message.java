@@ -112,7 +112,18 @@ public final class Message extends AbstractMessage implements VoiceMessage {
 
     @Override
     public boolean isSent() {
-        return sent;
+        //TODO
+        return false;
+    }
+
+    @Override
+    public boolean isRead() {
+        return false;
+    }
+
+    @Override
+    public void markAsRead() {
+
     }
 
     @Override

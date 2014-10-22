@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,6 +31,9 @@ import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.messages.Conversation;
+import edu.chalmers.sikkr.backend.messages.OneSms;
+import edu.chalmers.sikkr.backend.messages.TheInbox;
+import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
@@ -64,12 +68,12 @@ public class ConversationActivity extends Activity {
                     String messageBody = smsMessage.getMessageBody();
                     String phoneNbr = smsMessage.getOriginatingAddress();
                     String date = String.valueOf(smsMessage.getTimestampMillis());
-                    OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
-                    ArrayList<SmsConversation> list = TheInbox.getInstance().getSmsInbox();
+                    OneSms sms = new OneSms(messageBody, date, false);
+                    List<Conversation> list = TheInbox.getInstance().getMessageInbox();
                     for(int i = 0;i<list.size();i++){
                         if(phoneNbr.equals(list.get(i).getAddress())){
                             sms.markAsUnread();
-                            list.get(i).addSms(sms);
+                            list.get(i).addMessage(sms);
                         }
                     }
                     if(phoneNbr.equals(thisConversation.getAddress())){
@@ -87,11 +91,15 @@ public class ConversationActivity extends Activity {
     @Override
     public void onPause(){
         super.onPause();
-        if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.RECORDING) {
-            recorder.stopRecording();
-            recorder.discardRecording();
-        }else if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.STOPPED){
-            recorder.discardRecording();
+        try {
+            if (recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.RECORDING) {
+                recorder.stopRecording();
+                recorder.discardRecording();
+            } else if (recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.STOPPED) {
+                recorder.discardRecording();
+            }
+        } catch (IOException e) {
+            LogUtility.writeLogFile("ConversationActivityLogs", e);
         }
     }
 
@@ -136,8 +144,12 @@ public class ConversationActivity extends Activity {
      * @param v the view that called this method
      */
     public void cancelMessage(View v){
-        recorder.discardRecording();
-        hideButtons();
+        try {
+            recorder.discardRecording();
+            hideButtons();
+        } catch (IOException e) {
+            LogUtility.writeLogFile("ConversationActivity", e);
+        }
     }
 
     /**

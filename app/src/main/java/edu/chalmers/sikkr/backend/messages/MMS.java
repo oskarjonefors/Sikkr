@@ -47,4 +47,9 @@ public class MMS extends AbstractMessage implements VoiceMessage {
         return true;
     }
 
+    @Override
+    public void markAsRead() {
+
+    }
+
 }

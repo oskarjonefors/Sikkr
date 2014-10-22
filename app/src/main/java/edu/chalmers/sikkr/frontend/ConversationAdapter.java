@@ -2,7 +2,6 @@ package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,11 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
-import edu.chalmers.sikkr.backend.messages.OneSms;
-import edu.chalmers.sikkr.backend.util.LogUtility;
 
 /**
  * Created by Jesper on 2014-10-13.
@@ -25,7 +22,7 @@ import edu.chalmers.sikkr.backend.util.LogUtility;
 public class ConversationAdapter extends ArrayAdapter {
     private Context context;
     private int layoutId;
-    private List<OneSms> list;
+    private List<ListableMessage> list;
 
     public ConversationAdapter(Context context, int layoutId, List list){
         super(context, layoutId, list);
@@ -84,7 +81,7 @@ public class ConversationAdapter extends ArrayAdapter {
         }else{
             holder.playButton.setBackgroundResource(R.drawable.play);
         }
-        holder.message.setText(DateDiffUtility.callDateToString(Long.parseLong(list.get(position).getDate())));
+        holder.message.setText(DateDiffUtility.callDateToString(list.get(position).getTimestamp().getTimeInMillis()));
         holder.playButton.setTag(list.get(position));
         return view;
     }

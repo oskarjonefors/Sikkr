@@ -19,17 +19,11 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import edu.chalmers.sikkr.R;
@@ -225,7 +219,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                 holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
                 holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 holder.contactName.setTag(i);
-                holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage[]) list.get(i).getSmsList().toArray())[0].getTimestamp().getTimeInMillis()));
+                holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage) list.get(i).getSmsList().toArray()[0]).getTimestamp().getTimeInMillis()));
             } catch (Exception e) {
                 LogUtility.writeLogFile("SmsViewAdapterLogs", e);
             }
