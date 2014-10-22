@@ -49,7 +49,7 @@ public class CallLog {
             call.setContactID(getContactIDFromNumber(call.getCallNumber()));
             Log.d("CallLog", "Get ContactID " + call.getContactID());
 
-            if(!isCallOld(call.getCallDate())) {
+            if(!isCallOld(call.getCallDate()) && !isCallDuplicate(call.getCallNumber())) {
                 callList.add(call);
             }
         }
@@ -75,6 +75,15 @@ public class CallLog {
         long rightNowMillis = rightNow.getTimeInMillis();
         long deltaMillis = rightNowMillis - Long.parseLong(callDate);
         return TimeUnit.MILLISECONDS.toDays(deltaMillis) / 7 > 4;
+    }
+
+    private boolean isCallDuplicate(String callNumber) {
+        for(OneCall call : callList) {
+            if(callNumber == call.getCallNumber()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public ArrayList<OneCall> getCallList() {

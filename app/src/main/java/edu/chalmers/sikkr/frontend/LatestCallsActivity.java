@@ -50,10 +50,6 @@ public class LatestCallsActivity extends Activity {
         listV.setAdapter(adapter);
     }
 
-    public void buttonClick(View view) {
-
-    }
-
     private static class ViewHolder {
         TextView name;
         TextView date;
