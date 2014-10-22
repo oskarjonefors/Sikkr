@@ -36,9 +36,9 @@ public class InputScreen extends Activity {
     private void numberExist() {
         File f = new File(getFilesDir(), "number");
         if(f.exists()) {
-            Log.i("Input", "File exist");
             Intent intent = new Intent(this, StartActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
