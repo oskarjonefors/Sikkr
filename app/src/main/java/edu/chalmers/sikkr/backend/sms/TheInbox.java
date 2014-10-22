@@ -112,5 +112,15 @@ public class TheInbox {
         return smsList;
     }
 
+    public SmsConversation getConversation(String adress){
+        SmsConversation tmpConv = null;
+        for(SmsConversation conv: smsList){
+            if(conv.getAddress().equals(adress)){
+                tmpConv = conv;
+            }
+        }
+        return tmpConv;
+    }
+
 
 }

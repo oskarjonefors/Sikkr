@@ -91,6 +91,7 @@ public class SMS_Activity extends Activity {
         Intent intent = new Intent(view.getContext(), ConversationActivity.class);
         intent.putExtra("position", position);
         intent.putExtra("name", getContactByNbr(smsList.get(position).getAddress()));
+        intent.putExtra("number", smsList.get(position).getAddress());
         startActivity(intent);
     }
 
