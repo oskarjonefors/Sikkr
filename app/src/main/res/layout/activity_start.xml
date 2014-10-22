@@ -27,7 +27,7 @@
             <edu.chalmers.sikkr.frontend.TintFeedbackButton
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:text="@string/lastCall"
+                android:text="@string/calls"
                 android:id="@+id/lastCall"
                 android:onClick="clickedButton"
                 android:drawableTop="@drawable/call_history"
@@ -38,7 +38,7 @@
             <edu.chalmers.sikkr.frontend.TintFeedbackButton
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:text="@string/favCont"
+                android:text="@string/favorites"
                 android:id="@+id/fav_contacts"
                 android:onClick="clickedButton"
                 android:drawableTop="@drawable/favorites_icon"
@@ -60,7 +60,7 @@
             <edu.chalmers.sikkr.frontend.TintFeedbackButton
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:text="@string/message"
+                android:text="@string/messages"
                 android:id="@+id/message"
                 android:onClick="clickedButton"
                 android:drawableTop="@drawable/messages_icon"
@@ -71,7 +71,7 @@
             <edu.chalmers.sikkr.frontend.TintFeedbackButton
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:text="@string/contBook"
+                android:text="@string/contacts"
                 android:id="@+id/contactBook"
                 android:onClick="clickedButton"
                 android:drawableTop="@drawable/contacts_icon"
