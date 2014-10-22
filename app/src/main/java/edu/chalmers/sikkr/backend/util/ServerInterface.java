@@ -164,7 +164,7 @@ public final class ServerInterface implements ProgressListenable {
             }
 
             if (!privateKeyFile.createNewFile()) {
-                throw new IOException("Could not create public key file");
+                throw new IOException("Could not create private key file");
             }
 
             saveByteDataToFile(publicKeyFile, key.getPublic().getEncoded());
