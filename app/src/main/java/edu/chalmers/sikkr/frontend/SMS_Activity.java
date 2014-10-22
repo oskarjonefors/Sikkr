@@ -71,9 +71,9 @@ public class SMS_Activity extends Activity {
         listV.setAdapter(adapter);
     }
 
-    public static ArrayList<SmsConversation> getConversations(){
-        return smsList;
-    }
+    //public static ArrayList<SmsConversation> getConversations(){
+        //return smsList;
+    //}
 
     public void readMsg(View view) {
         ((ListableMessage) view.getTag()).play();

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import edu.chalmers.sikkr.backend.sms.OneSms;
 import edu.chalmers.sikkr.backend.sms.SmsConversation;
+import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.frontend.SMS_Activity;
 
 /**
@@ -31,7 +32,7 @@ public class SmsListener extends BroadcastReceiver {
                 String phoneNbr = smsMessage.getOriginatingAddress();
                 String date = String.valueOf(smsMessage.getTimestampMillis());
                 OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
-                ArrayList<SmsConversation> list = SMS_Activity.getConversations();
+                ArrayList<SmsConversation> list = TheInbox.getInstance().getSmsInbox();
                 for(int i = 0;i<list.size();i++){
                     if(phoneNbr.equals(list.get(i).getAddress())){
                         sms.markAsUnread();

@@ -7,8 +7,7 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip"
     android:id="@+id/latest_call_item"
-    android:weightSum="1"
-    android:onClick="buttonClick">
+    android:weightSum="1">
 
     <ImageView
         android:layout_width="55dp"

@@ -48,7 +48,6 @@ public class ConversationActivity extends Activity {
     private ImageButton recordButton;
     ArrayAdapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -67,7 +66,7 @@ public class ConversationActivity extends Activity {
                     String phoneNbr = smsMessage.getOriginatingAddress();
                     String date = String.valueOf(smsMessage.getTimestampMillis());
                     OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
-                    ArrayList<SmsConversation> list = SMS_Activity.getConversations();
+                    ArrayList<SmsConversation> list = TheInbox.getInstance().getSmsInbox();
                     for(int i = 0;i<list.size();i++){
                         if(phoneNbr.equals(list.get(i).getAddress())){
                             sms.markAsUnread();
@@ -112,8 +111,7 @@ public class ConversationActivity extends Activity {
 
     public void createConversationLayout(){
         final Bundle bundle = getIntent().getExtras();
-        if(bundle!=null && bundle.containsKey("position") && bundle.containsKey("name")){
-            //thisConversation = SMS_Activity.getConversations().get(bundle.getInt("position"));
+        if(bundle!=null && bundle.containsKey("number") && bundle.containsKey("name")){
             thisConversation = TheInbox.getInstance().getConversation(bundle.getString("number"));
             TextView tv = (TextView)findViewById(R.id.conversation_name);
             tv.setText(bundle.getString("name"));
