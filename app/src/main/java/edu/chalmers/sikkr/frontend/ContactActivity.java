@@ -70,6 +70,16 @@ public class ContactActivity extends Activity {
         recorder = VoiceMessageRecorder.getSharedInstance();
 
     }
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.RECORDING) {
+            recorder.stopRecording();
+            recorder.discardRecording();
+        }else if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.STOPPED){
+            recorder.discardRecording();
+        }
+    }
 
     public void buttonClick(View view) {
         //Brings out the phone dialer
