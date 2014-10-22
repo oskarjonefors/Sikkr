@@ -89,8 +89,10 @@ public class ConversationActivity extends Activity {
 
     public void onPause(){
         super.onPause();
+        if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.RECORDING) {
             recorder.stopRecording();
             recorder.discardRecording();
+        }
     }
 
     private void setButtonVisability() {
