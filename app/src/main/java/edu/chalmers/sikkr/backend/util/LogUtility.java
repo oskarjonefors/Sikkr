@@ -17,6 +17,17 @@ public class LogUtility {
 
     public static final String TAG = "WriteLogUtility";
 
+    public static void writeLogFile(String fileName, Exception e) {
+        e.printStackTrace();
+        StackTraceElement[] trace = e.getStackTrace();
+        String[] stacktrace = new String[trace.length + 1];
+        stacktrace[0] = e.getLocalizedMessage();
+        for (int i = 1; i < stacktrace.length + 1; i++) {
+            stacktrace[i] = trace[i].toString();
+        }
+        writeLogFile(fileName, true, stacktrace);
+    }
+
     /**
      * Write the given log rows to a log file with the given name. The file name will be stripped of
      * all non-alphanumerical characters, and the log will be placed in the 'sikkr' directory in
@@ -25,7 +36,6 @@ public class LogUtility {
      * @param fileName
      * @param logRows
      */
-
     public static void writeLogFile(String fileName, String... logRows) {
         writeLogFile(fileName, false, logRows);
     }

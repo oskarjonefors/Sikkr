@@ -21,5 +21,7 @@ public interface ListableMessage extends Comparable<ListableMessage> {
 
     boolean isRead();
 
+    void markAsRead();
+
 
 }

@@ -88,14 +88,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
         try {
             TheInbox.getInstance().loadInbox(this);
         } catch (Exception e) {
-            e.printStackTrace();
-            StackTraceElement[] trace = e.getStackTrace();
-            String[] stacktrace = new String[trace.length + 1];
-            stacktrace[0] = e.getLocalizedMessage();
-            for (int i = 1; i < stacktrace.length + 1; i++) {
-                stacktrace[i] = trace[i].toString();
-            }
-            LogUtility.writeLogFile("load_inbox_throws", true, stacktrace);
+            LogUtility.writeLogFile("load_inbox_throws", e);
         }
     }
 
@@ -104,10 +97,15 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     //}
 
     public void readMsg(View view) {
-        ((ListableMessage) view.getTag()).play();
-        ((OneSms)view.getTag()).markAsRead();
-        ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
-        tryButton.setBackgroundResource(R.drawable.play);
+        try {
+            ListableMessage message = (ListableMessage) view.getTag();
+            message.play();
+            message.markAsRead();
+            ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
+            tryButton.setBackgroundResource(R.drawable.play);
+        } catch (Exception e) {
+            LogUtility.writeLogFile("ReadMessageLogs", e);
+        }
     }
 
     /**
@@ -115,12 +113,16 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     Open the clicked contacts sms history view
      */
     public void clickedText(View view) {
-        int position = (Integer) view.getTag();
-        Intent intent = new Intent(view.getContext(), ConversationActivity.class);
-        intent.putExtra("position", position);
-        intent.putExtra("name", getContactByNbr(smsList.get(position).getAddress()));
-        intent.putExtra("number", smsList.get(position).getAddress());
-        startActivity(intent);
+        try {
+            int position = (Integer) view.getTag();
+            Intent intent = new Intent(view.getContext(), ConversationActivity.class);
+            intent.putExtra("position", position);
+            intent.putExtra("name", getContactByNbr(smsList.get(position).getAddress()));
+            intent.putExtra("number", smsList.get(position).getAddress());
+            startActivity(intent);
+        } catch (Exception e) {
+            LogUtility.writeLogFile("ClickedConversation", e);
+        }
     }
 
     /**
@@ -178,51 +180,55 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
         @Override
         public View getView(int i, final View v, ViewGroup viewGroup) {
             View view = v;
-            final ViewHolder holder;
 
-            if (i < 0 || i >= list.size()) {
-                return null;
+            try {
+                final ViewHolder holder;
+
+                if (i < 0 || i >= list.size()) {
+                    return null;
+                }
+
+                if (view == null) {
+                    LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+                    view = inflater.inflate(layoutId, viewGroup, false);
+                    holder = new ViewHolder();
+                    holder.contactName = (TextView) view.findViewById(R.id.sender);
+                    holder.date = (TextView) view.findViewById(R.id.date);
+                    view.setTag(holder);
+                } else {
+                    holder = (ViewHolder) view.getTag();
+                }
+
+                //get the current sms conversation
+                Conversation currentConv = list.get(i);
+                Set<ListableMessage> messageSet = currentConv.getSmsList();
+                List<ListableMessage> messageList = new ArrayList<ListableMessage>();
+                messageList.addAll(messageSet);
+                Collections.sort(messageList);
+                ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
+
+                //Link an sms to the playbutton
+                int counter = messageList.size() -1;
+
+                while(messageList.get(counter).isSent()){
+                    counter = counter - 1;
+                }
+                if(!messageList.get(counter).isRead()){
+                    tryButton.setBackgroundResource(R.drawable.unread_play);
+                }else{
+                    tryButton.setBackgroundResource(R.drawable.play);
+                }
+                view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
+                LogUtility.writeLogFile("counterweird", "Counter = " + counter);
+
+                //set the correct data of the element
+                holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
+                holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                holder.contactName.setTag(i);
+                holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage[]) list.get(i).getSmsList().toArray())[0].getTimestamp().getTimeInMillis()));
+            } catch (Exception e) {
+                LogUtility.writeLogFile("SmsViewAdapterLogs", e);
             }
-
-            if (view == null) {
-                LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-                view = inflater.inflate(layoutId, viewGroup, false);
-                holder = new ViewHolder();
-                holder.contactName = (TextView) view.findViewById(R.id.sender);
-                holder.date = (TextView) view.findViewById(R.id.date);
-                view.setTag(holder);
-            } else {
-                holder = (ViewHolder) view.getTag();
-            }
-
-            //get the current sms conversation
-            Conversation currentConv = list.get(i);
-            Set<ListableMessage> messageSet = currentConv.getSmsList();
-            List<ListableMessage> messageList = new ArrayList<ListableMessage>();
-            messageList.addAll(messageSet);
-            Collections.sort(messageList);
-            ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
-
-            //Link an sms to the playbutton
-            int counter = messageList.size() -1;
-
-            while(messageList.get(counter).isSent()){
-                counter = counter - 1;
-            }
-            if(!messageList.get(counter).isRead()){
-                tryButton.setBackgroundResource(R.drawable.unread_play);
-            }else{
-                tryButton.setBackgroundResource(R.drawable.play);
-            }
-
-            //Link an sms to the playbutton
-            view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
-
-            //set the correct data of the element
-            holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
-            holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            holder.contactName.setTag(i);
-            holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage[]) list.get(i).getSmsList().toArray())[0].getTimestamp().getTimeInMillis()));
 
             return view;
         }
