@@ -65,32 +65,33 @@ public class TheInbox implements ProgressListenable {
         if (count != 0) {
             double step = 1D / (count * numberOfOperations);
             while (cursor.moveToNext()) {
-                String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
                 String partID = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-                MMS mms;
-                Conversation conversation;
-                Uri partURI;
-                Calendar timestamp;
                 Cursor curPart = context.getContentResolver().query(Uri.parse("content://mms/" + partID + "/part"), null, null, null, null);
-
                 curPart.moveToFirst();
-                partURI = Uri.parse("content://mms/part/" + curPart.getString(0));
+                if (curPart.getColumnCount() >= 3 && curPart.getString(3).startsWith("audio")) {
+                    String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+                    //context.getContentResolver().
+                    Uri partURI = Uri.parse("content://mms/part/" + curPart.getString(0));
+                    MMS mms;
+                    Conversation conversation;
+                    Calendar timestamp;
 
-                Date thisDate = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
-                timestamp = Calendar.getInstance();
-                timestamp.setTime(thisDate);
+                    Date thisDate = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
+                    timestamp = Calendar.getInstance();
+                    timestamp.setTime(thisDate);
 
-                if (!map.containsKey(address)) {
-                    conversation = new Conversation(address);
-                    messageList.add(conversation);
-                    map.put(address, conversation);
-                } else {
-                    conversation = map.get(address);
+                    if (!map.containsKey(address)) {
+                        conversation = new Conversation(address);
+                        messageList.add(conversation);
+                        map.put(address, conversation);
+                    } else {
+                        conversation = map.get(address);
+                    }
+
+                    mms = new MMS(timestamp, partURI, false, context);
+                    conversation.addMessage(mms);
+                    curPart.close();
                 }
-
-                mms = new MMS(timestamp, partURI, false);
-                conversation.addMessage(mms);
-                curPart.close();
                 notifyListeners(step, "Collecting MMS");
             }
         } else {
@@ -128,7 +129,7 @@ public class TheInbox implements ProgressListenable {
                     conversation = map.get(address);
                 }
 
-                mms = new MMS(timestamp, partURI, true);
+                mms = new MMS(timestamp, partURI, true, context);
                 conversation.addMessage(mms);
                 curPart.close();
                 notifyListeners(step, "Collecting sent MMS");
@@ -285,6 +286,16 @@ public class TheInbox implements ProgressListenable {
         }
     }
 
+    public Conversation getConversation(String address) {
+        Conversation tmpConv = null;
+        for (Conversation conv : messageList) {
+            if (conv.getAddress().equals(address)) {
+                tmpConv = conv;
+            }
+        }
+        return tmpConv;
+    }
+
     private class InboxLoader extends AsyncTask<InboxDoneLoadingListener, String, Boolean> implements ProgressListener {
 
         private double progress = 0;
@@ -306,14 +317,7 @@ public class TheInbox implements ProgressListenable {
                 collectWebMessages();
                 collectSentWebMessages();
             } catch (Exception e ) {
-                e.printStackTrace();
-                StackTraceElement[] trace = e.getStackTrace();
-                String[] stacktrace = new String[trace.length + 1];
-                stacktrace[0] = e.getLocalizedMessage();
-                for (int i = 1; i < stacktrace.length + 1; i++) {
-                    stacktrace[i] = trace[i].toString();
-                }
-                LogUtility.writeLogFile("load_inbox_throws", true, stacktrace);
+                LogUtility.writeLogFile("load_inbox_throws", e);
                 return false;
             }
             return true; //If successful

@@ -22,7 +22,6 @@ import edu.chalmers.sikkr.R;
  * Created by Jingis on 2014-10-22.
  */
 public class InputScreen extends Activity {
-    private String savedNbr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class InputScreen extends Activity {
 
     public void enterNbr(View view) {
         EditText tv = ((EditText)findViewById(R.id.editText));
-        savedNbr = tv.getText().toString();
+        final String savedNbr = tv.getText().toString();
         final File parent = getFilesDir();
         final File file = new File(parent, "number");
 
@@ -58,7 +57,8 @@ public class InputScreen extends Activity {
             }
 
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-            writer.write(savedNbr);
+            writer.append(savedNbr);
+            writer.newLine();
             writer.flush();
             writer.close();
         } catch (Exception e) {

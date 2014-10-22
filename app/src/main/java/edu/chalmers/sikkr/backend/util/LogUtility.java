@@ -1,7 +1,9 @@
 package edu.chalmers.sikkr.backend.util;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,12 +20,19 @@ public class LogUtility {
     public static final String TAG = "WriteLogUtility";
 
     public static void writeLogFile(String fileName, Exception e) {
+        writeLogFile(fileName, e, null);
+    }
+
+    public static void writeLogFile(String fileName, Exception e, Context context) {
+        if (context != null) {
+            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
         e.printStackTrace();
         StackTraceElement[] trace = e.getStackTrace();
         String[] stacktrace = new String[trace.length + 1];
         stacktrace[0] = e.getLocalizedMessage();
-        for (int i = 1; i < stacktrace.length + 1; i++) {
-            stacktrace[i] = trace[i].toString();
+        for (int i = 1; i < stacktrace.length; i++) {
+            stacktrace[i] = trace[i-1].toString();
         }
         writeLogFile(fileName, true, stacktrace);
     }

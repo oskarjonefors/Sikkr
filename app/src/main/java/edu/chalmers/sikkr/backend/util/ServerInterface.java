@@ -92,13 +92,9 @@ public final class ServerInterface implements ProgressListenable {
 
 
         if (localnbr == null || localnbr.isEmpty()) {
-            localnbr = tMgr.getSubscriberId();
-        }
-        if (localnbr == null || localnbr.isEmpty()) {
-            localnbr = tMgr.getSimSerialNumber();
-        }
-        if (localnbr == null || localnbr.isEmpty()) {
-            localnbr = "1337";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(context.getFilesDir(), "number"))));
+            localnbr = reader.readLine();
+            reader.close();
         }
         LOCAL_NUMBER = localnbr;
         SOCKET = new Socket(SERVER_IP, standardPort);

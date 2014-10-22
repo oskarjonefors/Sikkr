@@ -1,7 +1,15 @@
 package edu.chalmers.sikkr.backend.messages;
 
+import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
@@ -14,12 +22,17 @@ public class MMS extends AbstractMessage implements VoiceMessage {
 
     private final Calendar timestamp;
     private final Uri part;
+    private final Context context;
     private final boolean sent;
 
-    public MMS(final Calendar timestamp, final Uri part, final boolean sent) {
+    private boolean read;
+
+    public MMS(final Calendar timestamp, final Uri part, final boolean sent, final Context context) {
         this.timestamp = timestamp;
         this.part = part;
         this.sent = sent;
+        this.read = false;
+        this.context = context;
     }
 
 
@@ -42,14 +55,15 @@ public class MMS extends AbstractMessage implements VoiceMessage {
     public boolean isSent(){
         return sent;
     }
+
     @Override
     public boolean isRead(){
-        return true;
+        return read;
     }
 
     @Override
     public void markAsRead() {
-
+        read = true;
     }
 
 }

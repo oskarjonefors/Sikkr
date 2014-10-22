@@ -82,13 +82,9 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
         try {
             TheInbox.getInstance().loadInbox(this);
         } catch (Exception e) {
-            LogUtility.writeLogFile("load_inbox_throws", e);
+            LogUtility.writeLogFile("load_inbox_throws", e, this);
         }
     }
-
-    //public static ArrayList<SmsConversation> getConversations(){
-        //return smsList;
-    //}
 
     public void readMsg(View view) {
         try {
@@ -98,7 +94,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
             ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
             tryButton.setBackgroundResource(R.drawable.play);
         } catch (Exception e) {
-            LogUtility.writeLogFile("ReadMessageLogs", e);
+            LogUtility.writeLogFile("ReadMessageLogs", e, this);
         }
     }
 
@@ -115,7 +111,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
             intent.putExtra("number", smsList.get(position).getAddress());
             startActivity(intent);
         } catch (Exception e) {
-            LogUtility.writeLogFile("ClickedConversation", e);
+            LogUtility.writeLogFile("ClickedConversation", e, this);
         }
     }
 
@@ -133,11 +129,13 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
         Cursor cursor = contentResolver.query(uri, new String[]{ BaseColumns._ID,
                     ContactsContract.PhoneLookup.DISPLAY_NAME}, null, null, null);
 
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             try {
                 cursor.moveToNext();
                 contact = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-            } catch(Exception e){}
+            } catch(Exception e){
+                LogUtility.writeLogFile("getting_contacts_log", e, this);
+            }
             finally {
                 cursor.close();
             }
@@ -204,8 +202,8 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                 //Link an sms to the playbutton
                 int counter = messageList.size() -1;
 
-                while(messageList.get(counter).isSent()){
-                    counter = counter - 1;
+                while(messageList.get(counter).isSent() && counter >= 1){
+                    counter--;
                 }
                 if(!messageList.get(counter).isRead()){
                     tryButton.setBackgroundResource(R.drawable.unread_play);
@@ -219,9 +217,11 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                 holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
                 holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 holder.contactName.setTag(i);
-                holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage) list.get(i).getSmsList().toArray()[0]).getTimestamp().getTimeInMillis()));
+
+                Object[] messages = list.get(i).getSmsList().toArray();
+                holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage) messages[messages.length - 1]).getTimestamp().getTimeInMillis()));
             } catch (Exception e) {
-                LogUtility.writeLogFile("SmsViewAdapterLogs", e);
+                LogUtility.writeLogFile("SmsViewAdapterLogs", e, SMS_Activity.this);
             }
 
             return view;
