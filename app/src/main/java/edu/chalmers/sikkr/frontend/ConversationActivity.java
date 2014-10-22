@@ -92,6 +92,8 @@ public class ConversationActivity extends Activity {
         if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.RECORDING) {
             recorder.stopRecording();
             recorder.discardRecording();
+        }else if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.STOPPED){
+            recorder.discardRecording();
         }
     }
 
