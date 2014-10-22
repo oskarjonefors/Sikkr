@@ -78,6 +78,7 @@ public class FuzzySearchUtility {
     }
 
     public static int getDifference(String s, String t) {
+        LogUtility.writeLogFile("DIFF", s + " --- " + t);
         return StringUtils.getLevenshteinDistance(s.toLowerCase(), t.toLowerCase());
     }
 

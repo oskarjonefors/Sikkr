@@ -108,6 +108,7 @@ public class StartActivity extends Activity {
                 String firstWord = firstLine.split(" ")[0];
                 if (getDifference(firstWord, getString(R.string.call)) <= 2) {
                     callContactByName(firstLine.split(" ", 2)[1]);
+                    LogUtility.writeLogFile("onActivityResult", true, firstLine.split(" ", 2)[1]);
                 } else {
                     selectFunctionality(firstLine);
                 }
@@ -158,20 +159,14 @@ public class StartActivity extends Activity {
      */
     private void callContactByName(String text) {
         final ContactBook cb = ContactBook.getSharedInstance();
-        words = text.split(" ");
         try {
-            if (words[0].contains(getText(R.string.call))) {
-                intent = new Intent(Intent.ACTION_CALL);
-                String searchString = "";
-                for (int i = 1; i < words.length; i++) {
-                    searchString += words[i] + " ";
-                }
-                contact = cb.getClosestMatch(searchString);
-            }
+            intent = new Intent(Intent.ACTION_CALL);
+            contact = cb.getClosestMatch(text);
+
             if (contact != null) {
                 if (contact.getDefaultNumber() != null && contact.getName() != null) {
                     intent.setData(Uri.parse("tel:" + contact.getDefaultNumber()));
-                    TextToSpeechUtility.readAloud(R.string.calling + " " + contact.getName());
+                    TextToSpeechUtility.readAloud(getString(R.string.calling) + " " + contact.getName());
                     while (TextToSpeechUtility.isSpeaking()) {
                         Thread.sleep(100);
                     }
