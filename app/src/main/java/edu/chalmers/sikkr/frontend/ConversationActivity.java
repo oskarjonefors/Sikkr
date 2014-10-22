@@ -47,7 +47,7 @@ public class ConversationActivity extends Activity {
     private ImageButton cancelButton;
     private ImageButton recordButton;
     ArrayAdapter adapter;
-    private TextView recText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

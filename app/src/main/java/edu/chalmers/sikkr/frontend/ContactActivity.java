@@ -21,6 +21,7 @@ import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.sms.SmsConversation;
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
@@ -30,6 +31,45 @@ public class ContactActivity extends Activity {
 
     private Contact contact;
     private VoiceMessageRecorder recorder;
+
+    private Button sendButton;
+    private Button cancelButton;
+    private Button recordButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_contact);
+        setButtonVisability();
+
+        //This makes us able to use the TextView defined in the .xml and change it from here
+        final TextView contactName = (TextView) findViewById(R.id.contactName);
+        final TextView contactNumber = (TextView) findViewById(R.id.contactNumber);
+        final ImageView contactPicture = (ImageView) findViewById(R.id.contactPicture);
+
+
+        //Gets the shared instance ContactBook
+        final ContactBook book = ContactBook.getSharedInstance();
+        //Saves the content of the intent in a bundle
+        final Bundle bundle = getIntent().getExtras();
+
+        //From the bundle we get the contact ID,
+        //and with it we get the right contact from the Contact Book
+        contact = book.getContact(bundle.getString("contact_id"));
+
+        //Set the name of the contact as the text in the TextView
+        contactName.setText(contact.getName());
+        //Set the picture of the contact in the ImageView
+        contactPicture.setImageBitmap(contact.getPhoto());
+
+        //Set the first phonenumber of the contact in the ImageView
+        contactNumber.setText(contact.getMobilePhoneNumbers().get(0));
+
+        recorder = VoiceMessageRecorder.getSharedInstance();
+
+    }
 
     public void buttonClick(View view) {
         //Brings out the phone dialer
@@ -59,49 +99,58 @@ public class ContactActivity extends Activity {
                 recorder.stopRecording();
                 btn.setText(R.string.send);
                 break;
-            case STOPPED:
-                VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
-                try {
-                    sender.sendMessage(recorder.getVoiceMessage(), contact.getMobilePhoneNumbers().get(0));
-                } catch (MessageNotSentException e) {
-                    Log.e("ContactActivity", "Message not sent");
-                }
-                btn.setText(R.string.record);
+
+        }
+    }
+
+    public void recordTheMessage(View v){
+        switch (recorder.getRecordingState()) {
+            case RESET:
+                recorder.startRecording();
+                recordButton.setBackgroundResource(R.drawable.stop_record);
+                break;
+            case RECORDING:
+                recorder.stopRecording();
+                recordButton.setBackgroundResource(R.drawable.redrec);
+                sendButton.setVisibility(View.VISIBLE);
+                cancelButton.setVisibility(View.VISIBLE);
+                sendButton.setEnabled(true);
+                cancelButton.setEnabled(true);
+                recordButton.setEnabled(false);
                 break;
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_contact);
-
-        //This makes us able to use the TextView defined in the .xml and change it from here
-        final TextView contactName = (TextView) findViewById(R.id.contactName);
-        final TextView contactNumber = (TextView) findViewById(R.id.contactNumber);
-        final ImageView contactPicture = (ImageView) findViewById(R.id.contactPicture);
-
-
-        //Gets the shared instance ContactBook
-        final ContactBook book = ContactBook.getSharedInstance();
-        //Saves the content of the intent in a bundle
-        final Bundle bundle = getIntent().getExtras();
-
-        //From the bundle we get the contact ID,
-        //and with it we get the right contact from the Contact Book
-        contact = book.getContact(bundle.getString("contact_id"));
-
-        //Set the name of the contact as the text in the TextView
-        contactName.setText(contact.getName());
-        //Set the picture of the contact in the ImageView
-        contactPicture.setImageBitmap(contact.getPhoto());
-
-        //Set the first phonenumber of the contact in the ImageView
-        contactNumber.setText(contact.getMobilePhoneNumbers().get(0));
-
-        recorder = VoiceMessageRecorder.getSharedInstance();
-
+    private void setButtonVisability() {
+         sendButton = (Button) findViewById(R.id.conversation_send);
+         cancelButton = (Button) findViewById(R.id.conversation_cancel);
+         recordButton = (Button) findViewById(R.id.recordButton);
+         recordButton.setVisibility(View.VISIBLE);
+         sendButton.setVisibility(View.GONE);
+         sendButton.setEnabled(false);
+         cancelButton.setEnabled(false);
+         cancelButton.setVisibility(View.GONE);
     }
+    private void hideButtons(){
+        cancelButton.setVisibility(View.GONE);
+        sendButton.setVisibility(View.GONE);
+        cancelButton.setEnabled(false);
+        sendButton.setEnabled(false);
+        recordButton.setEnabled(true);
+    }
+    public void sendTheMessage(View v){
+        VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
+        try {
+            sender.sendMessage(recorder.getVoiceMessage(), contact.getDefaultNumber());
+        } catch (MessageNotSentException e) {
+            Log.e("ContactActivity", "Message not sent");
+        }
+        hideButtons();
+    }
+
+    public void cancelTheMessage(View v){
+        recorder.discardRecording();
+        hideButtons();
+    }
+
 }

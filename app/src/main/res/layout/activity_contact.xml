@@ -13,46 +13,83 @@
     android:background="@color/background_color"
     android:keepScreenOn="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="ContactName"
-        android:id="@+id/contactName"
-        android:layout_gravity="center_horizontal" />
+         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="ContactName"
+            android:id="@+id/contactName"
+            android:layout_gravity="center_horizontal" />
 
-    <ImageView
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:id="@+id/contactPicture"
-        android:src="@drawable/ic_launcher"
-        android:layout_gravity="center_horizontal" />
+         <ImageView
+             android:layout_width="170dp"
+             android:layout_height="170dp"
+             android:id="@+id/contactPicture"
+             android:src="@drawable/ic_launcher"
+             android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ContactNumber"
-        android:id="@+id/contactNumber"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <Button
-        android:onClick="buttonClick"
-        android:layout_width="150dp"
-        android:layout_height="120dp"
-        android:text="Call"
-        android:id="@+id/callButton"
-        android:layout_gravity="center" />
-
-    <Button
-        android:layout_width="150dp"
-        android:layout_height="120dp"
-        android:text="Voice Message"
-        android:id="@+id/recordButton"
-        android:onClick="voiceInteraction"
-        android:layout_gravity="center"
-        android:layout_toEndOf="@+id/callButton" />
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="ContactNumber"
+             android:id="@+id/contactNumber"
+             android:layout_gravity="center_horizontal"
+             android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
+        <Button
+             android:onClick="buttonClick"
+             android:layout_gravity="center"
+             android:layout_width="150dp"
+             android:layout_height="120dp"
+             android:text="Call"
+             android:id="@+id/callButton"
+            />
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/recordButton"
+            android:background ="@drawable/redrec"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:onClick="recordTheMessage"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/conversation_send"
+            android:onClick="sendTheMessage"
+            android:background="@drawable/send_voicemessage"
+            android:layout_toRightOf="@id/recordButton"
+            android:layout_alignParentBottom="true"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/conversation_cancel"
+            android:onClick = "cancelTheMessage"
+            android:background="@drawable/cancel_recording"
+            android:layout_toLeftOf="@id/recordButton"
+            android:layout_alignParentBottom="true"
+            />
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll"
+            android:id="@+id/conversation_list"
+            android:layout_above="@id/recordButton"
+            />
+
+
+    </RelativeLayout>
 
 </LinearLayout>
