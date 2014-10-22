@@ -52,7 +52,7 @@ public class ConversationAdapter extends ArrayAdapter {
         }
 
         if(list.get(position).isSent()) {
-            holder.message.setBackgroundColor(Color.BLUE);
+            holder.message.setBackgroundColor(view.getResources().getColor(R.color.light_yellow));
 
             RelativeLayout.LayoutParams userNameAndChatMessageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             userNameAndChatMessageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
@@ -66,7 +66,7 @@ public class ConversationAdapter extends ArrayAdapter {
             holder.playButton.setLayoutParams(chatMessageParams);
             holder.message.setLayoutParams(userNameParams);
         }else {
-            holder.message.setBackgroundColor(Color.GREEN);
+            holder.message.setBackgroundColor(view.getResources().getColor(R.color.blue));
             RelativeLayout.LayoutParams userNameAndChatMessageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             userNameAndChatMessageParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
 
