@@ -108,8 +108,10 @@ public class StartActivity extends Activity {
                 if (getDifference(firstWord, getString(R.string.call)) <= 2 && firstLine.split(" ").length > 1) {
                     callContactByName(firstLine.split(" ", 2)[1]);
                     LogUtility.writeLogFile("onActivityResult", true, firstLine.split(" ", 2)[1]);
+                } else if (getDifference(firstWord, getString(R.string.show)) <= 2) {
+                    showContactByName(firstLine.split(" ", 2)[1]);
                 } else {
-                    selectFunctionality(firstWord);
+                    selectFunctionality(firstLine);
                 }
             }
         } else if (requestCode == MY_TTS_CHECK_CODE) {
@@ -182,6 +184,19 @@ public class StartActivity extends Activity {
         } catch (Throwable t) {
         }
 
+    }
+
+    private void showContactByName(String name) {
+        final ContactBook cb = ContactBook.getSharedInstance();
+        final Contact contact = cb.getClosestMatch(name);
+
+        if (contact != null) {
+            final Intent intent = new Intent(this, ContactActivity.class);
+            intent.putExtra("contact_id", contact.getID());
+            startActivity(intent);
+        } else {
+            TextToSpeechUtility.readAloud(getString(R.string.found_no_contact));
+        }
     }
 
     void updateProgress(double progress, String taskMsg) {
