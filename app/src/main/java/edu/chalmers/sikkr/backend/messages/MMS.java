@@ -13,13 +13,11 @@ public class MMS extends AbstractMessage implements VoiceMessage {
 
 
     private final Calendar timestamp;
-    private final String sender;
     private final Uri part;
     private final boolean sent;
 
-    public MMS(final Calendar timestamp, final String sender, final Uri part, final boolean sent) {
+    public MMS(final Calendar timestamp, final Uri part, final boolean sent) {
         this.timestamp = timestamp;
-        this.sender = sender;
         this.part = part;
         this.sent = sent;
     }
@@ -33,11 +31,6 @@ public class MMS extends AbstractMessage implements VoiceMessage {
     @Override
     public Uri getFileUri() {
         return part;
-    }
-
-    @Override
-    public String getSender() {
-        return sender;
     }
 
     @Override

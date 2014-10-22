@@ -27,8 +27,10 @@ import edu.chalmers.sikkr.backend.util.ServerInterface;
  */
 
 public class TheInbox implements ProgressListenable {
-    private Context context;
     private final static TheInbox box = new TheInbox();
+    private final static double numberOfOperations = 8D;
+
+    private Context context;
     private static List<Conversation> messageList;
     private final Map<String, Conversation> map;
     private final Collection<ProgressListener> listeners;
@@ -58,10 +60,10 @@ public class TheInbox implements ProgressListenable {
     }
 
     private void collectMMS() {
-        Cursor cursor = context.getContentResolver().query(Uri.parse("content://mms/inbox"), null, null, null, null);
-        int count = cursor.getCount();
+        final Cursor cursor = context.getContentResolver().query(Uri.parse("content://mms/inbox"), null, null, null, null);
+        final int count = cursor.getCount();
         if (count != 0) {
-            double step = 1D / (count * 8D);
+            double step = 1D / (count * numberOfOperations);
             while (cursor.moveToNext()) {
                 String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
                 String partID = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
@@ -86,22 +88,22 @@ public class TheInbox implements ProgressListenable {
                     conversation = map.get(address);
                 }
 
-                mms = new MMS(timestamp, address, partURI, false);
+                mms = new MMS(timestamp, partURI, false);
                 conversation.addMessage(mms);
                 curPart.close();
                 notifyListeners(step, "Collecting MMS");
             }
         } else {
-            notifyListeners(1D/8D, "Collecting MMS");
+            notifyListeners(1D/numberOfOperations, "Collecting MMS");
         }
         cursor.close();
     }
 
     private void collectSentMMS() {
-        Cursor cursor = context.getContentResolver().query(Uri.parse("content://mms/sent"), null, null, null, null);
-        int count = cursor.getCount();
+        final Cursor cursor = context.getContentResolver().query(Uri.parse("content://mms/sent"), null, null, null, null);
+        final int count = cursor.getCount();
         if (count != 0) {
-            double step = 1D / (cursor.getCount() * 8D);
+            double step = 1D / (cursor.getCount() * numberOfOperations);
             while (cursor.moveToNext()) {
                 String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
                 String partID = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
@@ -126,23 +128,23 @@ public class TheInbox implements ProgressListenable {
                     conversation = map.get(address);
                 }
 
-                mms = new MMS(timestamp, address, partURI, true);
+                mms = new MMS(timestamp, partURI, true);
                 conversation.addMessage(mms);
                 curPart.close();
                 notifyListeners(step, "Collecting sent MMS");
             }
         } else {
-            notifyListeners(1D/8D, "Collecting sent MMS");
+            notifyListeners(1D/numberOfOperations, "Collecting sent MMS");
         }
         cursor.close();
     }
 
     private void collectSms() {
-        Uri uriToAndroidInbox = Uri.parse("content://sms/inbox");
-        Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
-        int count = cursor.getCount();
+        final Uri uriToAndroidInbox = Uri.parse("content://sms/inbox");
+        final Cursor cursor = context.getContentResolver().query(uriToAndroidInbox, null, null, null, null);
+        final int count = cursor.getCount();
         if (count != 0) {
-            double step = 1D / (count * 8D);
+            double step = 1D / (count * numberOfOperations);
             while (cursor.moveToNext()) {
 
                 Conversation conversation;
@@ -162,23 +164,23 @@ public class TheInbox implements ProgressListenable {
                     //Toast.makeText(context, "Found existing conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
                     conversation = map.get(address);
                 }
-                sms = new OneSms(msg, address, date, false);
+                sms = new OneSms(msg, date, false);
                 conversation.addMessage(sms);
                 notifyListeners(step, "Collecting SMS");
             }
         } else {
-            notifyListeners(1D/8D, "Collecting SMS");
+            notifyListeners(1D/numberOfOperations, "Collecting SMS");
         }
 
         cursor.close();
     }
 
     private void collectSentSms() {
-        Uri uriToAndroidSentMessages = Uri.parse("content://sms/sent");
-        Cursor cursor = context.getContentResolver().query(uriToAndroidSentMessages, null, null, null, null);
-        int count = cursor.getCount();
+        final Uri uriToAndroidSentMessages = Uri.parse("content://sms/sent");
+        final Cursor cursor = context.getContentResolver().query(uriToAndroidSentMessages, null, null, null, null);
+        final int count = cursor.getCount();
         if (count != 0) {
-            double step = 1D / (count * 8D);
+            double step = 1D / (count * numberOfOperations);
             while (cursor.moveToNext()) {
                 Conversation conversation;
                 OneSms sms;
@@ -196,12 +198,12 @@ public class TheInbox implements ProgressListenable {
                     //Toast.makeText(context, "Found existing conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
                     conversation = map.get(address);
                 }
-                sms = new OneSms(msg, address, date, true);
+                sms = new OneSms(msg, date, true);
                 conversation.addMessage(sms);
                 notifyListeners(step, "Collecting sent SMS");
             }
         } else {
-            notifyListeners(1D/8D, "Collecting sent SMS");
+            notifyListeners(1D/numberOfOperations, "Collecting sent SMS");
 
         }
         cursor.close();
@@ -209,9 +211,9 @@ public class TheInbox implements ProgressListenable {
     }
 
     private void collectWebMessages() throws Exception {
-        List<Message> messages = ServerInterface.getReceivedMessages();
+        final List<Message> messages = ServerInterface.getReceivedMessages();
         if (!messages.isEmpty()) {
-            double step = 1D / (messages.size() * 8D);
+            double step = 1D / (messages.size() * numberOfOperations);
             for (Message msg : messages) {
                 Conversation conversation;
                 if (!map.containsKey(msg.getSender())) {
@@ -225,14 +227,14 @@ public class TheInbox implements ProgressListenable {
                 notifyListeners(step, "Preparing web messages");
             }
         } else {
-            notifyListeners(1D/8D, "Preparing web messages");
+            notifyListeners(1D/numberOfOperations, "Preparing web messages");
         }
     }
 
     private void collectSentWebMessages() throws Exception {
         List<Message> messages = ServerInterface.getSentMessages();
         if (!messages.isEmpty()) {
-            double step = 1D / (messages.size() * 8D);
+            double step = 1D / (messages.size() * numberOfOperations);
             for (Message msg : messages) {
                 Conversation conversation;
                 if (!map.containsKey(msg.getSender())) {
@@ -246,7 +248,7 @@ public class TheInbox implements ProgressListenable {
                 notifyListeners(step, "Preparing sent web messages");
             }
         } else {
-            notifyListeners(1D/8D, "Preparing sent web messages");
+            notifyListeners(1D/numberOfOperations, "Preparing sent web messages");
         }
     }
 

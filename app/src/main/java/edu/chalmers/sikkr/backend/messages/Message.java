@@ -2,13 +2,13 @@ package edu.chalmers.sikkr.backend.messages;
 
 import android.content.Context;
 import android.net.Uri;
-import android.telephony.TelephonyManager;
 
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
@@ -32,7 +32,7 @@ public final class Message extends AbstractMessage implements VoiceMessage {
     public final static int TYPE_DATA = 2;
 
     public Message(final Context context, final String SENDER, final String RECEIVER, final byte[] CONTENT,
-                    final int TYPE, final long TIMESTAMP, final boolean sent) {
+                    final int TYPE, final long TIMESTAMP, final boolean sent) throws IOException {
         this.SENDER = SENDER;
         this.RECEIVER = RECEIVER;
         this.CONTENT = CONTENT;
@@ -45,12 +45,17 @@ public final class Message extends AbstractMessage implements VoiceMessage {
             final File messageDir = new File(context.getFilesDir(), ".temp/");
             final File messageFile = generateMessageFile(messageDir);
             if (!messageDir.exists()) {
-                messageDir.mkdirs();
+                if (!messageDir.mkdirs()) {
+                    throw new IOException("Could not create a temp folder for web message");
+                }
                 messageDir.deleteOnExit();
             }
 
+
+            if (messageFile.createNewFile()) {
+                throw new IOException("Could not create a temp file for web message");
+            }
             try {
-                messageFile.createNewFile();
                 messageFile.deleteOnExit();
                 saveByteDataToFile(messageFile, CONTENT);
                 tmp = Uri.fromFile(messageFile);
@@ -89,7 +94,6 @@ public final class Message extends AbstractMessage implements VoiceMessage {
         return TIMESTAMP;
     }
 
-    @Override
     public String getSender() {
         return SENDER;
     }
@@ -118,7 +122,7 @@ public final class Message extends AbstractMessage implements VoiceMessage {
 
     @Override
     public int hashCode() {
-        return 17 * SENDER.hashCode() + 13 * RECEIVER.hashCode() + 23 * CONTENT.hashCode() +
+        return 17 * SENDER.hashCode() + 13 * RECEIVER.hashCode() + 23 * Arrays.hashCode(CONTENT) +
                 11 * TIMESTAMP.hashCode() + 27 * TYPE;
     }
 }

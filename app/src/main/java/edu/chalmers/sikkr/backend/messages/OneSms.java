@@ -10,23 +10,24 @@ import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
  */
 public class OneSms extends AbstractMessage {
     private String message;
-    private String senderNbr;
-    private String date;
     private Calendar calendar;
     private boolean isSent;
     private boolean isRead;
 
-    public OneSms(String msg, String senderNbr, String date, boolean isSent) {
+    public OneSms(String msg, String date, boolean isSent) {
         this.message = msg;
-        this.senderNbr = senderNbr;
-        this.date = date;
         this.isSent = isSent;
         isRead = true;
+        this.calendar = Calendar.getInstance();
+
+        Date thisDate = new Date(Long.parseLong(date));
+        calendar.setTime(thisDate);
     }
 
     public String getMessage() {
         return message;
     }
+
     public boolean isSent(){
         return isSent;
     }
@@ -39,12 +40,6 @@ public class OneSms extends AbstractMessage {
     public void markAsUnread(){
         isRead = false;
     }
-    public String getDate() {
-        return date;
-    }
-    public String getSender() {
-        return senderNbr;
-    }
 
     public void play() {
         TextToSpeechUtility.readAloud(message);
@@ -52,7 +47,7 @@ public class OneSms extends AbstractMessage {
 
     @Override
     public int hashCode() {
-        return 11*message.hashCode()*senderNbr.hashCode()*date.hashCode() + (isSent ? 1 : 0);
+        return 11*message.hashCode()*calendar.hashCode() + (isSent ? 1 : 0);
     }
 
     @Override
@@ -63,14 +58,11 @@ public class OneSms extends AbstractMessage {
             return false;
         }else{
             OneSms tmp = (OneSms)rhs;
-            return message.equals(tmp.message) && senderNbr.equals(tmp.senderNbr) && date.equals(tmp.date) && isSent == tmp.isSent();
+            return message.equals(tmp.message) && isSent == tmp.isSent() && calendar.equals(tmp.calendar);
         }
     }
 
     public Calendar getTimestamp(){
-        Date thisDate = new Date(Long.parseLong(date));
-        calendar = Calendar.getInstance();
-        calendar.setTime(thisDate);
         return calendar;
     }
 }

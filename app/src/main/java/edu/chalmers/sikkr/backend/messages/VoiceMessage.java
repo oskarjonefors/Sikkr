@@ -8,8 +8,7 @@ import android.net.Uri;
 public interface VoiceMessage extends ListableMessage {
 
     /**
-     * Return the absolute file path of the voice message.
-     * @return
+     * @return the absolute file path of the voice message.
      */
     Uri getFileUri();
 

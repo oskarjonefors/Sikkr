@@ -26,14 +26,23 @@ public class VoiceMessageRecorder {
     }
 
     private final String TAG = "VoiceMessageRecorder";
-    private final static VoiceMessageRecorder singleton = new VoiceMessageRecorder();
+    private final static VoiceMessageRecorder singleton = createNewInstance();
     private Context context;
     private RecordingState state = RecordingState.RESET;
     private String targetPath;
     private String currentFilePath;
     private MediaRecorder recorder;
 
-    private VoiceMessageRecorder() {
+    private static VoiceMessageRecorder createNewInstance() {
+        try {
+            return new VoiceMessageRecorder();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private VoiceMessageRecorder() throws IOException {
         if(Environment.getExternalStorageState().equals("mounted")){
             targetPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         } else {
@@ -42,7 +51,9 @@ public class VoiceMessageRecorder {
         targetPath += "/sikkr/";
         File dir = new File(targetPath);
         Log.d(TAG, "Target path is " + targetPath);
-        dir.mkdirs();
+        if (!dir.exists() && !dir.mkdirs()) {
+            throw new IOException("Could not setup folder");
+        }
     }
 
     private void setup(Context context) {
@@ -113,10 +124,12 @@ public class VoiceMessageRecorder {
      * Delete the current recording and reset the player.
      * This method can only be run when the recorder has stopped.
      */
-    public void discardRecording() {
+    public void discardRecording() throws IOException {
         if (state == RecordingState.STOPPED) {
             File discardFile = new File(currentFilePath);
-            discardFile.delete();
+            if (!discardFile.delete()) {
+                throw new IOException("Could not delete a temporary file");
+            }
             state = RecordingState.RESET;
         } else {
             throw new IllegalArgumentException("Cannot discard recording since " +
@@ -143,7 +156,7 @@ public class VoiceMessageRecorder {
 
             Log.d(TAG, "MMS timestamp set to " + timeStamp);
             state = RecordingState.RESET;
-            return new MMS(timeStamp, "0", Uri.fromFile(new File(currentFilePath)), true);
+            return new MMS(timeStamp, Uri.fromFile(new File(currentFilePath)), true);
         } else {
             throw new IllegalArgumentException(state == RecordingState.RECORDING ? "Cannot get voice message," +
                     "recording has not been stopped." : "Cannot get voice message since one has not been recorded.");
