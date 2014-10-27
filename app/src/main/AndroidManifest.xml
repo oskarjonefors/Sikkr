@@ -29,10 +29,12 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+
         android:theme="@style/AppTheme" >
         <service android:name="com.android.mms.transaction.TransactionService"/>
         <activity
             android:name=".frontend.InputScreen"
+            android:configChanges="orientation|screenSize">
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,30 +42,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".frontend.StartActivity">
+        <activity android:name=".frontend.StartActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
         <activity
             android:name=".frontend.ContactActivity"
+            android:configChanges="orientation|screenSize"
             android:label="Sikkr" >
         </activity>
         <activity
             android:name=".frontend.ContactBookActivity"
+            android:configChanges="orientation|screenSize"
             android:label="SiKKr" >
         </activity>
         <activity
             android:name=".frontend.ContactGridActivity"
+            android:configChanges="orientation|screenSize"
             android:label="contact_grid_activity" >
         </activity>
         <activity
             android:name=".frontend.SMS_Activity"
+            android:configChanges="orientation|screenSize"
             android:label="Sms" >
         </activity>
         <activity
             android:name=".frontend.ConversationActivity"
+            android:configChanges="orientation|screenSize"
             >
         </activity>
         <activity
             android:name=".frontend.LatestCallsActivity"
+            android:configChanges="orientation|screenSize"
              >
         </activity>
     </application>
