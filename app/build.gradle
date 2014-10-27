@@ -30,7 +30,8 @@ dependencies {
     compile 'com.klinkerapps:android-smsmms:+'
     compile 'org.apache.commons:commons-lang3:+'
     compile 'org.bouncycastle:bcprov-jdk15on:+'
-    compile 'org.codehaus.woodstox:wstx-asl:+'
+    compile 'com.fasterxml:aalto-xml:+'
+
 }
 
 task downloadSDP(type: MyDownload) {
