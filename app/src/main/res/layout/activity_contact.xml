@@ -43,7 +43,7 @@
             android:layout_height="10dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" />
-        <Button
+        <edu.chalmers.sikkr.frontend.TintFeedbackButton
              android:onClick="buttonClick"
              android:layout_gravity="center"
              android:layout_width="150dp"
@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
+        <edu.chalmers.sikkr.frontend.TintFeedbackButton
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:id="@+id/recordButton"
@@ -68,7 +68,7 @@
             android:layout_centerHorizontal="true"
             android:onClick="recordTheMessage"
             />
-        <Button
+        <edu.chalmers.sikkr.frontend.TintFeedbackButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/conversation_send"
@@ -77,7 +77,7 @@
             android:layout_toRightOf="@id/recordButton"
             android:layout_alignParentBottom="true"
             />
-        <Button
+        <edu.chalmers.sikkr.frontend.TintFeedbackButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/conversation_cancel"
