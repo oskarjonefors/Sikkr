@@ -2,6 +2,8 @@
 <resources>
 
     <string name="app_name">Sikkr</string>
+    <string name="enter_your_phone_number">"Mata in ditt telefonnummer:"</string>
+    <string name="accept">"Godkänn"</string>
     <string name="action_settings">Inställningar</string>
     <string name="calls">Samtal</string>
     <string name="favorites">Favoriter</string>
