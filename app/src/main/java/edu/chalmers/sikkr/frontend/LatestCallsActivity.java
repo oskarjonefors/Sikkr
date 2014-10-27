@@ -106,6 +106,8 @@ public class LatestCallsActivity extends Activity {
 
             } else {
                 holder.name.setText(list.get(i).getCallNumber());
+                holder.contactDrawable = null;
+                holder.contactImage.setImageDrawable(null);
             }
 
             String callDate = DateDiffUtility.callDateToString(Long.parseLong(list.get(i).getCallDate()));
@@ -117,6 +119,7 @@ public class LatestCallsActivity extends Activity {
                     holder.drawable = new BitmapDrawable(getResources(), holder.bitmap);
                     holder.image = (ImageView) view.findViewById(R.id.call_type);
                     holder.image.setImageDrawable(holder.drawable);
+                    holder.name.setTextColor(getResources().getColor(android.R.color.black));
                     break;
 
                 case android.provider.CallLog.Calls.OUTGOING_TYPE:
@@ -124,11 +127,13 @@ public class LatestCallsActivity extends Activity {
                     holder.drawable = new BitmapDrawable(getResources(), holder.bitmap);
                     holder.image = (ImageView) view.findViewById(R.id.call_type);
                     holder.image.setImageDrawable(holder.drawable);
+                    holder.name.setTextColor(getResources().getColor(android.R.color.black));
                     break;
 
                 case android.provider.CallLog.Calls.MISSED_TYPE:
                     holder.name.setTextColor(getResources().getColor(android.R.color.holo_red_light));
                     break;
+                // måste kolla färg varje gång
             }
             return view;
         }
