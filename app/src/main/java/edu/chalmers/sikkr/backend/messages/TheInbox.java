@@ -21,6 +21,7 @@ import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
+import edu.chalmers.sikkr.backend.util.VoiceMessageFileUtility;
 
 /**
  * Created by Jingis on 2014-09-27.
@@ -28,7 +29,7 @@ import edu.chalmers.sikkr.backend.util.ServerInterface;
 
 public class TheInbox implements ProgressListenable {
     private final static TheInbox box = new TheInbox();
-    private final static double numberOfOperations = 8D;
+    private final static double numberOfOperations = 10D;
 
     private Context context;
     private static List<Conversation> messageList;
@@ -211,20 +212,12 @@ public class TheInbox implements ProgressListenable {
 
     }
 
-    private void collectWebMessages() throws Exception {
-        final List<Message> messages = ServerInterface.getReceivedMessages();
+    private void saveServerMessages() throws Exception {
+        final List<ServerMessage> messages = ServerInterface.getReceivedMessages();
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
-            for (Message msg : messages) {
-                Conversation conversation;
-                if (!map.containsKey(msg.getSender())) {
-                    conversation = new Conversation(msg.getSender());
-                    map.put(msg.getSender(), conversation);
-                    messageList.add(conversation);
-                } else {
-                    conversation = map.get(msg.getSender());
-                }
-                conversation.addMessage(msg);
+            for (ServerMessage msg : messages) {
+                VoiceMessageFileUtility.saveServerMessage(context, msg);
                 notifyListeners(step, "Preparing web messages");
             }
         } else {
@@ -232,24 +225,23 @@ public class TheInbox implements ProgressListenable {
         }
     }
 
-    private void collectSentWebMessages() throws Exception {
-        List<Message> messages = ServerInterface.getSentMessages();
+    public void collectServerMessages() {
+        List<Message> messages = VoiceMessageFileUtility.readMessages(context);
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
             for (Message msg : messages) {
                 Conversation conversation;
-                if (!map.containsKey(msg.getSender())) {
-                    conversation = new Conversation(msg.getReceiver());
-                    map.put(msg.getReceiver(), conversation);
+                String address = msg.isSent() ? msg.getReceiver() : msg.getSender();
+                if (!map.containsKey(address)) {
+                    conversation = new Conversation(address);
                     messageList.add(conversation);
+                    map.put(address, conversation);
                 } else {
-                    conversation = map.get(msg.getReceiver());
+                    conversation = map.get(address);
                 }
                 conversation.addMessage(msg);
-                notifyListeners(step, "Preparing sent web messages");
+                notifyListeners(step, "Collecting sent SMS");
             }
-        } else {
-            notifyListeners(1D/numberOfOperations, "Preparing sent web messages");
         }
     }
 
@@ -310,12 +302,12 @@ public class TheInbox implements ProgressListenable {
         protected Boolean doInBackground(InboxDoneLoadingListener... params) {
             try {
                 listener = params[0];
+                saveServerMessages();
                 collectMMS();
                 collectSentMMS();
                 collectSms();
                 collectSentSms();
-                collectWebMessages();
-                collectSentWebMessages();
+                collectServerMessages();
             } catch (Exception e ) {
                 LogUtility.writeLogFile("load_inbox_throws", e);
                 return false;

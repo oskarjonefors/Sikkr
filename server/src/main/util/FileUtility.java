@@ -68,10 +68,9 @@ public final class FileUtility {
 						&& reader.getName().getLocalPart() == "Message") {
 					String sender = reader.getAttributeValue(0); //Sender
 					String reciever = reader.getAttributeValue(1); //Reciever
-					int type = Integer.parseInt(reader.getAttributeValue(2)); //Type
-					long time = Long.parseLong(reader.getAttributeValue(3)); //Timestamp
-					String path = reader.getAttributeValue(4); //Content path
-					messages.add(new Message(getMessageContent(path), sender, reciever, type, time));
+					long time = Long.parseLong(reader.getAttributeValue(2)); //Timestamp
+					String path = reader.getAttributeValue(3); //Content path
+					messages.add(new Message(getMessageContent(path), sender, reciever, time));
 				}
 			}
 		}
@@ -116,7 +115,6 @@ public final class FileUtility {
 			writer.writeEmptyElement("Message");
 			writer.writeAttribute("sender", message.getSender());
 			writer.writeAttribute("reciever", message.getReciever());
-			writer.writeAttribute("type", message.getType() + "");
 			writer.writeAttribute("time", message.getTimeInMillis() + "");
 			writer.writeAttribute("content", path = getRandomContentPath(message));
 			

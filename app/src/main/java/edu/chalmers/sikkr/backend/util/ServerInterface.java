@@ -37,6 +37,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.messages.Message;
+import edu.chalmers.sikkr.backend.messages.ServerMessage;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
@@ -220,14 +221,14 @@ public final class ServerInterface implements ProgressListenable {
     /**
      * @return a list of recieved messages from the server.
      */
-    public static List<Message> getReceivedMessages() throws Exception {
+    public static List<ServerMessage> getReceivedMessages() throws Exception {
         return getSingleton().getReceivedMessagesFromServer();
     }
 
     /**
      * @return a list of sent messages from the server.
      */
-    public static List<Message> getSentMessages() throws Exception {
+    public static List<ServerMessage> getSentMessages() throws Exception {
         return getSingleton().getSentMessagesFromServer();
     }
 
@@ -236,19 +237,14 @@ public final class ServerInterface implements ProgressListenable {
      * @param number the number that you want to send the message to.
      * @param content the content of the message as a byte array.
      */
-    public static void sendMessage(String number, byte[] content, int messageType) {
-        getSingleton().sendMessageToServer(number, content, messageType);
-    }
-
-    @SuppressWarnings("unused")
-    public static void sendTextMessage(String number, String text) {
-        sendMessage(number, text.getBytes(), Message.TYPE_TEXT);
+    public static void sendMessage(String number, byte[] content, long time) {
+        getSingleton().sendMessageToServer(number, content, time);
     }
 
     public static void sendVoiceMessage(String number, VoiceMessage message) {
         try {
             byte[] content = readByteDataFromFile(new File(message.getFileUri().getPath()));
-            sendMessage(number, content, Message.TYPE_DATA);
+            sendMessage(number, content, message.getTimestamp().getTimeInMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -326,18 +322,18 @@ public final class ServerInterface implements ProgressListenable {
         return cipher.doFinal(bytes);
     }
 
-    private List<Message> getReceivedMessagesFromServer() throws Exception {
+    private List<ServerMessage> getReceivedMessagesFromServer() throws Exception {
         writeLine("get_received_messages");
         return getMessagesFromServer(false);
     }
 
-    private List<Message> getSentMessagesFromServer() throws Exception {
+    private List<ServerMessage> getSentMessagesFromServer() throws Exception {
         writeLine("get_sent_messages");
         return getMessagesFromServer(true);
     }
 
-    private List<Message> getMessagesFromServer(boolean sent) throws Exception {
-        final List<Message> messages = new ArrayList<>();
+    private List<ServerMessage> getMessagesFromServer(boolean sent) throws Exception {
+        final List<ServerMessage> messages = new ArrayList<>();
         final int n = INPUT_STREAM.readInt();
         final double numberOfOperations = 8D;
 
@@ -351,17 +347,16 @@ public final class ServerInterface implements ProgressListenable {
             final int senderNumberLength = INPUT_STREAM.readInt();
             final int receiverNumberLength = INPUT_STREAM.readInt();
             final int contentLength = INPUT_STREAM.readInt();
+            final long time = INPUT_STREAM.readLong();
             final byte[] encryptedKey = new byte[keyLength], key;
             final byte[] encryptedIV = new byte[ivLength], iv;
             final byte[] encryptedSenderNumber = new byte[senderNumberLength];
             final byte[] encryptedReceiverNumber = new byte[receiverNumberLength];
             final byte[] encryptedContent = new byte[contentLength];
             final byte[] content;
-            final int type;
-            final long time;
             final String senderNumber;
             final String receiverNumber;
-            final Message msg;
+            final ServerMessage msg;
 
             INPUT_STREAM.readFully(encryptedIV);
             INPUT_STREAM.readFully(encryptedKey);
@@ -374,11 +369,9 @@ public final class ServerInterface implements ProgressListenable {
             senderNumber = new String(aesDecrypt(encryptedSenderNumber, key, iv));
             receiverNumber = new String(aesDecrypt(encryptedReceiverNumber, key, iv));
             content = aesDecrypt(encryptedContent, key, iv);
-            type = INPUT_STREAM.readInt();
-            time = INPUT_STREAM.readLong();
 
 
-            msg = new Message(context, senderNumber, receiverNumber, content, type, time, sent);
+            msg = new ServerMessage(senderNumber, receiverNumber, content, time, sent);
             messages.add(msg);
             notifyListeners(step, "Loading " + (sent ? "sent " : "incoming") + "web messages");
         }
@@ -438,18 +431,19 @@ public final class ServerInterface implements ProgressListenable {
         Log.i("ServerInterface", "We gave the server our public key");
     }
 
-    private void sendMessageToServer(String number, byte[] content, int messageType) {
+    private void sendMessageToServer(String number, byte[] content, long time) {
         try {
+            ServerMessage savedMsg = new ServerMessage(LOCAL_NUMBER, number, content, time, true);
             EncryptedMessage message = new EncryptedMessage(number.getBytes(), content);
             byte[] encryptedIV = encrypt(message.iv);
             byte[] encryptedKey = encrypt(message.aeskey);
+            VoiceMessageFileUtility.saveServerMessage(context, savedMsg);
             writeLine("send_message");
             OUTPUT_STREAM.writeInt(encryptedIV.length);
             OUTPUT_STREAM.writeInt(encryptedKey.length);
             OUTPUT_STREAM.writeInt(message.encryptedBytes[0].length);
             OUTPUT_STREAM.writeInt(message.encryptedBytes[1].length);
-            OUTPUT_STREAM.writeInt(messageType);
-            OUTPUT_STREAM.writeLong(1000);
+            OUTPUT_STREAM.writeLong(time);
             OUTPUT_STREAM.write(encryptedIV);
             OUTPUT_STREAM.write(encryptedKey);
             OUTPUT_STREAM.write(message.encryptedBytes[0]);

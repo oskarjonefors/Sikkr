@@ -139,7 +139,6 @@ public class SocketThread extends Thread {
 			final int keyLength = inputStream.readInt();
 			final int numberLength = inputStream.readInt();
 			final int contentLength = inputStream.readInt();
-			final int type = inputStream.readInt();
 			final long time = inputStream.readLong();
 			final byte[] encryptedIV = new byte[ivLength], decryptedIV;
 			final byte[] encryptedKey = new byte[keyLength], decryptedKey;
@@ -158,7 +157,7 @@ public class SocketThread extends Thread {
 			
 			number = new String(aesDecrypt(encryptedNumber, decryptedKey, decryptedIV));
 			content = aesDecrypt(encryptedContent, decryptedKey, decryptedIV);
-			message = new Message(content, contact.getNumber(), number, type, time);
+			message = new Message(content, contact.getNumber(), number, time);
 			listener.getContactByNumber(number).recievedMessages.add(message);
 			contact.sentMessages.add(message);
 			listener.sendInformation(new InformationEvent(Level.INFO, "Recieved message \""+new String(content)+"\" to "+number));
@@ -229,7 +228,6 @@ public class SocketThread extends Thread {
 				EncryptedMessage msg = new EncryptedMessage(message.getSender().getBytes(), message.getReciever().getBytes(), message.getContent());
 				byte[] encryptedIV = contact.encryptBytes(msg.iv);
 				byte[] encryptedKey = contact.encryptBytes(msg.aeskey);
-				int type = message.getType();
 				long time = message.getTimeInMillis();
 				
 				outputStream.writeInt(encryptedIV.length);
@@ -237,13 +235,12 @@ public class SocketThread extends Thread {
 				outputStream.writeInt(msg.encryptedBytes[0].length);
 				outputStream.writeInt(msg.encryptedBytes[1].length);
 				outputStream.writeInt(msg.encryptedBytes[2].length);
+                outputStream.writeLong(time);
 				outputStream.write(encryptedIV);
 				outputStream.write(encryptedKey);
 				outputStream.write(msg.encryptedBytes[0]);
 				outputStream.write(msg.encryptedBytes[1]);
 				outputStream.write(msg.encryptedBytes[2]);
-				outputStream.writeInt(type);
-				outputStream.writeLong(time);
 				outputStream.flush();
 			}
 		}
