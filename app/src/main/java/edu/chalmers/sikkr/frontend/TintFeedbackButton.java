@@ -41,7 +41,7 @@ public class TintFeedbackButton extends Button {
                 setTextColor(0xff888888);
 
                 break;
-
+            case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                     /* clear color filter */
                 for (Drawable draw : drawables) {
