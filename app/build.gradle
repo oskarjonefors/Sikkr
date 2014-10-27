@@ -30,7 +30,6 @@ dependencies {
     compile 'com.klinkerapps:android-smsmms:+'
     compile 'org.apache.commons:commons-lang3:+'
     compile 'org.bouncycastle:bcprov-jdk15on:+'
-    compile 'com.fasterxml:aalto-xml:+'
 
 }
 
