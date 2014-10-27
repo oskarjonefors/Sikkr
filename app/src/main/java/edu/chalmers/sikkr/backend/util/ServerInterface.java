@@ -1,8 +1,10 @@
 package edu.chalmers.sikkr.backend.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -226,13 +228,6 @@ public final class ServerInterface implements ProgressListenable {
     }
 
     /**
-     * @return a list of sent messages from the server.
-     */
-    public static List<ServerMessage> getSentMessages() throws Exception {
-        return getSingleton().getSentMessagesFromServer();
-    }
-
-    /**
      * Sends a message to somebody through the server.
      * @param number the number that you want to send the message to.
      * @param content the content of the message as a byte array.
@@ -246,6 +241,7 @@ public final class ServerInterface implements ProgressListenable {
             byte[] content = readByteDataFromFile(new File(message.getFileUri().getPath()));
             sendMessage(number, content, message.getTimestamp().getTimeInMillis());
         } catch (IOException e) {
+            LogUtility.toastInActivityThread((Activity) singleton.context, "Could not send message via server", Toast.LENGTH_SHORT);
             e.printStackTrace();
         }
     }
@@ -325,11 +321,6 @@ public final class ServerInterface implements ProgressListenable {
     private List<ServerMessage> getReceivedMessagesFromServer() throws Exception {
         writeLine("get_received_messages");
         return getMessagesFromServer(false);
-    }
-
-    private List<ServerMessage> getSentMessagesFromServer() throws Exception {
-        writeLine("get_sent_messages");
-        return getMessagesFromServer(true);
     }
 
     private List<ServerMessage> getMessagesFromServer(boolean sent) throws Exception {

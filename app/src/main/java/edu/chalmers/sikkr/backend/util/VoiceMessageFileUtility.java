@@ -1,7 +1,10 @@
 package edu.chalmers.sikkr.backend.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.widget.Toast;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -90,6 +93,7 @@ public class VoiceMessageFileUtility {
             dos.flush();
             dos.close();
         } catch (IOException | XmlPullParserException e) {
+            LogUtility.toastInActivityThread((Activity) context, "Satans jävla exception", Toast.LENGTH_SHORT);
             LogUtility.writeLogFile(TAG, e);
         }
 

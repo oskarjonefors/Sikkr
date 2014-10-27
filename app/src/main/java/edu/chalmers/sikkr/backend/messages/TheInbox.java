@@ -303,8 +303,8 @@ public class TheInbox implements ProgressListenable {
             try {
                 listener = params[0];
                 saveServerMessages();
-                collectMMS();
-                collectSentMMS();
+                //collectMMS();
+                //collectSentMMS();
                 collectSms();
                 collectSentSms();
                 collectServerMessages();

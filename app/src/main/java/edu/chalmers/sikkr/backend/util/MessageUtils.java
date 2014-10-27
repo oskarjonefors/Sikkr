@@ -45,6 +45,10 @@ public class MessageUtils {
     }
 
     public static String fixNumber(String number) {
-        return number.replaceAll("[^0-9]", "");
+        number = number.replaceAll("[^0-9]", "");
+        if (number.startsWith("46")) {
+            number = "0" + number.substring(2);
+        }
+        return number;
     }
 }

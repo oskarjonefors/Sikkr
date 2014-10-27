@@ -133,7 +133,7 @@ public class SocketThread extends Thread {
 	
 	private void beginRecieveMessage() throws Exception {
 		if (isClientVerifiedContact()) {
-			listener.sendInformation(new InformationEvent(Level.INFO, "Recieving message from client: "+contact.getNumber()));
+			listener.sendInformation(new InformationEvent(Level.INFO, "Receiving message from client: "+contact.getNumber()));
 			
 			final int ivLength = inputStream.readInt();
 			final int keyLength = inputStream.readInt();
@@ -161,7 +161,9 @@ public class SocketThread extends Thread {
 			listener.getContactByNumber(number).recievedMessages.add(message);
 			contact.sentMessages.add(message);
 			listener.sendInformation(new InformationEvent(Level.INFO, "Recieved message \""+new String(content)+"\" to "+number));
-		}
+		} else {
+            listener.sendInformation(new InformationEvent(Level.INFO, "Client tried to send message but was not verified"));
+        }
 	}
 	
 	

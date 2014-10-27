@@ -1,7 +1,9 @@
 package edu.chalmers.sikkr.backend.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.klinker.android.send_message.Message;
 import com.klinker.android.send_message.Settings;
@@ -11,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidParameterException;
 
 import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
@@ -32,6 +35,9 @@ public class VoiceMessageSender {
     private VoiceMessageSender() {}
 
     private void setup(Context context) {
+        if (context == null) {
+            throw new InvalidParameterException("Cannot create instance with null as context");
+        }
         this.context = context;
 
         /* Configure MMS settings - hard-coded for now */
@@ -69,18 +75,22 @@ public class VoiceMessageSender {
     }
 
     public void sendMessage(final VoiceMessage vmsg, final String receiverNbr) throws IllegalArgumentException {
+        Toast.makeText(context, "Preparing to send message", Toast.LENGTH_SHORT).show();
         Runnable runnable = new Runnable() {
 
             @Override
             public void run() {
                 try {
-                    if (ServerInterface.serverHasClient(receiverNbr)) {
-                        ServerInterface.sendVoiceMessage(receiverNbr, vmsg);
+                    if (ServerInterface.serverHasClient(MessageUtils.fixNumber(receiverNbr))) {
+                        LogUtility.toastInActivityThread((Activity) context, "Sending voice message via server", Toast.LENGTH_SHORT);
+                        ServerInterface.sendVoiceMessage(MessageUtils.fixNumber(receiverNbr), vmsg);
                     } else {
+                        LogUtility.toastInActivityThread((Activity) context, "Sending voice message via mms", Toast.LENGTH_SHORT);
                         sendMmsMessage(vmsg, receiverNbr);
                     }
                 } catch (MessageNotSentException e) {
-                    Log.e("ContactActivity", "Message not sent");
+                    LogUtility.toastInActivityThread((Activity) context, "Could not send voice message", Toast.LENGTH_SHORT);
+                    LogUtility.writeLogFile(TAG, e);
                 }
             }
         };

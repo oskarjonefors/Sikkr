@@ -1,5 +1,6 @@
 package edu.chalmers.sikkr.backend.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
@@ -35,6 +36,18 @@ public class LogUtility {
             stacktrace[i] = trace[i-1].toString();
         }
         writeLogFile(fileName, true, stacktrace);
+    }
+
+    public static void toastInActivityThread(Activity activity, String text, int length) {
+        activity.runOnUiThread(getToastRunnable(activity, text, length));
+    }
+
+    private static Runnable getToastRunnable(final Context context, final CharSequence text, final int length) {
+        return new Runnable() {
+            public void run() {
+                Toast.makeText(context, text, length).show();
+            }
+        };
     }
 
     /**
