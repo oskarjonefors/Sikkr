@@ -2,11 +2,8 @@ package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,11 +15,8 @@ import android.util.Log;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.MessageNotSentException;
-import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
-import edu.chalmers.sikkr.backend.sms.SmsConversation;
-import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
@@ -42,7 +36,7 @@ public class ContactActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_contact);
-        setButtonVisability();
+        setButtonVisibility();
 
         //This makes us able to use the TextView defined in the .xml and change it from here
         final TextView contactName = (TextView) findViewById(R.id.contactName);
@@ -131,7 +125,7 @@ public class ContactActivity extends Activity {
         }
     }
 
-    private void setButtonVisability() {
+    private void setButtonVisibility() {
          sendButton = (Button) findViewById(R.id.conversation_send);
          cancelButton = (Button) findViewById(R.id.conversation_cancel);
          recordButton = (Button) findViewById(R.id.recordButton);
