@@ -7,9 +7,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -75,6 +77,7 @@ public class SocketThread extends Thread {
 
 		try {	
 			while (client.allSocketsOpen()) {
+                listener.sendInformation(new InformationEvent(Level.INFO, "Waiting on a command from: "+client.getInetAddress()));
 				String command = bufferedReader.readLine();
                 if (command == null) {
                     break;
@@ -220,7 +223,7 @@ public class SocketThread extends Thread {
 		}
 	}
 	
-	private void sendMessagesToClient(List<Message> list) throws Exception {
+	private void sendMessagesToClient(Collection<Message> list) throws Exception {
 		if (isClientVerifiedContact()) {
 			listener.sendInformation(new InformationEvent(Level.INFO, "Sending messages to client: " + contact.getNumber()));
 			//DataOutputStream dos = new DataOutputStream(outputStream);
@@ -290,7 +293,7 @@ public class SocketThread extends Thread {
 	
 	private byte[] aesDecrypt(byte[] data, byte[] key, byte[] iv) throws Exception {
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-		SecretKeySpec kSpec = new SecretKeySpec(key, "AES/CBC/PKCS5Padding");
+		Key kSpec = new SecretKeySpec(key, "AES/CBC/PKCS5Padding");
 		
 		cipher.init(Cipher.DECRYPT_MODE, kSpec, new IvParameterSpec(iv));
 		return cipher.doFinal(data);
@@ -318,24 +321,24 @@ public class SocketThread extends Thread {
 			listener.sendInformation(new InformationEvent(Level.INFO, "Sent information about number "+number+" to client"));
 		}
 	}
-	
+
 	private String getNumber() throws Exception {
 		listener.sendInformation(new InformationEvent(Level.INFO, "Checking if server has a client"));
-		final int ivLength = inputStream.readInt();
-		final int keyLength = inputStream.readInt();
-		final int numberLength = inputStream.readInt();
+        final int ivLength = inputStream.readInt();
+        final int keyLength = inputStream.readInt();
+        final int numberLength = inputStream.readInt();
 
-		final byte[] encryptedIV = new byte[ivLength], decryptedIV;
-		final byte[] encryptedKey = new byte[keyLength], decryptedKey;
-		final byte[] encryptedNumber = new byte[numberLength];
-		
-		inputStream.readFully(encryptedIV);
-		inputStream.readFully(encryptedKey);
-		inputStream.readFully(encryptedNumber);
-		
-		decryptedIV = listener.decrypt(encryptedIV);
-		decryptedKey = listener.decrypt(encryptedKey);
-		
+        final byte[] encryptedIV = new byte[ivLength], decryptedIV;
+        final byte[] encryptedKey = new byte[keyLength], decryptedKey;
+        final byte[] encryptedNumber = new byte[numberLength];
+
+        inputStream.readFully(encryptedIV);
+        inputStream.readFully(encryptedKey);
+        inputStream.readFully(encryptedNumber);
+
+        decryptedIV = listener.decrypt(encryptedIV);
+        decryptedKey = listener.decrypt(encryptedKey);
+
 		return new String(aesDecrypt(encryptedNumber, decryptedKey, decryptedIV));
 	}
 

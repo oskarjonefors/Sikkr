@@ -236,12 +236,15 @@ public final class ServerInterface implements ProgressListenable {
         getSingleton().sendMessageToServer(number, content, time);
     }
 
-    public static void sendVoiceMessage(String number, VoiceMessage message) {
+    public static void sendVoiceMessage(Activity toastActivity, String number, VoiceMessage message) {
         try {
+            LogUtility.toastInActivityThread(toastActivity, "Reading byte data from voice message", Toast.LENGTH_SHORT);
             byte[] content = readByteDataFromFile(new File(message.getFileUri().getPath()));
+            LogUtility.toastInActivityThread(toastActivity, "Finished reading byte data from voice message", Toast.LENGTH_SHORT);
             sendMessage(number, content, message.getTimestamp().getTimeInMillis());
+            LogUtility.toastInActivityThread(toastActivity, "Finished sending message data to server", Toast.LENGTH_SHORT);
         } catch (IOException e) {
-            LogUtility.toastInActivityThread((Activity) singleton.context, "Could not send message via server", Toast.LENGTH_SHORT);
+            LogUtility.toastInActivityThread(toastActivity, "Could not send message via server", Toast.LENGTH_SHORT);
             e.printStackTrace();
         }
     }

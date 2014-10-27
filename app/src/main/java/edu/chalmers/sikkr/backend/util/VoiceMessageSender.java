@@ -83,7 +83,7 @@ public class VoiceMessageSender {
                 try {
                     if (ServerInterface.serverHasClient(MessageUtils.fixNumber(receiverNbr))) {
                         LogUtility.toastInActivityThread((Activity) context, "Sending voice message via server", Toast.LENGTH_SHORT);
-                        ServerInterface.sendVoiceMessage(MessageUtils.fixNumber(receiverNbr), vmsg);
+                        ServerInterface.sendVoiceMessage((Activity) context, MessageUtils.fixNumber(receiverNbr), vmsg);
                     } else {
                         LogUtility.toastInActivityThread((Activity) context, "Sending voice message via mms", Toast.LENGTH_SHORT);
                         sendMmsMessage(vmsg, receiverNbr);
