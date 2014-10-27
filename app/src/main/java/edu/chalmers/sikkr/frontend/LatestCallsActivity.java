@@ -131,6 +131,10 @@ public class LatestCallsActivity extends Activity {
                     break;
 
                 case android.provider.CallLog.Calls.MISSED_TYPE:
+                    holder.bitmap = BitmapFactory.decodeResource(res, res.getIdentifier("missed_call", "drawable", context.getPackageName()));
+                    holder.drawable = new BitmapDrawable(getResources(), holder.bitmap);
+                    holder.image = (ImageView) view.findViewById(R.id.call_type);
+                    holder.image.setImageDrawable(holder.drawable);
                     holder.name.setTextColor(getResources().getColor(android.R.color.holo_red_light));
                     break;
                 // måste kolla färg varje gång
