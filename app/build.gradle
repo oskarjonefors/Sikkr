@@ -26,10 +26,11 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'org.slf4j:slf4j-android:1.7.7'
+    compile 'org.slf4j:slf4j-android:+'
     compile 'com.klinkerapps:android-smsmms:+'
-    compile 'org.apache.commons:commons-lang3:3.0'
-    compile 'org.bouncycastle:bcprov-jdk15on:1.51'
+    compile 'org.apache.commons:commons-lang3:+'
+    compile 'org.bouncycastle:bcprov-jdk15on:+'
+    compile 'org.codehaus.woodstox:wstx-asl:+'
 }
 
 task downloadSDP(type: MyDownload) {
