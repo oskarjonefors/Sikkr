@@ -63,6 +63,8 @@ public class VoiceMessageFileUtility {
                         long time = Long.parseLong(reader.getAttributeValue(2)); //Timestamp
                         boolean sent = Boolean.parseBoolean(reader.getAttributeValue(3)); //sent
                         String path = reader.getAttributeValue(4); //Content path
+                        LogUtility.writeLogFile("ATTRS", "Sender: " + sender + " Receiver: " + receiver
+                                + " Time: " + time);
                         messages.add(new Message(sender, receiver, Uri.fromFile(new File(getAppPath(), "messages/" + path)), time, sent));
                     }
                 }
