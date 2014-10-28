@@ -3,6 +3,7 @@ package edu.chalmers.sikkr.backend.util;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -43,7 +45,7 @@ public class VoiceMessageFileUtility {
 
     public static List<Message> readMessages(Context context) {
         File file =  new File(context.getFilesDir(), "messages.xml");
-        List<Message> messages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<>();
 
 
         try {
@@ -74,14 +76,35 @@ public class VoiceMessageFileUtility {
     public static void saveServerMessage(Context context, ServerMessage message) {
         try {
             XmlSerializer writer = inputFactory.newSerializer();
-            File file = new File(context.getFilesDir(), "messages.xml");
-            List<Message> previousMessages = new ArrayList<>();
+            Collection<Message> previousMessages = new ArrayList<>();
+            File sikkrDirectory, file;
+            String sikkopath = getAppPath();
+
+
+            sikkrDirectory = new File(sikkopath);
+            file = new File(sikkrDirectory, "messages.xml");
+
+            if (sikkrDirectory.exists() && !sikkrDirectory.isDirectory()) {
+                if (!sikkrDirectory.delete()) {
+                    throw new IOException("Could not delete a misnamed file");
+                }
+            }
+
+            if (!sikkrDirectory.exists()) {
+                if (!sikkrDirectory.mkdirs()) {
+                    throw new IOException("Could not create sikkr directory");
+                }
+            }
+
             if (!file.exists()) {
-                file.createNewFile();
+                if (!file.createNewFile()) {
+                    throw new IOException("Could not create a new file!");
+                }
             } else {
                 previousMessages.addAll(readMessages(context));
-                file.delete();
-                file.createNewFile();
+                if (!file.delete() || !file.createNewFile()) {
+                    throw new IOException("Could not create a new file!");
+                }
             }
 
             writer.setOutput(new OutputStreamWriter(new FileOutputStream(file)));
@@ -97,7 +120,7 @@ public class VoiceMessageFileUtility {
                 writer.endTag("Messages", "Message");
             }
 
-            File contentDir = new File(context.getFilesDir(), "messages/");
+            File contentDir = new File(sikkrDirectory, "messages/");
             File contentFile;
             String path;
             writer.startTag("Messages", "Message");
@@ -109,8 +132,16 @@ public class VoiceMessageFileUtility {
             writer.endTag("Messages", "Message");
             writer.endDocument();
 
+            if (contentDir.exists() && !contentDir.isDirectory()) {
+                if (!contentDir.delete()) {
+                    throw new IOException("Could not delete a misnamed file");
+                }
+            }
+
             if (!contentDir.exists()) {
-                contentDir.mkdir();
+                if (!contentDir.mkdir()) {
+                    throw new IOException("Could not create content folder");
+                }
             }
 
             contentFile = new File(contentDir, path + ".msg");
@@ -136,6 +167,16 @@ public class VoiceMessageFileUtility {
             tmp = new File(dir, path);
         } while (tmp.exists());
         return path;
+    }
+
+    private static String getAppPath() {
+        String path;
+        if(Environment.getExternalStorageState().equals("mounted")){
+            path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        } else {
+            path = Environment.getDataDirectory().getAbsolutePath();
+        }
+        return path + "/sikkr/";
     }
 
 }
