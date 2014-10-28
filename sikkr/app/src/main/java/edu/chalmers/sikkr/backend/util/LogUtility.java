@@ -14,6 +14,7 @@ import java.util.Calendar;
 
 /**
  * A simple class to write messages to a log file on the Android device.
+ *
  * @author Oskar Jönefors
  */
 public class LogUtility {
@@ -33,12 +34,12 @@ public class LogUtility {
         String[] stacktrace = new String[trace.length + 1];
         stacktrace[0] = e.getLocalizedMessage();
         for (int i = 1; i < stacktrace.length; i++) {
-            stacktrace[i] = trace[i-1].toString();
+            stacktrace[i] = trace[i - 1].toString();
         }
         writeLogFile(fileName, true, stacktrace);
     }
 
-    public static void toastInActivityThread(Activity activity, String text, int length) {
+    public static void toastInActivityThread(Activity activity, CharSequence text, int length) {
         activity.runOnUiThread(getToastRunnable(activity, text, length));
     }
 
@@ -63,41 +64,47 @@ public class LogUtility {
     }
 
     /**
-     *
      * Write the given log rows to a log file with the given name. The file name will be stripped of
      * all non-alphanumerical characters, and the log will be placed in the 'sikkr/log' directory in
      * the android data directory.
      *
-     * @param fileName - The file name without path.
+     * @param fileName  - The file name without path.
      * @param timeStamp - Whether or not a time stamp should be written in the beginning of every line.
-     * @param logRows - The rows to write to the log.
+     * @param logRows   - The rows to write to the log.
      */
     public static void writeLogFile(String fileName, boolean timeStamp, String... logRows) {
         final String fName = fixFilename(fileName);
 
-        if(fName.length() > 0 && logRows.length > 0) {
-            String logPath = getLogDirectory();
-            File dir = new File(logPath);
+        if (fName.length() > 0 && logRows.length > 0) {
+            try {
+                String logPath = getLogDirectory();
+                File dir = new File(logPath);
 
             /* Create log directory if there isn't one */
-            dir.mkdirs();
-
-            File logFile = new File(logPath + fName + ".txt");
-
-            if(!logFile.exists()) {
-                try {
-                    logFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (!dir.mkdirs()) {
+                    throw new IOException("Could not create a log directory");
                 }
-            }
 
-            try {
+                File logFile = new File(logPath + fName + ".txt");
+
+                if (!logFile.exists()) {
+                    try {
+                        if (!logFile.createNewFile()) {
+                            throw new IOException("Could not create log file");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
                 BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-                for(String logLine : logRows) {
+                for (String logLine : logRows) {
 
                     if (timeStamp) {
-                        buf.append(getTimeStamp() + " " + logLine);
+                        buf.append(getTimeStamp());
+                        buf.append(" ");
+                        buf.append(logLine);
                     } else {
                         buf.append(logLine);
                     }
@@ -114,6 +121,7 @@ public class LogUtility {
 
     /**
      * This will remove all illegal characters from the file name.
+     *
      * @param str
      * @return
      */
@@ -123,11 +131,12 @@ public class LogUtility {
 
     /**
      * Return the absolute path of the log directory.
+     *
      * @return
      */
     public static String getLogDirectory() {
         String logPath;
-        if(Environment.getExternalStorageState().equals("mounted")){
+        if (Environment.getExternalStorageState().equals("mounted")) {
             logPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         } else {
             logPath = Environment.getDataDirectory().getAbsolutePath();
@@ -139,6 +148,7 @@ public class LogUtility {
 
     /**
      * Returns a timestamp of the current file in the format YYYY-MM-DD_HH-MM-SS
+     *
      * @return - A string timestamp
      */
     public static String getTimeStamp() {

@@ -2,14 +2,7 @@ package edu.chalmers.sikkr.backend.messages;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Calendar;
 
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;

@@ -9,6 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,7 +36,7 @@ public class CallLog {
 
     private void collectCallLog(){
 
-        callList = new ArrayList<OneCall>();
+        callList = new ArrayList<>();
         String strOrder = android.provider.CallLog.Calls.DATE + " DESC";
         Uri callUri = Uri.parse("content://call_log/calls");
         Cursor cursor = context.getContentResolver().query(callUri, null, null, null, strOrder);
@@ -78,7 +79,7 @@ public class CallLog {
     }
 
 
-    public ArrayList<OneCall> getCallList() {
+    public List<OneCall> getCallList() {
         collectCallLog();
         return callList;
     }

@@ -1,11 +1,8 @@
 package edu.chalmers.sikkr.backend.util;
 
-import android.util.Log;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;

@@ -1,7 +1,6 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
@@ -9,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 
 /**
@@ -29,7 +26,7 @@ public class ButtonAdapter extends BaseAdapter {
 
     public ButtonAdapter(Context c) {
         mContext = c;
-        al = new ArrayList<Character>();
+        al = new ArrayList<>();
         al.addAll(ContactBook.getSharedInstance().getInitialLetters());
 
     }
@@ -57,9 +54,10 @@ public class ButtonAdapter extends BaseAdapter {
      */
     public View getView (int position, View convertView, ViewGroup parent){
         Button btn;
+        final int height = 500, textSize = 80;
         if(convertView == null) {
             btn = new TintFeedbackButton(mContext);
-            btn.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.WRAP_CONTENT,500 ));
+            btn.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.WRAP_CONTENT, height));
 
 
         }else{
@@ -67,7 +65,7 @@ public class ButtonAdapter extends BaseAdapter {
         }
         btn.setText(String.valueOf(Character.toUpperCase((al.get(position)))));
         btn.setTextColor(Color.BLACK);
-        btn.setTextSize(80);
+        btn.setTextSize(textSize);
         btn.setTypeface(null, Typeface.BOLD);
         btn.setBackground(null);
         btn.setId(position);

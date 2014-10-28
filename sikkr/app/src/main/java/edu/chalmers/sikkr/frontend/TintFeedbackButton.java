@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class TintFeedbackButton extends Button {
@@ -24,8 +25,9 @@ public class TintFeedbackButton extends Button {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        final Collection<Drawable> drawables = new ArrayList<>();
+        final int color = 0xff888888;
         Drawable[] drawableArray = getCompoundDrawables();
-        final List<Drawable> drawables = new ArrayList<Drawable>();
         drawables.addAll(Arrays.asList(drawableArray));
 
         if (getBackground() != null)
@@ -35,10 +37,10 @@ public class TintFeedbackButton extends Button {
             case MotionEvent.ACTION_DOWN:
                 for (Drawable draw : drawables) {
                     if (draw != null)
-                        draw.setColorFilter(new LightingColorFilter(0xff888888, 0xff888888));
+                        draw.setColorFilter(new LightingColorFilter(color, color));
                 }
 
-                setTextColor(0xff888888);
+                setTextColor(color);
 
                 break;
             case MotionEvent.ACTION_CANCEL:

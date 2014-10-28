@@ -3,8 +3,6 @@ package edu.chalmers.sikkr.frontend;
 import android.content.Intent;
 import android.view.View;
 
-import edu.chalmers.sikkr.frontend.ContactGridActivity;
-
 /**
  * A simple class to handle buttons clicked in ContactBookActivity.
  * @author Jesper Olsson

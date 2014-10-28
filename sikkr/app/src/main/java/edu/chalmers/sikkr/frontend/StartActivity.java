@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,9 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.SmsListener;
@@ -35,7 +31,8 @@ import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
-import static edu.chalmers.sikkr.backend.util.FuzzySearchUtility.*;
+
+import static edu.chalmers.sikkr.backend.util.FuzzySearchUtility.getDifference;
 
 
 

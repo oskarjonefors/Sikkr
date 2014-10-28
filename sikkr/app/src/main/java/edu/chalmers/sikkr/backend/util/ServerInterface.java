@@ -38,7 +38,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import edu.chalmers.sikkr.backend.ProgressListenable;
-import edu.chalmers.sikkr.backend.messages.Message;
 import edu.chalmers.sikkr.backend.messages.ServerMessage;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
@@ -60,9 +59,6 @@ public final class ServerInterface implements ProgressListenable {
      * -------------------- Instance constants, mostly assigned in constructor. --------------------
      */
 
-
-    private final Context context;
-
     private final PublicKey SERVER_KEY;
     private final String LOCAL_NUMBER;
 
@@ -83,7 +79,6 @@ public final class ServerInterface implements ProgressListenable {
      * @throws IOException if connectivity to the server cannot be resolved.
      */
     private ServerInterface(Context context) throws IOException {
-        this.context = context;
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         final Socket SOCKET, WRITE_SOCKET;
         final TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -265,7 +260,7 @@ public final class ServerInterface implements ProgressListenable {
         Log.i("ServerInterface", "Setting up an interface to the server");
         if (context == null && singleton != null) {
             throw new UnsupportedOperationException("Cannot create instance of ServerInterface with a null context");
-        } else {
+        } else if (context != null) {
             try {
                 singleton = new ServerInterface(context.getApplicationContext());
             } catch (Exception e) {

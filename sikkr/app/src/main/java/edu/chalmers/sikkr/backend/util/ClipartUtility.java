@@ -44,7 +44,7 @@ public class ClipartUtility {
             return readMapFile(file);
         } else {
             Log.d(TAG, "No map file found, returning new map.");
-            return new HashMap<String, String>();
+            return new HashMap<>();
         }
     }
 

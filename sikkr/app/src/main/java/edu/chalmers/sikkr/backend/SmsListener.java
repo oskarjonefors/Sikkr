@@ -9,7 +9,6 @@ import android.telephony.SmsMessage;
 
 import java.util.List;
 
-
 import edu.chalmers.sikkr.backend.messages.Conversation;
 import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.messages.TheInbox;

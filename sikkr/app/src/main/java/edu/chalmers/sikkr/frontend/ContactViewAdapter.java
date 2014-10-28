@@ -22,7 +22,7 @@ import edu.chalmers.sikkr.backend.contact.Contact;
  * 
  * @author Oskar Jönefors
  */
-public class ContactViewAdapter extends ArrayAdapter {
+public class ContactViewAdapter extends ArrayAdapter<Contact> {
 
     private final Context context;
     private final int layoutResourceId;

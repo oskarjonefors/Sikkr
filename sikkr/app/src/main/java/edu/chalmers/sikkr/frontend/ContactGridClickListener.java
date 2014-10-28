@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.view.View;
 
 import edu.chalmers.sikkr.backend.contact.Contact;
-import edu.chalmers.sikkr.frontend.ContactActivity;
 
 /**
  * Created by ivaldi on 2014-09-29.

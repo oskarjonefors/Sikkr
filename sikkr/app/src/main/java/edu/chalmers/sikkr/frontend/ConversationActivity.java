@@ -8,14 +8,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,9 +25,8 @@ import java.util.List;
 import java.util.Set;
 
 import edu.chalmers.sikkr.R;
-import edu.chalmers.sikkr.backend.messages.ListableMessage;
-import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.messages.Conversation;
+import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
@@ -44,7 +40,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 public class ConversationActivity extends Activity {
     private Conversation thisConversation;
     private Set<ListableMessage> messageSet;
-    List<ListableMessage> messages = new ArrayList<ListableMessage>();
+    private final List<ListableMessage> messages = new ArrayList<>();
     private VoiceMessageRecorder recorder;
     private ImageButton sendButton;
     private ImageButton cancelButton;
@@ -70,10 +66,10 @@ public class ConversationActivity extends Activity {
                     String date = String.valueOf(smsMessage.getTimestampMillis());
                     OneSms sms = new OneSms(messageBody, date, false);
                     List<Conversation> list = TheInbox.getInstance().getMessageInbox();
-                    for(int i = 0;i<list.size();i++){
-                        if(phoneNbr.equals(list.get(i).getAddress())){
+                    for(Conversation conv : list){
+                        if(phoneNbr.equals(conv.getAddress())){
                             sms.markAsUnread();
-                            list.get(i).addMessage(sms);
+                            conv.addMessage(sms);
                         }
                     }
                     if(phoneNbr.equals(thisConversation.getAddress())){
@@ -128,7 +124,7 @@ public class ConversationActivity extends Activity {
             thisConversation = TheInbox.getInstance().getConversation(bundle.getString("number"));
             TextView tv = (TextView)findViewById(R.id.conversation_name);
             tv.setText(bundle.getString("name"));
-            messageSet = new HashSet<ListableMessage>();
+            messageSet = new HashSet<>();
             messageSet = thisConversation.getSmsList();
             messages.addAll(messageSet);
             Collections.sort(messages);
@@ -203,7 +199,7 @@ public class ConversationActivity extends Activity {
      */
     public void readMessage(View view){
         ((ListableMessage)view.getTag()).play();
-        ((OneSms)view.getTag()).markAsRead();
+        ((ListableMessage)view.getTag()).markAsRead();
         ImageButton trybutton =  (ImageButton)view.findViewById(R.id.conversation_icon);
         trybutton.setBackgroundResource(R.drawable.play);
     }
@@ -220,11 +216,7 @@ public class ConversationActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return item.getItemId() == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
 }

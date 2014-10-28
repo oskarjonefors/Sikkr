@@ -1,5 +1,14 @@
 package edu.chalmers.sikkr.backend.contact;
 
+import android.content.ContentUris;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.util.Log;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,23 +22,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import android.content.ContentUris;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.ContactsContract;
-import android.content.Context;
-import android.database.Cursor;
-import android.util.Log;
-
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.util.ClipartUtility;
 import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 
-import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
-
-import static android.provider.ContactsContract.CommonDataKinds.*;
+import static android.provider.ContactsContract.CommonDataKinds.Phone;
 
 /**
  * @author Oskar Jönefors

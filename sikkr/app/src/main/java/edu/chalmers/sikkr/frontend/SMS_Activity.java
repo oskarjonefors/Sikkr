@@ -28,12 +28,12 @@ import java.util.Set;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.SmsListener;
-import edu.chalmers.sikkr.backend.util.DateDiffUtility;
-import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.messages.Conversation;
 import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
 import edu.chalmers.sikkr.backend.messages.ListableMessage;
-import edu.chalmers.sikkr.backend.messages.Conversation;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
+import edu.chalmers.sikkr.backend.util.DateDiffUtility;
+import edu.chalmers.sikkr.backend.util.LogUtility;
 
 
 /**

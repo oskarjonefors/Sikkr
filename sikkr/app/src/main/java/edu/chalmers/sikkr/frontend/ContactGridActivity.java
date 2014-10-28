@@ -1,21 +1,17 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
+import android.widget.ListAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import edu.chalmers.sikkr.R;
-import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 
@@ -37,7 +33,7 @@ public class ContactGridActivity extends Activity {
             contacts = book.getTopContacts(10);
         }
 
-        final List<Contact> contactList = new ArrayList<Contact>();
+        final List<Contact> contactList = new ArrayList<>();
         for(final Contact c : contacts) {
             contactList.add(c);
         }
@@ -45,7 +41,7 @@ public class ContactGridActivity extends Activity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_contact_grid);
 
-        ContactViewAdapter adapter = new ContactViewAdapter(this, R.layout.contact_thumb, contactList);
+        ListAdapter adapter = new ContactViewAdapter(this, R.layout.contact_thumb, contactList);
         ((GridView) findViewById(R.id.contact_grid)).setAdapter(adapter);
     }
 
