@@ -48,6 +48,9 @@ import edu.chalmers.sikkr.backend.sms.TheInbox;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 
+/**
+ * Activity for showing the sms inbox
+ */
 public class SMS_Activity extends Activity {
     private static ArrayList<SmsConversation> smsList;
     ArrayAdapter adapter;
@@ -57,9 +60,9 @@ public class SMS_Activity extends Activity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.sms_layout);
         createSmsLayout();
+
         BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
