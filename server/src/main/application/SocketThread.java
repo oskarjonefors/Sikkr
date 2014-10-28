@@ -163,7 +163,7 @@ public class SocketThread extends Thread {
 			message = new Message(content, contact.getNumber(), number, time);
 			listener.getContactByNumber(number).recievedMessages.add(message);
 			contact.sentMessages.add(message);
-			listener.sendInformation(new InformationEvent(Level.INFO, "Recieved message \""+new String(content)+"\" to "+number));
+			listener.sendInformation(new InformationEvent(Level.INFO, "Recieved message from " + contact.getNumber() + " to "+number));
 		} else {
             listener.sendInformation(new InformationEvent(Level.INFO, "Client tried to send message but was not verified"));
         }
@@ -214,12 +214,14 @@ public class SocketThread extends Thread {
 	private void sendReceivedMessages() throws Exception {
 		if (verifiedClient && contact != null) {
 			sendMessagesToClient(contact.recievedMessages);
+            contact.recievedMessages.clear();
 		}
 	}
 	
 	private void sendSentMessages() throws Exception {
 		if (verifiedClient && contact != null) {
 			sendMessagesToClient(contact.sentMessages);
+            contact.sentMessages.clear();
 		}
 	}
 	

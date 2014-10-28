@@ -49,7 +49,6 @@ public final class FileUtility {
 						&& reader.getName().getLocalPart() == "Contact") {
 					String number = reader.getAttributeValue(0); //Number
 					RSAPublicKey key = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(getPublicKeyFromFile("contacts/" + number + ".key")));
-                    Logger.getGlobal().info(new String(key.getEncoded()));
                     Contact contact = new Contact(number, key);
 					contacts.add(contact);
 				}
