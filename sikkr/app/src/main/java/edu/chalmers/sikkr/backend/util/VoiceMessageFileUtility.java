@@ -44,7 +44,7 @@ public class VoiceMessageFileUtility {
     }
 
     public static List<Message> readMessages(Context context) {
-        File file =  new File(context.getFilesDir(), "messages.xml");
+        File file =  new File(getAppPath(), "messages.xml");
         List<Message> messages = new ArrayList<>();
 
 
@@ -55,6 +55,7 @@ public class VoiceMessageFileUtility {
 
                 int next;
                 while ((next = reader.next()) != XmlPullParser.END_DOCUMENT) {
+                    LogUtility.writeLogFile(TAG, "Next type: "+next+"\tName: "+reader.getName());
                     if (next == XmlPullParser.START_TAG
                             && reader.getName().equals("Message")) {
                         String sender = reader.getAttributeValue(0); //Sender
@@ -62,7 +63,7 @@ public class VoiceMessageFileUtility {
                         long time = Long.parseLong(reader.getAttributeValue(2)); //Timestamp
                         boolean sent = Boolean.parseBoolean(reader.getAttributeValue(3)); //sent
                         String path = reader.getAttributeValue(4); //Content path
-                        messages.add(new Message(sender, receiver, Uri.fromFile(new File(context.getFilesDir(), "messages/" + path)), time, sent));
+                        messages.add(new Message(sender, receiver, Uri.fromFile(new File(getAppPath(), "messages/" + path)), time, sent));
                     }
                 }
             }
@@ -109,27 +110,28 @@ public class VoiceMessageFileUtility {
 
             writer.setOutput(new OutputStreamWriter(new FileOutputStream(file)));
             writer.startDocument("UTF-8", true);
+            writer.startTag("", "Messages");
 
             for (Message msg : previousMessages) {
-                writer.startTag("Messages", "Message");
-                writer.attribute("Message", "sender", msg.getSender());
-                writer.attribute("Message", "receiver", msg.getReceiver());
-                writer.attribute("Message", "time", msg.getTimestamp().getTimeInMillis() + "");
-                writer.attribute("Message", "sent", msg.isSent() + "");
-                writer.attribute("Message", "content", msg.getFileUri().getPath());
-                writer.endTag("Messages", "Message");
+                writer.startTag("", "Message");
+                writer.attribute("", "sender", msg.getSender());
+                writer.attribute("", "receiver", msg.getReceiver());
+                writer.attribute("", "time", msg.getTimestamp().getTimeInMillis() + "");
+                writer.attribute("", "sent", msg.isSent() + "");
+                writer.attribute("", "content", msg.getFileUri().getLastPathSegment());
+                writer.endTag("", "Message");
             }
 
             File contentDir = new File(sikkrDirectory, "messages/");
             File contentFile;
             String path;
-            writer.startTag("Messages", "Message");
-            writer.attribute("Message", "sender", message.SENDER);
-            writer.attribute("Message", "receiver", message.RECEIVER);
-            writer.attribute("Message", "time", message.TIMESTAMP + "");
-            writer.attribute("Message", "sent", message.SENT + "");
-            writer.attribute("Message", "content", path = getRandomContentPath(message));
-            writer.endTag("Messages", "Message");
+            writer.startTag("", "Message");
+            writer.attribute("", "sender", message.SENDER);
+            writer.attribute("", "receiver", message.RECEIVER);
+            writer.attribute("", "time", message.TIMESTAMP + "");
+            writer.attribute("", "sent", message.SENT + "");
+            writer.attribute("", "content", path = getRandomContentPath(message));
+            writer.endTag("", "Message");
             writer.endDocument();
 
             if (contentDir.exists() && !contentDir.isDirectory()) {

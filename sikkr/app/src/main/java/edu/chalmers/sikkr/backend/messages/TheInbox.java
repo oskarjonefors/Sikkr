@@ -34,15 +34,12 @@ public class TheInbox implements ProgressListenable {
     private static List<Conversation> messageList;
     private final Map<String, Conversation> map;
     private final Collection<ProgressListener> listeners;
-    private final InboxLoader loader;
+    private InboxLoader loader;
 
     private TheInbox() {
         map = new TreeMap<>();
         listeners = new ArrayList<>();
-        loader = new InboxLoader();
 
-        addProgressListener(loader);
-        ServerInterface.addSingletonProgressListener(loader);
     }
 
     public static void setupInbox(Context context) {
@@ -211,7 +208,7 @@ public class TheInbox implements ProgressListenable {
 
     }
 
-    private void saveServerMessages() throws Exception {
+    private void collectAndSaveServerMessages() throws Exception {
         final List<ServerMessage> messages = ServerInterface.getReceivedMessages();
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
@@ -224,7 +221,7 @@ public class TheInbox implements ProgressListenable {
         }
     }
 
-    public void collectServerMessages() {
+    public void collectLocalMessages() {
         List<Message> messages = VoiceMessageFileUtility.readMessages(context);
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
@@ -245,6 +242,14 @@ public class TheInbox implements ProgressListenable {
     }
 
     public void loadInbox(InboxDoneLoadingListener listener) {
+        if (loader != null) {
+            removeProgressListener(loader);
+            ServerInterface.removeSingletonProgressListener(loader);
+        }
+        loader = new InboxLoader();
+
+        addProgressListener(loader);
+        ServerInterface.addSingletonProgressListener(loader);
         loader.execute(listener);
     }
 
@@ -301,12 +306,12 @@ public class TheInbox implements ProgressListenable {
         protected Boolean doInBackground(InboxDoneLoadingListener... params) {
             try {
                 listener = params[0];
-                saveServerMessages();
+                collectAndSaveServerMessages();
                 //collectMMS();
                 //collectSentMMS();
                 collectSms();
                 collectSentSms();
-                collectServerMessages();
+                collectLocalMessages();
             } catch (Exception e ) {
                 LogUtility.writeLogFile("load_inbox_throws", e);
                 return false;
