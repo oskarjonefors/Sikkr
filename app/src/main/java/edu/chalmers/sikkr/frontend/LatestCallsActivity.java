@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,19 +42,62 @@ public class LatestCallsActivity extends Activity {
         createCallLogLayout();
     }
 
+    private List<OneCall> createRefinedcallList (List<OneCall> callList){
+
+        List<OneCall> refinedList = new ArrayList<OneCall>();
+
+        //Vi kollar igenom listan som vi har. har vi två personer av samma id eller samma nummer som ringt flera gånger på rad
+        // så lägger vi in dem i en item
+
+        int i=0;
+        while( i < callList.size() -2 ){
+
+            int counter = 1;
+            long callDate= 12345678910L;
+            while(callList.get(i).getContactID().equals(callList.get(i+1).getContactID())
+                    && (callList.get(i).getCallType() == callList.get(i+1).getCallType())){
+
+                if(Long.parseLong(callList.get(i).getCallDate()) > Long.parseLong(callList.get(i+1).getCallDate())){
+
+                    callDate = Long.parseLong(callList.get(i).getCallDate());
+                    counter++;
+                    i++;
+                    callList.get(i).setCallDate("" + callDate);
+
+                }else{ callDate = Long.parseLong(callList.get(i+1).getCallDate());  }
+
+                counter++;
+                i++;
+                callList.get(i).setCallDate("" + callDate);
+            }
+
+            Log.i("calldate"," " + callDate);
+            callList.get(i).setCallTypeAmount(counter);
+            refinedList.add(callList.get(i));
+            i++;
+
+        }
+        //ta hänsyn till det sista elementet
+
+        return refinedList;
+
+    }
+
 
     private void createCallLogLayout() {
 
         List<OneCall> callList = CallLog.getInstance().getCallList();
         Collections.sort(callList);
-        ArrayAdapter adapter = new LatestCallItemAdapter(this, R.layout.latest_call_item, callList);
+        List<OneCall> refinedList = this.createRefinedcallList(callList);
+
+        ArrayAdapter adapter = new LatestCallItemAdapter(this, R.layout.latest_call_item, refinedList);
         ListView listV = (ListView) findViewById(R.id.listView);
         listV.setAdapter(adapter);
     }
 
     private static class ViewHolder {
         TextView name;
-        TextView date;
+        TextView callTypeAmountAndDate;
         Contact contact;
         Bitmap bitmap;
         Drawable drawable;
@@ -80,6 +125,7 @@ public class LatestCallsActivity extends Activity {
             Resources res = context.getResources();
             String contactID = list.get(i).getContactID();
 
+
             if (view == null) {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 view = inflater.inflate(layoutId, viewGroup, false);
@@ -87,7 +133,7 @@ public class LatestCallsActivity extends Activity {
                 holder.name = (TextView) view.findViewById(R.id.nameText);
                 holder.contactImage = (ImageView) view.findViewById(R.id.latest_call_image);
                 holder.name = (TextView) view.findViewById(R.id.nameText);
-                holder.date = (TextView) view.findViewById(R.id.dateText);
+                holder.callTypeAmountAndDate = (TextView) view.findViewById(R.id.callTypeAmountAndDate_text);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
@@ -110,8 +156,11 @@ public class LatestCallsActivity extends Activity {
                 holder.contactImage.setImageDrawable(null);
             }
 
-            String callDate = DateDiffUtility.callDateToString(Long.parseLong(list.get(i).getCallDate()));
-            holder.date.setText(callDate);
+            String callDate = DateDiffUtility.callDateToString(Long.parseLong( list.get(i).getCallDate()));
+            holder.callTypeAmountAndDate.setText(list.get(i).getCallTypeAmount()<2 ? "" + callDate : "(" + list.get(i).getCallTypeAmount() + ")" + "\n" +  callDate);
+
+
+
 
             switch (list.get(i).getCallType()) {
                 case android.provider.CallLog.Calls.INCOMING_TYPE:
@@ -137,7 +186,7 @@ public class LatestCallsActivity extends Activity {
                     holder.image.setImageDrawable(holder.drawable);
                     holder.name.setTextColor(getResources().getColor(android.R.color.holo_red_light));
                     break;
-                // måste kolla färg varje gång
+
             }
             return view;
         }

@@ -7,7 +7,7 @@ package edu.chalmers.sikkr.backend.calls;
 public class OneCall implements Comparable <OneCall> {
 
     String callNumber, callDate, isCallNew, contactID;
-    int callType;
+    int callType, callTypeAmount;
 
     public void setCallNumber(String callNumber) {
         this.callNumber = callNumber;
@@ -23,6 +23,8 @@ public class OneCall implements Comparable <OneCall> {
 
     public void setCallType(int callType) { this.callType = callType; }
 
+    public void setCallTypeAmount(int callTypeAmount){ this.callTypeAmount = callTypeAmount; }
+
     public void setContactID(String contactID) { this.contactID = contactID; }
 
     public String getCallNumber() {
@@ -33,13 +35,11 @@ public class OneCall implements Comparable <OneCall> {
         return callDate;
     }
 
-    public String getIsCallNew() {
-        return isCallNew;
-    }
+    public String getIsCallNew() { return isCallNew; }
 
-    public int getCallType() {
-        return callType;
-    }
+    public int getCallType() { return callType; }
+
+    public int getCallTypeAmount() { return callTypeAmount; }
 
     public String getContactID() { return contactID; }
 

@@ -41,13 +41,13 @@ public final class DateDiffUtility {
 
         } else if ((timeMinutes / 5) >= 1) {
 
-            return timeMinutes + " min";
+            return timeMinutes + "  min";
 
         } else if ((timeMinutes / 5 ) < 1) {
 
-            return "Just Now";
+            return "Recently";
         }
 
-        return "Long ago";
+        return "Earlier";
     }
 }
