@@ -239,7 +239,7 @@ public class TheInbox implements ProgressListenable {
                     conversation = map.get(address);
                 }
                 conversation.addMessage(msg);
-                notifyListeners(step, "Collecting sent SMS");
+                notifyListeners(step, "Collecting web messages.");
             }
         }
     }
