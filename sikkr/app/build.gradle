@@ -5,7 +5,7 @@ android {
     buildToolsVersion '21.0.1'
     defaultConfig {
         applicationId "edu.chalmers.sikkr"
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -30,7 +30,6 @@ dependencies {
     compile 'com.klinkerapps:android-smsmms:+'
     compile 'org.apache.commons:commons-lang3:+'
     compile 'org.bouncycastle:bcprov-jdk15on:+'
-
 }
 
 task downloadSDP(type: MyDownload) {
