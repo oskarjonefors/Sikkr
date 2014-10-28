@@ -38,6 +38,10 @@ import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
+/**
+ * A class to represent Message Conversation with specific contact
+ * @author Jesper Olsson
+ */
 public class ConversationActivity extends Activity {
     private SmsConversation thisConversation;
     private Set<ListableMessage> messageSet;
@@ -85,7 +89,7 @@ public class ConversationActivity extends Activity {
         };
         registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
-
+    @Override
     public void onPause(){
         super.onPause();
         if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.RECORDING) {
@@ -96,6 +100,9 @@ public class ConversationActivity extends Activity {
         }
     }
 
+    /**
+     * Method to makee the recording button appear and the other buttons dissapear
+     */
     private void setButtonVisability() {
         sendButton = (ImageButton) findViewById(R.id.conversation_send);
         cancelButton = (ImageButton) findViewById(R.id.conversation_cancel);
@@ -109,6 +116,9 @@ public class ConversationActivity extends Activity {
 
     }
 
+    /**
+     * Mehtod to be run in onCreate. Setup all thing needed for this activity.
+     */
     public void createConversationLayout(){
         final Bundle bundle = getIntent().getExtras();
         if(bundle!=null && bundle.containsKey("number") && bundle.containsKey("name")){
@@ -125,11 +135,21 @@ public class ConversationActivity extends Activity {
         }
     }
 
+    /**
+     * OnClick for the cancel button after voice message has been recorded.
+     * Will delete the voice message that has been recorded
+     * @param v the view that called this method
+     */
     public void cancelMessage(View v){
         recorder.discardRecording();
         hideButtons();
     }
 
+    /**
+     * OnClick for the recording button.
+     * Will start recording voice message
+     * @param v the view that called this method
+     */
     public void recordMessage(View v){
         switch (recorder.getRecordingState()) {
             case RESET:
@@ -148,6 +168,11 @@ public class ConversationActivity extends Activity {
         }
     }
 
+    /**
+     * OnClick for the send message button
+     * Will send the voice message to the given contact in conversation
+     * @param v the view that called this method
+     */
     public void sendMessage(View v){
         VoiceMessageSender sender = VoiceMessageSender.getSharedInstance();
         try {
@@ -158,6 +183,9 @@ public class ConversationActivity extends Activity {
         hideButtons();
     }
 
+    /**
+     * Method to show hide all buttons but the recording button
+     */
     private void hideButtons(){
         cancelButton.setVisibility(View.GONE);
         sendButton.setVisibility(View.GONE);
@@ -166,6 +194,11 @@ public class ConversationActivity extends Activity {
         recordButton.setEnabled(true);
     }
 
+    /**
+     * OnClick for the play button.
+     * Will read the given text message out aloud
+     * @param view the view that called this method
+     */
     public void readMessage(View view){
         ((ListableMessage)view.getTag()).play();
         ((OneSms)view.getTag()).markAsRead();

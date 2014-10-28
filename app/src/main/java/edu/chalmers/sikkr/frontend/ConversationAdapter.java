@@ -35,6 +35,7 @@ public class ConversationAdapter extends ArrayAdapter {
         this.list = list;
     }
 
+    
     public View getView(int position, View convertView, ViewGroup parent){
         View view = convertView;
         final ViewHolder holder;
@@ -89,6 +90,9 @@ public class ConversationAdapter extends ArrayAdapter {
         return view;
     }
 
+    /**
+     * Class to hold some view elements
+     */
     private static class ViewHolder{
         ImageButton playButton;
         TextView message;
