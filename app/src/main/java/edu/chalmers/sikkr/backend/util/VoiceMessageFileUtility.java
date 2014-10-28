@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -41,7 +42,7 @@ public class VoiceMessageFileUtility {
     }
 
     public static List<Message> readMessages(Context context) {
-        File file =  new File("messages.xml");
+        File file =  new File(context.getFilesDir(), "messages.xml");
         List<Message> messages = new ArrayList<Message>();
 
 
@@ -64,6 +65,7 @@ public class VoiceMessageFileUtility {
                 }
             }
         } catch (Exception e) {
+            LogUtility.toastInActivityThread((Activity) context, "Någon annan jävla exception", Toast.LENGTH_SHORT);
             LogUtility.writeLogFile(TAG, e);
         }
         return messages;
@@ -72,16 +74,40 @@ public class VoiceMessageFileUtility {
     public static void saveServerMessage(Context context, ServerMessage message) {
         try {
             XmlSerializer writer = inputFactory.newSerializer();
+            File file = new File(context.getFilesDir(), "messages.xml");
+            List<Message> previousMessages = new ArrayList<>();
+            if (!file.exists()) {
+                file.createNewFile();
+            } else {
+                previousMessages.addAll(readMessages(context));
+                file.delete();
+                file.createNewFile();
+            }
+
+            writer.setOutput(new OutputStreamWriter(new FileOutputStream(file)));
+            writer.startDocument("UTF-8", true);
+
+            for (Message msg : previousMessages) {
+                writer.startTag("Messages", "Message");
+                writer.attribute("Message", "sender", msg.getSender());
+                writer.attribute("Message", "receiver", msg.getReceiver());
+                writer.attribute("Message", "time", msg.getTimestamp().getTimeInMillis() + "");
+                writer.attribute("Message", "sent", msg.isSent() + "");
+                writer.attribute("Message", "content", msg.getFileUri().getPath());
+                writer.endTag("Messages", "Message");
+            }
+
             File contentDir = new File(context.getFilesDir(), "messages/");
             File contentFile;
             String path;
             writer.startTag("Messages", "Message");
-            writer.setProperty("sender", message.SENDER);
-            writer.setProperty("receiver", message.RECEIVER);
-            writer.setProperty("time", message.TIMESTAMP);
-            writer.setProperty("sent", message.SENT);
-            writer.setProperty("content", path = getRandomContentPath(message));
+            writer.attribute("Message", "sender", message.SENDER);
+            writer.attribute("Message", "receiver", message.RECEIVER);
+            writer.attribute("Message", "time", message.TIMESTAMP + "");
+            writer.attribute("Message", "sent", message.SENT + "");
+            writer.attribute("Message", "content", path = getRandomContentPath(message));
             writer.endTag("Messages", "Message");
+            writer.endDocument();
 
             if (!contentDir.exists()) {
                 contentDir.mkdir();
@@ -106,7 +132,7 @@ public class VoiceMessageFileUtility {
         File tmp;
         do {
             random.setSeed(random.nextLong() * message.hashCode());
-            path = ""+random.nextInt();
+            path = ""+random.nextLong();
             tmp = new File(dir, path);
         } while (tmp.exists());
         return path;

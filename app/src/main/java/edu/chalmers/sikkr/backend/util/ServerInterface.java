@@ -232,8 +232,8 @@ public final class ServerInterface implements ProgressListenable {
      * @param number the number that you want to send the message to.
      * @param content the content of the message as a byte array.
      */
-    public static void sendMessage(String number, byte[] content, long time) {
-        getSingleton().sendMessageToServer(number, content, time);
+    public static void sendMessage(Activity toastActivity, String number, byte[] content, long time) {
+        getSingleton().sendMessageToServer(toastActivity, number, content, time);
     }
 
     public static void sendVoiceMessage(Activity toastActivity, String number, VoiceMessage message) {
@@ -241,7 +241,7 @@ public final class ServerInterface implements ProgressListenable {
             LogUtility.toastInActivityThread(toastActivity, "Reading byte data from voice message", Toast.LENGTH_SHORT);
             byte[] content = readByteDataFromFile(new File(message.getFileUri().getPath()));
             LogUtility.toastInActivityThread(toastActivity, "Finished reading byte data from voice message", Toast.LENGTH_SHORT);
-            sendMessage(number, content, message.getTimestamp().getTimeInMillis());
+            sendMessage(toastActivity, number, content, message.getTimestamp().getTimeInMillis());
             LogUtility.toastInActivityThread(toastActivity, "Finished sending message data to server", Toast.LENGTH_SHORT);
         } catch (IOException e) {
             LogUtility.toastInActivityThread(toastActivity, "Could not send message via server", Toast.LENGTH_SHORT);
@@ -425,13 +425,13 @@ public final class ServerInterface implements ProgressListenable {
         Log.i("ServerInterface", "We gave the server our public key");
     }
 
-    private void sendMessageToServer(String number, byte[] content, long time) {
+    private void sendMessageToServer(Activity toastActivity, String number, byte[] content, long time) {
         try {
             ServerMessage savedMsg = new ServerMessage(LOCAL_NUMBER, number, content, time, true);
             EncryptedMessage message = new EncryptedMessage(number.getBytes(), content);
             byte[] encryptedIV = encrypt(message.iv);
             byte[] encryptedKey = encrypt(message.aeskey);
-            VoiceMessageFileUtility.saveServerMessage(context, savedMsg);
+            VoiceMessageFileUtility.saveServerMessage(toastActivity, savedMsg);
             writeLine("send_message");
             OUTPUT_STREAM.writeInt(encryptedIV.length);
             OUTPUT_STREAM.writeInt(encryptedKey.length);
@@ -445,7 +445,8 @@ public final class ServerInterface implements ProgressListenable {
             OUTPUT_STREAM.flush();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtility.toastInActivityThread(toastActivity, "Exception", Toast.LENGTH_SHORT);
+            LogUtility.writeLogFile("ServerInterface", e);
         }
     }
 
