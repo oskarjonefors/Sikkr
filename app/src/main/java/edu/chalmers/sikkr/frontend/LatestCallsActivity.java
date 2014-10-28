@@ -42,6 +42,12 @@ public class LatestCallsActivity extends Activity {
         createCallLogLayout();
     }
 
+    private void callDateSetter(int i, int counter, List<OneCall> callList, Long callDate){
+
+
+    }
+
+
     private List<OneCall> createRefinedcallList (List<OneCall> callList){
 
         List<OneCall> refinedList = new ArrayList<OneCall>();
@@ -54,24 +60,26 @@ public class LatestCallsActivity extends Activity {
 
             int counter = 1;
             long callDate= 12345678910L;
-            while(callList.get(i).getContactID().equals(callList.get(i+1).getContactID())
-                    && (callList.get(i).getCallType() == callList.get(i+1).getCallType())){
 
-                if(Long.parseLong(callList.get(i).getCallDate()) > Long.parseLong(callList.get(i+1).getCallDate())){
+                while (callList.get(i).getCallNumber().equals(callList.get(i + 1).getCallNumber())
+                        && (callList.get(i).getCallType() == callList.get(i + 1).getCallType())) {
 
-                    callDate = Long.parseLong(callList.get(i).getCallDate());
-                    counter++;
-                    i++;
-                    callList.get(i).setCallDate("" + callDate);
+                    if (Long.parseLong(callList.get(i).getCallDate()) > Long.parseLong(callList.get(i + 1).getCallDate())) {
 
-                }else{ callDate = Long.parseLong(callList.get(i+1).getCallDate());  }
+                        callDate = Long.parseLong(callList.get(i).getCallDate());
+                        counter++;
+                        i++;
+                        callList.get(i).setCallDate("" + callDate);
 
-                counter++;
-                i++;
-                callList.get(i).setCallDate("" + callDate);
+                    } else {
+
+                        callDate = Long.parseLong(callList.get(i + 1).getCallDate());
+                        counter++;
+                        i++;
+                        callList.get(i).setCallDate("" + callDate);
+                }
             }
 
-            Log.i("calldate"," " + callDate);
             callList.get(i).setCallTypeAmount(counter);
             refinedList.add(callList.get(i));
             i++;
