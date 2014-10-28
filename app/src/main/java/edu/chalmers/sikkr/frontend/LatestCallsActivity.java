@@ -148,6 +148,7 @@ public class LatestCallsActivity extends Activity {
             }
 
             if (contactID != null && ContactBook.getSharedInstance().getContact(contactID) != null) {
+
                 holder.contact = ContactBook.getSharedInstance().getContact(contactID);
                 holder.name.setText(holder.contact.getName());
 
@@ -159,9 +160,18 @@ public class LatestCallsActivity extends Activity {
                 view.setOnClickListener(new ContactGridClickListener(holder.contact));
 
             } else {
-                holder.name.setText(list.get(i).getCallNumber());
-                holder.contactDrawable = null;
-                holder.contactImage.setImageDrawable(null);
+
+                try{
+
+                    if(Integer.parseInt(list.get(i).getCallNumber())<0){  holder.name.setText("Private number"); }
+
+                    else{  holder.name.setText(list.get(i).getCallNumber()); }
+
+                        holder.contactDrawable = null;
+                        holder.contactImage.setImageDrawable(null);
+
+                }catch (NumberFormatException e){ Log.e("NF-Exeption"," Integer.parseInt in getView "); }
+
             }
 
             String callDate = DateDiffUtility.callDateToString(Long.parseLong( list.get(i).getCallDate()));
