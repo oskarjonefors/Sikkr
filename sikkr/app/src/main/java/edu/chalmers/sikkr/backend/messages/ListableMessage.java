@@ -14,6 +14,8 @@ public interface ListableMessage extends Comparable<ListableMessage> {
 
     void play();
 
+    void play(PlaybackListener listener);
+
     @Override
     int compareTo(ListableMessage other);
 

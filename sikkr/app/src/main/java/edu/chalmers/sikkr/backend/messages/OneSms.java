@@ -46,6 +46,11 @@ public class OneSms extends AbstractMessage {
     }
 
     @Override
+    public void play(PlaybackListener listener) {
+        TextToSpeechUtility.readAloud(message, listener);
+    }
+
+    @Override
     public int hashCode() {
         return 11*message.hashCode()*calendar.hashCode() + (isSent ? 1 : 0);
     }

@@ -10,7 +10,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 /**
  * Created by Eric on 2014-10-02.
  */
-public class MMS extends AbstractMessage implements VoiceMessage {
+public class SikkrVoiceMessage extends AbstractMessage implements VoiceMessage {
 
 
     private final Calendar timestamp;
@@ -20,7 +20,7 @@ public class MMS extends AbstractMessage implements VoiceMessage {
 
     private boolean read;
 
-    public MMS(final Calendar timestamp, final Uri part, final boolean sent, final Context context) {
+    public SikkrVoiceMessage(final Calendar timestamp, final Uri part, final boolean sent, final Context context) {
         this.timestamp = timestamp;
         this.part = part;
         this.sent = sent;
@@ -42,6 +42,11 @@ public class MMS extends AbstractMessage implements VoiceMessage {
     @Override
     public void play(){
         VoiceMessagePlayer.getSharedInstance().playMessage(this);
+    }
+
+    @Override
+    public void play(PlaybackListener listener) {
+        play();
     }
 
     @Override

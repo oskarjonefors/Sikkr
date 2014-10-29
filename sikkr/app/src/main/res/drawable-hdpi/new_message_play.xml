@@ -1,0 +1,23 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/new_message_play"
+    android:oneshot="false">
+    <item android:drawable="@drawable/new_message_1" android:duration="100" />
+    <item android:drawable="@drawable/new_message_2" android:duration="100" />
+    <item android:drawable="@drawable/new_message_3" android:duration="100" />
+    <item android:drawable="@drawable/new_message_4" android:duration="100" />
+    <item android:drawable="@drawable/new_message_5" android:duration="100" />
+    <item android:drawable="@drawable/new_message_6" android:duration="100" />
+    <item android:drawable="@drawable/new_message_7" android:duration="100" />
+    <item android:drawable="@drawable/new_message_8" android:duration="100" />
+    <item android:drawable="@drawable/new_message_9" android:duration="100" />
+    <item android:drawable="@drawable/new_message_10" android:duration="100" />
+    <item android:drawable="@drawable/new_message_9" android:duration="100" />
+    <item android:drawable="@drawable/new_message_8" android:duration="100" />
+    <item android:drawable="@drawable/new_message_7" android:duration="100" />
+    <item android:drawable="@drawable/new_message_6" android:duration="100" />
+    <item android:drawable="@drawable/new_message_5" android:duration="100" />
+    <item android:drawable="@drawable/new_message_4" android:duration="100" />
+    <item android:drawable="@drawable/new_message_3" android:duration="100" />
+    <item android:drawable="@drawable/new_message_2" android:duration="100" />
+    <item android:drawable="@drawable/new_message_1" android:duration="100" />
+</animation-list>

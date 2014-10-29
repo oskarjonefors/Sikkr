@@ -11,4 +11,6 @@ public interface PlaybackListener {
 
     void playbackDone();
 
+    void playbackError();
+
 }

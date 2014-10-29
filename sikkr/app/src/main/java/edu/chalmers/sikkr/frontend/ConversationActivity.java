@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -201,10 +202,14 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
      * @param view the view that called this method
      */
     public void readMessage(View view){
-        ((ListableMessage)view.getTag()).play();
-        ((ListableMessage)view.getTag()).markAsRead();
-        ImageButton trybutton =  (ImageButton)view.findViewById(R.id.conversation_icon);
-        trybutton.setBackgroundResource(R.drawable.play);
+
+        Button trybutton =  (Button)view.findViewById(R.id.conversation_icon);
+        //trybutton.setBackgroundResource(R.drawable.play);
+
+        final ListableMessage msg = (ListableMessage)view.getTag();
+
+        msg.play(new PlayButtonHandler(trybutton, msg, this));
+        msg.markAsRead();
     }
 
     @Override

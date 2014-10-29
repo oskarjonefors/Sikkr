@@ -4,7 +4,11 @@ import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.UUID;
+
+import edu.chalmers.sikkr.backend.messages.PlaybackListener;
 
 /**
  * Created by Eric on 2014-09-25.
@@ -30,14 +34,23 @@ public final class TextToSpeechUtility {
     }
 
     public static void readAloud(String msg) {
+        readAloud(msg, null);
+    }
+
+    public static void readAloud(String msg, PlaybackListener playbackListener) {
         if (tts != null) {
-            tts.speak(msg, TextToSpeech.QUEUE_FLUSH, null);
+            final HashMap<String, String> map = new HashMap<String, String>();
+            map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "" + UUID.randomUUID());
+            tts.setOnUtteranceProgressListener(new SikkrUtteranceProgressListener(playbackListener));
+            tts.speak(msg, TextToSpeech.QUEUE_FLUSH, map);
         }
     }
 
     private static void removeTextToSpeech() {
         tts = null;
     }
+
+
 
     private final static class SetupListener implements TextToSpeech.OnInitListener {
         
@@ -48,8 +61,6 @@ public final class TextToSpeechUtility {
                 Toast.makeText(context, "Error setting up text to speech", Toast.LENGTH_LONG).show();
             } else {
                 tts.setLanguage(Locale.ROOT);
-                //Toast.makeText(context, "Successfully set up text to speech", Toast.LENGTH_LONG).show();
-                //readAloud("Successfully set up text to speech");
             }
         }
     }

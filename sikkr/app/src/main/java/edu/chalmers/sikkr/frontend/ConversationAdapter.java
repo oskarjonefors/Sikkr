@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,7 +42,7 @@ public class ConversationAdapter extends ArrayAdapter {
             holder = new ViewHolder();
             holder.message = (TextView)view.findViewById(R.id.conversation_message);
 
-            holder.playButton=(ImageButton)view.findViewById(R.id.conversation_icon);
+            holder.playButton= (Button) view.findViewById(R.id.conversation_icon);
             view.setTag(holder);
 
         }else{
@@ -90,7 +91,7 @@ public class ConversationAdapter extends ArrayAdapter {
      * Class to hold some view elements
      */
     private static class ViewHolder{
-        ImageButton playButton;
+        Button playButton;
         TextView message;
 
     }

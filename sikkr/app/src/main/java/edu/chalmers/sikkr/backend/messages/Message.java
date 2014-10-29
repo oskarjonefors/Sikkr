@@ -49,6 +49,11 @@ public final class Message extends AbstractMessage implements VoiceMessage {
     }
 
     @Override
+    public void play(PlaybackListener listener) {
+        play();
+    }
+
+    @Override
     public boolean isSent() {
         //TODO
         return sent;
