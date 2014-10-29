@@ -371,6 +371,7 @@ public class SocketThread extends Thread {
                     }
                 }
                 try {
+                    listener.sendInformation(new InformationEvent(Level.INFO, "Notifying the client that there is a new message"));
                     bufferedWriter.append("new_messages");
                     bufferedWriter.newLine();
                     bufferedWriter.flush();

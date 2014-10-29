@@ -16,6 +16,7 @@ import android.widget.TextView;
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 

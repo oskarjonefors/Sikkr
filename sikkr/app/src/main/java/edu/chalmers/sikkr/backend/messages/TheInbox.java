@@ -76,6 +76,8 @@ public class TheInbox implements ProgressListenable {
                     conversation = new Conversation(address, false);
                     messageList.add(conversation);
                     map.put(address, conversation);
+                } else if (!conversation.hasLocalNumber()) {
+                    conversation.setLocalNumber(address);
                 }
 
                 sms = new OneSms(msg, date, false);
@@ -106,6 +108,8 @@ public class TheInbox implements ProgressListenable {
                     conversation = new Conversation(address, false);
                     messageList.add(conversation);
                     map.put(address, conversation);
+                } else if (conversation.hasLocalNumber()) {
+                    conversation.setLocalNumber(address);
                 }
 
                 sms = new OneSms(msg, date, true);
@@ -159,11 +163,18 @@ public class TheInbox implements ProgressListenable {
             removeProgressListener(loader);
             ServerInterface.removeSingletonProgressListener(loader);
         }
-        loader = new InboxLoader();
 
-        addProgressListener(loader);
-        ServerInterface.addSingletonProgressListener(loader);
-        loader.execute(listener);
+        if (loader == null || loader.listener == null || loader.done) {
+            loader = new InboxLoader();
+
+            addProgressListener(loader);
+            try {
+                ServerInterface.addSingletonProgressListener(loader);
+            } catch (NullPointerException e) {
+                //NADA
+            }
+            loader.execute(listener);
+        }
     }
 
     public List<Conversation> getMessageInbox() {
@@ -209,7 +220,8 @@ public class TheInbox implements ProgressListenable {
     private class InboxLoader extends AsyncTask<InboxDoneLoadingListener, String, Boolean> implements ProgressListener {
 
         private double progress = 0;
-        private InboxDoneLoadingListener listener;
+        public boolean done = false;
+        public InboxDoneLoadingListener listener;
 
         @Override
         protected void onPreExecute() {
@@ -218,30 +230,58 @@ public class TheInbox implements ProgressListenable {
 
         @Override
         protected Boolean doInBackground(InboxDoneLoadingListener... params) {
+            boolean success = false;
+            listener = params[0];
+            LogUtility.writeLogFile("load_inbox_throws", "Hämtar och sparar meddelanden från servern");
             try {
-                listener = params[0];
                 collectAndSaveServerMessages();
-                collectLocalMessages();
-                if (listener != null) {
-                    collectSms();
-                    collectSentSms();
-                }
-            } catch (Exception e ) {
-                LogUtility.writeLogFile("load_inbox_throws", e, context);
-                return false;
+            } catch (Throwable t) {
+                LogUtility.writeLogFile("load_inbox_throws", t);
+                success = false;
             }
-            return true; //If successful
+
+            LogUtility.writeLogFile("load_inbox_throws", "Öppnar ljudmeddelanden på lokal enhet");
+            try {
+                collectLocalMessages();
+            } catch (Throwable t) {
+                LogUtility.writeLogFile("load_inbox_throws", t);
+                success = false;
+            }
+
+            LogUtility.writeLogFile("load_inbox_throws", "Kollar om den skall hämta sms");
+
+                if (listener != null) {
+                    LogUtility.writeLogFile("load_inbox_throws", "Hämtar sms");
+                    try {
+                        collectSms();
+                    } catch (Throwable t) {
+                        LogUtility.writeLogFile("load_inbox_throws", t);
+                        success = false;
+                    }
+
+                    LogUtility.writeLogFile("load_inbox_throws", "Hämtar skickade sms");
+                    try {
+                        collectSentSms();
+                    } catch (Throwable t) {
+                        LogUtility.writeLogFile("load_inbox_throws", t);
+                        success = false;
+                    }
+                }
+            return success;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (listener != null) {
+                listener.onDone();
+            }
+            done = true;
         }
 
         @Override
         protected void onProgressUpdate(String... progress) {
             this.progress += Double.parseDouble(progress[0]);
             updateProgress();
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (listener != null ) {listener.onDone(); }
         }
 
         @Override

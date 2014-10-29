@@ -29,8 +29,8 @@ public class Conversation {
         }
     }
 
-    public void setFixedNumber(String number) {
-        fixedNumber = number;
+    public void setLocalNumber(String number) {
+        phoneNbr = number;
     }
     public boolean hasLocalNumber() {
         return phoneNbr != null && !phoneNbr.isEmpty();
@@ -39,7 +39,11 @@ public class Conversation {
         conversation.add(msg);
     }
     public String getAddress() {
-        return phoneNbr;
+        if (!hasLocalNumber()) {
+            return getFixedNumber();
+        } else {
+            return phoneNbr;
+        }
     }
     public String getFixedNumber() {
         return fixedNumber;

@@ -90,13 +90,16 @@ public class VoiceMessageSender {
                     }
                 } catch (MessageNotSentException e) {
                     LogUtility.toastInActivityThread((Activity) context, "Could not send voice message", Toast.LENGTH_SHORT);
-                    LogUtility.writeLogFile(TAG, e);
+                    LogUtility.writeLogFile(TAG, e, context);
                 }
             }
         };
-        Thread t = new Thread(runnable, "Message send thread");
-        t.start();
-
+        try {
+            Thread t = new Thread(runnable, "MessageSenderThread");
+            t.start();
+        } catch (Throwable t) {
+            LogUtility.writeLogFile(TAG, t, context);
+        }
     }
 
     /**

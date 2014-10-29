@@ -32,7 +32,7 @@ public class LogUtility {
         e.printStackTrace();
         StackTraceElement[] trace = e.getStackTrace();
         String[] stacktrace = new String[trace.length + 1];
-        stacktrace[0] = e.getLocalizedMessage();
+        stacktrace[0] = e.getClass().getSimpleName() + " " + e.getLocalizedMessage();
         for (int i = 1; i < stacktrace.length; i++) {
             stacktrace[i] = trace[i - 1].toString();
         }

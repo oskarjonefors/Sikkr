@@ -273,8 +273,7 @@ public final class ServerInterface implements ProgressListenable {
                 singleton = new ServerInterface(context.getApplicationContext());
             } catch (Exception e) {
                 singleton = null;
-                Log.e("ServerInterface", "Could not create instance of singleton");
-                e.printStackTrace();
+                LogUtility.writeLogFile("ServerInterface", e);
             }
         }
     }
@@ -582,7 +581,7 @@ public final class ServerInterface implements ProgressListenable {
     private class MessageNotificationThread extends Thread {
 
         public MessageNotificationThread() {
-            super("Message notification thread");
+            super("MessageNotificationThread");
         }
 
         public void run() {
@@ -593,7 +592,7 @@ public final class ServerInterface implements ProgressListenable {
                 try {
                     msg = BUFFERED_READER.readLine();
 
-                    if (msg != null && TheInbox.getInstance() != null) {
+                    if (msg != null && !msg.isEmpty() && TheInbox.getInstance() != null) {
                         TheInbox.getInstance().loadInbox(null);
                     }
                     sleep(sleepyTime);
