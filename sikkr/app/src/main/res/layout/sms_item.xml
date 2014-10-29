@@ -4,11 +4,11 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/sms_item">
 
-    <ImageButton
+    <edu.chalmers.sikkr.frontend.TintFeedbackButton
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:id="@+id/imageButton"
-        android:background="@drawable/play"
+        android:background="@drawable/old_message_1"
         android:onClick="readMsg"
         android:layout_below="@+id/divider"
         android:layout_alignParentEnd="true" />
