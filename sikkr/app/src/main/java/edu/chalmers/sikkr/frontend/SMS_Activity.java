@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -107,10 +108,9 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     public void readMsg(View view) {
         try {
             ListableMessage message = (ListableMessage) view.getTag();
-            message.play();
+            Button tryButton = (Button)view.findViewById(R.id.imageButton);
+            message.play(new PlayButtonHandler(tryButton, message, this));
             message.markAsRead();
-            ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
-            tryButton.setBackgroundResource(R.drawable.play);
         } catch (Exception e) {
             LogUtility.writeLogFile("ReadMessageLogs", e, this);
         }
@@ -218,7 +218,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                 List<ListableMessage> messageList = new ArrayList<>();
                 messageList.addAll(messageSet);
                 Collections.sort(messageList);
-                ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);
+                Button tryButton = (Button)view.findViewById(R.id.imageButton);
 
                 //Link an sms to the playbutton
                 int counter = messageList.size() -1;
@@ -227,12 +227,11 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                     counter--;
                 }
                 if(!messageList.get(counter).isRead()){
-                    tryButton.setBackgroundResource(R.drawable.unread_play);
+                    tryButton.setBackgroundResource(R.drawable.new_message_1);
                 }else{
-                    tryButton.setBackgroundResource(R.drawable.play);
+                    tryButton.setBackgroundResource(R.drawable.old_message_1);
                 }
                 view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
-                LogUtility.writeLogFile("counterweird", "Counter = " + counter);
                 String address = currentConv.hasLocalNumber() ? currentConv.getAddress()
                         : currentConv.getFixedNumber();
                 //set the correct data of the element
