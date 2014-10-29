@@ -18,6 +18,7 @@ public final class TextToSpeechUtility {
     private static TextToSpeech tts;
     private static Context context;
     private final static SetupListener setupListener = new SetupListener();
+    private static PlaybackListener listener;
 
     private TextToSpeechUtility() {
         throw new UnsupportedOperationException("Cannot create instance");
@@ -39,10 +40,14 @@ public final class TextToSpeechUtility {
 
     public static void readAloud(String msg, PlaybackListener playbackListener) {
         if (tts != null) {
+            if (tts.isSpeaking() && listener != null) {
+                listener.playbackDone();
+            }
             final HashMap<String, String> map = new HashMap<String, String>();
             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "" + UUID.randomUUID());
             tts.setOnUtteranceProgressListener(new SikkrUtteranceProgressListener(playbackListener));
             tts.speak(msg, TextToSpeech.QUEUE_FLUSH, map);
+            listener = playbackListener;
         }
     }
 
