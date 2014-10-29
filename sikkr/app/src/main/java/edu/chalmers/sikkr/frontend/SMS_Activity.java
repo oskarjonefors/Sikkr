@@ -168,7 +168,6 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     @Override
     public void onDone() {
         try {
-            adapter.sortList();
             adapter.notifyDataSetChanged();
         } catch (Throwable t) {
             LogUtility.writeLogFile("Loaded_message_inbox_activity", t, this);
@@ -248,8 +247,10 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
             return view;
         }
 
-        public void sortList() {
+        @Override
+        public void notifyDataSetChanged() {
             Collections.sort(list, new LatestDateComparator());
+            super.notifyDataSetChanged();
         }
     }
 
