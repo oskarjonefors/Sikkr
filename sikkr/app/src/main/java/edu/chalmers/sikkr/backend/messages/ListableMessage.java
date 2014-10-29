@@ -12,8 +12,6 @@ public interface ListableMessage extends Comparable<ListableMessage> {
      */
     Calendar getTimestamp();
 
-    void play();
-
     void play(PlaybackListener listener);
 
     @Override
