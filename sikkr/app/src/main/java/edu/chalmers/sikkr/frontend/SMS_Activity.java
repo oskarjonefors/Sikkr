@@ -84,6 +84,15 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     private void createSmsLayout() {
         try {
             TheInbox.getInstance().loadInbox(this);
+            LogUtility.writeLogFile("Loaded_message_inbox_activity", "Loading the message inbox list");
+            smsList = TheInbox.getInstance().getMessageInbox();
+            LogUtility.writeLogFile("Loaded_message_inbox_activity", "Loaded the message inbox list");
+            findViewById(R.id.inboxProgressBar).setVisibility(View.GONE);
+            LogUtility.writeLogFile("Loaded_message_inbox_activity", "Removed the progressbar");
+            LogUtility.writeLogFile("smLsiT", "" + smsList.size());
+            adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
+            ListView listV = (ListView) findViewById(R.id.listView);
+            listV.setAdapter(adapter);
         } catch (Exception e) {
             LogUtility.writeLogFile("load_inbox_throws", e, this);
         }
@@ -155,15 +164,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     @Override
     public void onDone() {
         try {
-            LogUtility.writeLogFile("Loaded_message_inbox_activity", "Loading the message inbox list");
-            smsList = TheInbox.getInstance().getMessageInbox();
-            LogUtility.writeLogFile("Loaded_message_inbox_activity", "Loaded the message inbox list");
-            findViewById(R.id.inboxProgressBar).setVisibility(View.GONE);
-            LogUtility.writeLogFile("Loaded_message_inbox_activity", "Removed the progressbar");
-            LogUtility.writeLogFile("smLsiT", "" + smsList.size());
-            adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
-            ListView listV = (ListView) findViewById(R.id.listView);
-            listV.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         } catch (Throwable t) {
             LogUtility.writeLogFile("Loaded_message_inbox_activity", t, this);
         }

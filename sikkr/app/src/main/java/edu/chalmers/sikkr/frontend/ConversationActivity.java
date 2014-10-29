@@ -26,6 +26,7 @@ import java.util.Set;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.messages.Conversation;
+import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
 import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
@@ -37,7 +38,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
  * A class to represent Message Conversation with specific contact
  * @author Jesper Olsson
  */
-public class ConversationActivity extends Activity {
+public class ConversationActivity extends Activity implements InboxDoneLoadingListener {
     private Conversation thisConversation;
     private Set<ListableMessage> messageSet;
     private final List<ListableMessage> messages = new ArrayList<>();
@@ -219,4 +220,8 @@ public class ConversationActivity extends Activity {
         return item.getItemId() == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onDone() {
+        adapter.notifyDataSetChanged();
+    }
 }
