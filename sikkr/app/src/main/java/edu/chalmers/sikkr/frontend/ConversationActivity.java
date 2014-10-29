@@ -31,6 +31,7 @@ import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.util.ServerInterface;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
@@ -50,6 +51,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ServerInterface.addSingletonInboxDoneLoadingListener(this);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);

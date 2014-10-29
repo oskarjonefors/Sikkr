@@ -38,6 +38,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import edu.chalmers.sikkr.backend.ProgressListenable;
+import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
 import edu.chalmers.sikkr.backend.messages.ServerMessage;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
@@ -73,6 +74,7 @@ public final class ServerInterface implements ProgressListenable {
     private final RSAPublicKey PUBLIC_KEY;
 
     private final Collection<ProgressListener> listeners;
+    private final Collection<InboxDoneLoadingListener> doneLoadingListeners;
 
     private final Socket SOCKET, WRITE_SOCKET;
     private final Context context;
@@ -124,6 +126,7 @@ public final class ServerInterface implements ProgressListenable {
         verify();
 
         listeners = new ArrayList<>();
+        doneLoadingListeners = new ArrayList<>();
         this.context = context;
         thread = new MessageNotificationThread();
         thread.start();
@@ -296,6 +299,10 @@ public final class ServerInterface implements ProgressListenable {
     @SuppressWarnings("unused")
     public static void removeSingletonProgressListener(ProgressListener listener) {
         singleton.removeProgressListener(listener);
+    }
+
+    public static void addSingletonInboxDoneLoadingListener(InboxDoneLoadingListener listener) {
+        singleton.addInboxDoneLoadingListener(listener);
     }
 
     /*
@@ -557,6 +564,10 @@ public final class ServerInterface implements ProgressListenable {
         writeLine(line, true);
     }
 
+    public void addInboxDoneLoadingListener(InboxDoneLoadingListener listener) {
+        doneLoadingListeners.add(listener);
+    }
+
     @Override
     public void addProgressListener(ProgressListener listener) {
         listeners.add(listener);
@@ -593,7 +604,7 @@ public final class ServerInterface implements ProgressListenable {
                     msg = BUFFERED_READER.readLine();
 
                     if (msg != null && !msg.isEmpty() && TheInbox.getInstance() != null) {
-                        TheInbox.getInstance().loadInbox(null);
+                        TheInbox.getInstance().loadInbox(doneLoadingListeners.toArray(new InboxDoneLoadingListener[doneLoadingListeners.size()]));
                     }
                     sleep(sleepyTime);
                 } catch (Throwable e) {
