@@ -12,7 +12,6 @@ import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 
 import javax.crypto.Cipher;
@@ -64,6 +63,7 @@ public class SocketThread extends Thread {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
+            listener.sendInformation(new InformationEvent(e));
 		}
 	}
 	
@@ -257,9 +257,8 @@ public class SocketThread extends Thread {
 		listener.sendInformation(new InformationEvent(Level.INFO, "Verifying client: " + number));
 		final Contact c = listener.getContactByNumber(number);
 		if (c == null) {
-			bufferedWriter.append("verification_method new_client");
-			bufferedWriter.newLine();
-			bufferedWriter.flush();
+			outputStream.writeInt(0);
+            outputStream.flush();
 			
 			contact = new Contact(number, askForPublicKey());
 			listener.addContact(contact);
@@ -272,12 +271,15 @@ public class SocketThread extends Thread {
 		} else {
 			listener.sendInformation(new InformationEvent(Level.INFO, "Client failed verification!"));
 		}
+
+        if (contact != null && verifiedClient) {
+            MessageNotifierThread thread = new MessageNotifierThread();
+            thread.start();
+        }
 	}
 	
 	private boolean verifyContact(Contact c) throws IOException {
-		bufferedWriter.append("verification_method verification_code");
-		bufferedWriter.newLine();
-		bufferedWriter.flush();
+		outputStream.writeInt(1);
 		
 		final byte[] bytes = Utility.randomMessage();
 		final byte[] answer;
@@ -350,6 +352,34 @@ public class SocketThread extends Thread {
         outputStream.writeInt(key.length);
         outputStream.write(key);
         outputStream.flush();
+    }
+
+    private class MessageNotifierThread extends Thread {
+
+        public MessageNotifierThread() {
+            super("Message notifier thread for contact: "+contact.getNumber());
+        }
+
+        public void run() {
+            final int sleepyTime = 1000;
+            while (client.allSocketsOpen()) {
+                while (contact.recievedMessages.size() == 0) {
+                    try {
+                        sleep(sleepyTime);
+                    } catch (InterruptedException e) {
+                        listener.sendInformation(new InformationEvent(e));
+                    }
+                }
+                try {
+                    bufferedWriter.append("new_messages");
+                    bufferedWriter.newLine();
+                    bufferedWriter.flush();
+                } catch (IOException e) {
+                    //NADA
+                }
+            }
+        }
+
     }
 
 }

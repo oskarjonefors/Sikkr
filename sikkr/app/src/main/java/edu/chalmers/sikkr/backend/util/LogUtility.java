@@ -21,11 +21,11 @@ public class LogUtility {
 
     public static final String TAG = "WriteLogUtility";
 
-    public static void writeLogFile(String fileName, Exception e) {
+    public static void writeLogFile(String fileName, Throwable e) {
         writeLogFile(fileName, e, null);
     }
 
-    public static void writeLogFile(String fileName, Exception e, Context context) {
+    public static void writeLogFile(String fileName, Throwable e, Context context) {
         if (context != null) {
             Toast.makeText(context, e.getClass().getSimpleName() + " (" + e.getLocalizedMessage() + "):", Toast.LENGTH_SHORT).show();
         }
@@ -37,6 +37,7 @@ public class LogUtility {
             stacktrace[i] = trace[i - 1].toString();
         }
         writeLogFile(fileName, true, stacktrace);
+        TextToSpeechUtility.readAloud("Kuken");
     }
 
     public static void toastInActivityThread(Activity activity, CharSequence text, int length) {
@@ -105,7 +106,6 @@ public class LogUtility {
                 buf.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                TextToSpeechUtility.readAloud("Kuken");
             }
 
         }

@@ -39,6 +39,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.messages.ServerMessage;
+import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
@@ -73,6 +74,9 @@ public final class ServerInterface implements ProgressListenable {
 
     private final Collection<ProgressListener> listeners;
 
+    private final Socket SOCKET, WRITE_SOCKET;
+    private final Context context;
+
     /**
      * Creates a new ServerInterface.
      * @param context The application context for SiKKr.
@@ -80,10 +84,11 @@ public final class ServerInterface implements ProgressListenable {
      */
     private ServerInterface(Context context) throws IOException {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        final Socket SOCKET, WRITE_SOCKET;
+
         final TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         final KeyPair key = getKeyPair(context);
         String localnbr = tMgr.getLine1Number();
+        final MessageNotificationThread thread;
 
         PRIVATE_KEY = (RSAPrivateKey) key.getPrivate();
         PUBLIC_KEY = (RSAPublicKey) key.getPublic();
@@ -119,6 +124,9 @@ public final class ServerInterface implements ProgressListenable {
         verify();
 
         listeners = new ArrayList<>();
+        this.context = context;
+        thread = new MessageNotificationThread();
+        thread.start();
     }
 
     /*
@@ -385,12 +393,8 @@ public final class ServerInterface implements ProgressListenable {
     }
 
     private VerificationType getVerificationMethod() throws IOException {
-        String read = BUFFERED_READER.readLine();
-        if (read.contains("verification_method ")) {
-            return VerificationType.valueOf(read.replace("verification_method ", "").toUpperCase());
-        } else {
-            return VerificationType.INVALID;
-        }
+        int read = INPUT_STREAM.readInt();
+        return VerificationType.values()[read];
     }
 
     private void newClientVerification() throws Exception {
@@ -574,5 +578,32 @@ public final class ServerInterface implements ProgressListenable {
     private enum VerificationType {
         NEW_CLIENT, VERIFICATION_CODE, INVALID
     }
+
+    private class MessageNotificationThread extends Thread {
+
+        public MessageNotificationThread() {
+            super("Message notification thread");
+        }
+
+        public void run() {
+            final int sleepyTime = 500;
+            String msg;
+
+            while(WRITE_SOCKET.isConnected() && SOCKET.isConnected()) {
+                try {
+                    msg = BUFFERED_READER.readLine();
+
+                    if (msg != null && TheInbox.getInstance() != null) {
+                        TheInbox.getInstance().loadInbox(null);
+                    }
+                    sleep(sleepyTime);
+                } catch (Throwable e) {
+                    LogUtility.writeLogFile("MessageNotificationThread", e, context);
+                }
+            }
+        }
+
+    }
+
 
 }

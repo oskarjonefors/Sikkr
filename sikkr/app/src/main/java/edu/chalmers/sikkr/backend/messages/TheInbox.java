@@ -28,28 +28,30 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageFileUtility;
  */
 
 public class TheInbox implements ProgressListenable {
-    private final static TheInbox box = new TheInbox();
     private final static double numberOfOperations = 5D;
 
-    private Context context;
-    private static List<Conversation> messageList;
+
+    private static TheInbox box;
+
+    private final Context context;
+    private final List<Conversation> messageList;
     private final Map<String, Conversation> map;
     private final Collection<ProgressListener> listeners;
+
     private InboxLoader loader;
 
-    private TheInbox() {
+    private TheInbox(Context context) {
         map = new TreeMap<>();
         listeners = new ArrayList<>();
+        messageList = new ArrayList<>();
+        this.context = context;
 
     }
 
     public static void setupInbox(Context context) {
-        box.setUp(context);
-    }
-
-    private void setUp(Context context) {
-        messageList = new ArrayList<>();
-        this.context = context;
+        if (context != null) {
+            box = new TheInbox(context);
+        }
     }
 
     public static TheInbox getInstance() {
@@ -220,8 +222,10 @@ public class TheInbox implements ProgressListenable {
                 listener = params[0];
                 collectAndSaveServerMessages();
                 collectLocalMessages();
-                collectSms();
-                collectSentSms();
+                if (listener != null) {
+                    collectSms();
+                    collectSentSms();
+                }
             } catch (Exception e ) {
                 LogUtility.writeLogFile("load_inbox_throws", e, context);
                 return false;
@@ -237,7 +241,7 @@ public class TheInbox implements ProgressListenable {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            listener.onDone();
+            if (listener != null ) {listener.onDone(); }
         }
 
         @Override
