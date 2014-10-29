@@ -266,7 +266,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
         public int compare(Conversation conversation, Conversation conversation2) {
             final Calendar cal1 = conversation.getLatestMessage().getTimestamp();
             final Calendar cal2 = conversation2.getLatestMessage().getTimestamp();
-            return cal1.compareTo(cal2);
+            return cal2.compareTo(cal1);
         }
     }
 }
