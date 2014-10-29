@@ -27,7 +27,7 @@ public class LogUtility {
 
     public static void writeLogFile(String fileName, Exception e, Context context) {
         if (context != null) {
-            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, e.getClass().getSimpleName() + " (" + e.getLocalizedMessage() + "):", Toast.LENGTH_SHORT).show();
         }
         e.printStackTrace();
         StackTraceElement[] trace = e.getStackTrace();
@@ -77,24 +77,16 @@ public class LogUtility {
 
         if (fName.length() > 0 && logRows.length > 0) {
             try {
-                String logPath = getLogDirectory();
-                File dir = new File(logPath);
+                File dir = new File(getLogDirectory());
+                File logFile = new File(dir, fName + ".txt");
 
             /* Create log directory if there isn't one */
-                if (!dir.mkdirs()) {
+                if (!dir.exists() && !dir.mkdirs()) {
                     throw new IOException("Could not create a log directory");
                 }
 
-                File logFile = new File(logPath + fName + ".txt");
-
-                if (!logFile.exists()) {
-                    try {
-                        if (!logFile.createNewFile()) {
-                            throw new IOException("Could not create log file");
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (!logFile.exists() && !logFile.createNewFile()) {
+                    throw new IOException("Could not create log file");
                 }
 
 
@@ -113,6 +105,7 @@ public class LogUtility {
                 buf.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                TextToSpeechUtility.readAloud("Kuken");
             }
 
         }

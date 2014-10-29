@@ -5,6 +5,7 @@ import android.net.Uri;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 
 /**
@@ -20,6 +21,7 @@ public final class Message extends AbstractMessage implements VoiceMessage {
 
     public Message(final String SENDER, final String RECEIVER, final Uri path,
             final long TIMESTAMP, final boolean sent) {
+        LogUtility.writeLogFile("Message", "Constructed new message");
         this.SENDER = SENDER;
         this.RECEIVER = RECEIVER;
         this.TIMESTAMP = new GregorianCalendar();

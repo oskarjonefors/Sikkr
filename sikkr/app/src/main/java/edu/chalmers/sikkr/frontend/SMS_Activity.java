@@ -104,11 +104,15 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
      */
     public void clickedText(View view) {
         try {
-            int position = (Integer) view.getTag();
+            final int position = (Integer) view.getTag();
+            final Conversation conversation = smsList.get(position);
+            final String address = conversation.hasLocalNumber() ? conversation.getAddress()
+                    : conversation.getFixedNumber();
+
             Intent intent = new Intent(view.getContext(), ConversationActivity.class);
             intent.putExtra("position", position);
-            intent.putExtra("name", getContactByNbr(smsList.get(position).getAddress()));
-            intent.putExtra("number", smsList.get(position).getAddress());
+            intent.putExtra("name", getContactByNbr(address));
+            intent.putExtra("number", conversation.getFixedNumber());
             startActivity(intent);
         } catch (Exception e) {
             LogUtility.writeLogFile("ClickedConversation", e, this);
@@ -212,9 +216,10 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                 }
                 view.findViewById(R.id.imageButton).setTag(messageList.get(counter));
                 LogUtility.writeLogFile("counterweird", "Counter = " + counter);
-
+                String address = currentConv.hasLocalNumber() ? currentConv.getAddress()
+                        : currentConv.getFixedNumber();
                 //set the correct data of the element
-                holder.contactName.setText((getContactByNbr(currentConv.getAddress())));
+                holder.contactName.setText(getContactByNbr(address));
                 holder.contactName.setPaintFlags(holder.contactName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 holder.contactName.setTag(i);
 

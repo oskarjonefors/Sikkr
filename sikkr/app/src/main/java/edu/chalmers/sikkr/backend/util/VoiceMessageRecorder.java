@@ -151,12 +151,10 @@ public class VoiceMessageRecorder {
     public VoiceMessage getVoiceMessage() throws IllegalArgumentException {
         if(state == RecordingState.STOPPED) {
             final Calendar c = Calendar.getInstance();
-            final Calendar timeStamp = new GregorianCalendar(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-                    c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.SECOND));
 
-            Log.d(TAG, "MMS timestamp set to " + timeStamp);
+            Log.d(TAG, "MMS timestamp set to " + c);
             state = RecordingState.RESET;
-            return new MMS(timeStamp, Uri.fromFile(new File(currentFilePath)), true, context);
+            return new MMS(c, Uri.fromFile(new File(currentFilePath)), true, context);
         } else {
             throw new IllegalArgumentException(state == RecordingState.RECORDING ? "Cannot get voice message," +
                     "recording has not been stopped." : "Cannot get voice message since one has not been recorded.");

@@ -18,6 +18,7 @@ import java.util.TreeMap;
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.util.MessageUtils;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
 import edu.chalmers.sikkr.backend.util.VoiceMessageFileUtility;
@@ -28,7 +29,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageFileUtility;
 
 public class TheInbox implements ProgressListenable {
     private final static TheInbox box = new TheInbox();
-    private final static double numberOfOperations = 10D;
+    private final static double numberOfOperations = 5D;
 
     private Context context;
     private static List<Conversation> messageList;
@@ -46,95 +47,13 @@ public class TheInbox implements ProgressListenable {
         box.setUp(context);
     }
 
-    private void setUp(Context context)
-    {
+    private void setUp(Context context) {
         messageList = new ArrayList<>();
         this.context = context;
     }
 
     public static TheInbox getInstance() {
         return box;
-    }
-
-    private void collectMMS() {
-        final Cursor cursor = context.getContentResolver().query(Uri.parse("content://mms/inbox"), null, null, null, null);
-        final int count = cursor.getCount();
-        if (count != 0) {
-            double step = 1D / (count * numberOfOperations);
-            while (cursor.moveToNext()) {
-                String partID = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-                Cursor curPart = context.getContentResolver().query(Uri.parse("content://mms/" + partID + "/part"), null, null, null, null);
-                curPart.moveToFirst();
-                if (curPart.getColumnCount() >= 3 && curPart.getString(3).startsWith("audio")) {
-                    String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-                    //context.getContentResolver().
-                    Uri partURI = Uri.parse("content://mms/part/" + curPart.getString(0));
-                    MMS mms;
-                    Conversation conversation;
-                    Calendar timestamp;
-
-                    Date thisDate = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
-                    timestamp = Calendar.getInstance();
-                    timestamp.setTime(thisDate);
-
-                    if (!map.containsKey(address)) {
-                        conversation = new Conversation(address);
-                        messageList.add(conversation);
-                        map.put(address, conversation);
-                    } else {
-                        conversation = map.get(address);
-                    }
-
-                    mms = new MMS(timestamp, partURI, false, context);
-                    conversation.addMessage(mms);
-                    curPart.close();
-                }
-                notifyListeners(step, "Collecting MMS");
-            }
-        } else {
-            notifyListeners(1D/numberOfOperations, "Collecting MMS");
-        }
-        cursor.close();
-    }
-
-    private void collectSentMMS() {
-        final Cursor cursor = context.getContentResolver().query(Uri.parse("content://mms/sent"), null, null, null, null);
-        final int count = cursor.getCount();
-        if (count != 0) {
-            double step = 1D / (cursor.getCount() * numberOfOperations);
-            while (cursor.moveToNext()) {
-                String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-                String partID = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-                MMS mms;
-                Conversation conversation;
-                Uri partURI;
-                Calendar timestamp;
-                Cursor curPart = context.getContentResolver().query(Uri.parse ("content://mms/" + partID + "/part"), null, null, null, null);
-
-                curPart.moveToFirst();
-                partURI = Uri.parse("content://mms/part/" + curPart.getString(0));
-
-                Date thisDate = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
-                timestamp = Calendar.getInstance();
-                timestamp.setTime(thisDate);
-
-                if (!map.containsKey(address)) {
-                    conversation = new Conversation(address);
-                    messageList.add(conversation);
-                    map.put(address, conversation);
-                } else {
-                    conversation = map.get(address);
-                }
-
-                mms = new MMS(timestamp, partURI, true, context);
-                conversation.addMessage(mms);
-                curPart.close();
-                notifyListeners(step, "Collecting sent MMS");
-            }
-        } else {
-            notifyListeners(1D/numberOfOperations, "Collecting sent MMS");
-        }
-        cursor.close();
     }
 
     private void collectSms() {
@@ -144,24 +63,19 @@ public class TheInbox implements ProgressListenable {
         if (count != 0) {
             double step = 1D / (count * numberOfOperations);
             while (cursor.moveToNext()) {
-
-                Conversation conversation;
-                OneSms sms;
-
                 String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
                 String msg = cursor.getString(cursor.getColumnIndexOrThrow("body"));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                Conversation conversation = getConversation(address);
+                OneSms sms;
 
                 //If a sms conversation form this contact does not exist, create a new Conversation
-                if (!map.containsKey(address)) {
-                    //Toast.makeText(context, "Creating new conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
-                    conversation = new Conversation(address);
+                if (conversation == null) {
+                    conversation = new Conversation(address, false);
                     messageList.add(conversation);
                     map.put(address, conversation);
-                } else {
-                    //Toast.makeText(context, "Found existing conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
-                    conversation = map.get(address);
                 }
+
                 sms = new OneSms(msg, date, false);
                 conversation.addMessage(sms);
                 notifyListeners(step, "Collecting SMS");
@@ -180,22 +94,18 @@ public class TheInbox implements ProgressListenable {
         if (count != 0) {
             double step = 1D / (count * numberOfOperations);
             while (cursor.moveToNext()) {
-                Conversation conversation;
-                OneSms sms;
-
                 String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
                 String msg = cursor.getString(cursor.getColumnIndexOrThrow("body"));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                Conversation conversation = getConversation(address);
+                OneSms sms;
 
-                if (!map.containsKey(address)) {
-                    //Toast.makeText(context, "Creating new conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
-                    conversation = new Conversation(address);
+                if (conversation == null) {
+                    conversation = new Conversation(address, false);
                     messageList.add(conversation);
                     map.put(address, conversation);
-                } else {
-                    //Toast.makeText(context, "Found existing conversation: "+address+"\n"+msg, Toast.LENGTH_SHORT).show();
-                    conversation = map.get(address);
                 }
+
                 sms = new OneSms(msg, date, true);
                 conversation.addMessage(sms);
                 notifyListeners(step, "Collecting sent SMS");
@@ -209,6 +119,7 @@ public class TheInbox implements ProgressListenable {
     }
 
     private void collectAndSaveServerMessages() throws Exception {
+        LogUtility.writeLogFile("TheInbox", "Collecting messages from the server and saving them");
         final List<ServerMessage> messages = ServerInterface.getReceivedMessages();
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
@@ -222,19 +133,19 @@ public class TheInbox implements ProgressListenable {
     }
 
     public void collectLocalMessages() {
+        LogUtility.writeLogFile("TheInbox", "Collecting messages from the device");
         List<Message> messages = VoiceMessageFileUtility.readMessages(context);
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
             for (Message msg : messages) {
-                Conversation conversation;
                 String address = msg.isSent() ? msg.getReceiver() : msg.getSender();
-                if (!map.containsKey(address)) {
-                    conversation = new Conversation(address);
+                Conversation conversation = getConversation(address);
+                if (conversation == null) {
+                    conversation = new Conversation(address, true);
                     messageList.add(conversation);
                     map.put(address, conversation);
-                } else {
-                    conversation = map.get(address);
                 }
+
                 conversation.addMessage(msg);
                 notifyListeners(step, "Collecting web messages.");
             }
@@ -283,13 +194,14 @@ public class TheInbox implements ProgressListenable {
     }
 
     public Conversation getConversation(String address) {
-        Conversation tmpConv = null;
         for (Conversation conv : messageList) {
-            if (conv.getAddress().equals(address)) {
-                tmpConv = conv;
+            if (conv.hasLocalNumber() && conv.getAddress().equals(address)) {
+                return conv;
+            } else if (conv.getFixedNumber().equals(MessageUtils.fixNumber(address))) {
+                return conv;
             }
         }
-        return tmpConv;
+        return null;
     }
 
     private class InboxLoader extends AsyncTask<InboxDoneLoadingListener, String, Boolean> implements ProgressListener {
@@ -307,13 +219,11 @@ public class TheInbox implements ProgressListenable {
             try {
                 listener = params[0];
                 collectAndSaveServerMessages();
-                //collectMMS();
-                //collectSentMMS();
+                collectLocalMessages();
                 collectSms();
                 collectSentSms();
-                collectLocalMessages();
             } catch (Exception e ) {
-                LogUtility.writeLogFile("load_inbox_throws", e);
+                LogUtility.writeLogFile("load_inbox_throws", e, context);
                 return false;
             }
             return true; //If successful

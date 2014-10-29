@@ -44,7 +44,8 @@ public class VoiceMessageFileUtility {
     }
 
     public static List<Message> readMessages(Context context) {
-        File file =  new File(getAppPath(), "messages.xml");
+        LogUtility.writeLogFile(TAG, "Reading messages from xml file");
+        File file =  new File(new File(getAppPath()), "messages.xml");
         List<Message> messages = new ArrayList<>();
 
 
@@ -52,20 +53,19 @@ public class VoiceMessageFileUtility {
             if (file.exists()) {
                 XmlPullParser reader = inputFactory.newPullParser();
                 reader.setInput(new InputStreamReader(new FileInputStream(file)));
-
                 int next;
                 while ((next = reader.next()) != XmlPullParser.END_DOCUMENT) {
                     LogUtility.writeLogFile(TAG, "Next type: "+next+"\tName: "+reader.getName());
                     if (next == XmlPullParser.START_TAG
                             && reader.getName().equals("Message")) {
                         String sender = reader.getAttributeValue(0); //Sender
-                        String receiver = reader.getAttributeValue(1); //Reciever
+                        String receiver = reader.getAttributeValue(1); //Receiver
                         long time = Long.parseLong(reader.getAttributeValue(2)); //Timestamp
                         boolean sent = Boolean.parseBoolean(reader.getAttributeValue(3)); //sent
                         String path = reader.getAttributeValue(4); //Content path
                         LogUtility.writeLogFile("ATTRS", "Sender: " + sender + " Receiver: " + receiver
                                 + " Time: " + time);
-                        messages.add(new Message(sender, receiver, Uri.fromFile(new File(getAppPath(), "messages/" + path)), time, sent));
+                        messages.add(new Message(sender, receiver, Uri.fromFile(new File(getAppPath(), "messages/" + path + ".msg")), time, sent));
                     }
                 }
             }
@@ -78,6 +78,7 @@ public class VoiceMessageFileUtility {
 
     public static void saveServerMessage(Context context, ServerMessage message) {
         try {
+            LogUtility.writeLogFile(TAG, "Saving a message");
             XmlSerializer writer = inputFactory.newSerializer();
             Collection<Message> previousMessages = new ArrayList<>();
             File sikkrDirectory, file;
@@ -120,7 +121,7 @@ public class VoiceMessageFileUtility {
                 writer.attribute("", "receiver", msg.getReceiver());
                 writer.attribute("", "time", msg.getTimestamp().getTimeInMillis() + "");
                 writer.attribute("", "sent", msg.isSent() + "");
-                writer.attribute("", "content", msg.getFileUri().getLastPathSegment());
+                writer.attribute("", "content", msg.getFileUri().getLastPathSegment().replace(".msg", ""));
                 writer.endTag("", "Message");
             }
 
@@ -135,6 +136,7 @@ public class VoiceMessageFileUtility {
             writer.attribute("", "content", path = getRandomContentPath(message));
             writer.endTag("", "Message");
             writer.endDocument();
+            writer.flush();
 
             if (contentDir.exists() && !contentDir.isDirectory()) {
                 if (!contentDir.delete()) {
