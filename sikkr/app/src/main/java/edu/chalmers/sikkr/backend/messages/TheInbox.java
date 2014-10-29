@@ -8,9 +8,7 @@ import android.os.AsyncTask;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -158,23 +156,29 @@ public class TheInbox implements ProgressListenable {
         }
     }
 
-    public void loadInbox(InboxDoneLoadingListener listener) {
+    public void loadInbox(InboxDoneLoadingListener... listener) {
+        if (loader != null && loader.getStatus() == AsyncTask.Status.RUNNING) {
+            try {
+                loader.cancel(true);
+            } catch (Exception e) {
+                LogUtility.writeLogFile("TheInbox", e);
+            }
+        }
+
         if (loader != null) {
             removeProgressListener(loader);
             ServerInterface.removeSingletonProgressListener(loader);
         }
 
-        if (loader == null || loader.listener == null || loader.done) {
-            loader = new InboxLoader();
 
-            addProgressListener(loader);
-            try {
-                ServerInterface.addSingletonProgressListener(loader);
-            } catch (NullPointerException e) {
-                //NADA
-            }
-            loader.execute(listener);
+        loader = new InboxLoader();
+        addProgressListener(loader);
+        try {
+            ServerInterface.addSingletonProgressListener(loader);
+        } catch (NullPointerException e) {
+            LogUtility.writeLogFile("TheInbox", e);
         }
+        loader.execute(listener);
     }
 
     public List<Conversation> getMessageInbox() {
@@ -220,8 +224,7 @@ public class TheInbox implements ProgressListenable {
     private class InboxLoader extends AsyncTask<InboxDoneLoadingListener, String, Boolean> implements ProgressListener {
 
         private double progress = 0;
-        public boolean done = false;
-        public InboxDoneLoadingListener listener;
+        public InboxDoneLoadingListener[] listeners;
 
         @Override
         protected void onPreExecute() {
@@ -231,7 +234,7 @@ public class TheInbox implements ProgressListenable {
         @Override
         protected Boolean doInBackground(InboxDoneLoadingListener... params) {
             boolean success = false;
-            listener = params[0];
+            listeners = params;
             LogUtility.writeLogFile("load_inbox_throws", "Hämtar och sparar meddelanden från servern");
             try {
                 collectAndSaveServerMessages();
@@ -250,7 +253,7 @@ public class TheInbox implements ProgressListenable {
 
             LogUtility.writeLogFile("load_inbox_throws", "Kollar om den skall hämta sms");
 
-                if (listener != null) {
+                if (listeners != null && listeners.length > 0) {
                     LogUtility.writeLogFile("load_inbox_throws", "Hämtar sms");
                     try {
                         collectSms();
@@ -272,10 +275,11 @@ public class TheInbox implements ProgressListenable {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (listener != null) {
-                listener.onDone();
+            if (listeners != null) {
+                for (InboxDoneLoadingListener listener : listeners) {
+                    listener.onDone();
+                }
             }
-            done = true;
         }
 
         @Override
