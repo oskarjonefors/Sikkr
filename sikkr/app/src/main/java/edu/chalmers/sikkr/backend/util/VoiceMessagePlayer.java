@@ -1,6 +1,7 @@
 package edu.chalmers.sikkr.backend.util;
 
 import android.content.Context;
+import android.drm.DrmStore;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
@@ -11,17 +12,19 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import edu.chalmers.sikkr.backend.messages.PlaybackListener;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
- * Created by ivaldi on 2014-10-02.
+ * @author Oskar Jönefors
  */
-public class VoiceMessagePlayer {
+public class VoiceMessagePlayer implements MediaPlayer.OnCompletionListener {
 
     private final String TAG = "VoiceMessagePlayer";
     private final static VoiceMessagePlayer singleton = new VoiceMessagePlayer();
     private Context context;
     private MediaPlayer player;
+    private PlaybackListener listener;
 
     private VoiceMessagePlayer() {}
 
@@ -44,11 +47,17 @@ public class VoiceMessagePlayer {
         singleton.setup(context);
     }
 
-    public void playMessage(VoiceMessage msg) {
+    public void playMessage(VoiceMessage msg, PlaybackListener listener) {
         try {
             if(player != null) {
                 player.release();
             }
+
+            if (this.listener != null) {
+                this.listener.playbackDone();
+            }
+
+            this.listener = listener;
 
             final File parent = context.getFilesDir();
             final File tmp = new File(parent, "mms.tmp");
@@ -78,10 +87,12 @@ public class VoiceMessagePlayer {
 
             tmp.deleteOnExit();
             player = new MediaPlayer();
+            player.setOnCompletionListener(this);
             Log.d(TAG, "Trying to play message " +msg);
             player.setDataSource(context, Uri.fromFile(tmp));
             player.prepare();
             player.start();
+            listener.playbackStarted();
         }  catch (Exception e) {
             LogUtility.writeLogFile("VoiceMessagePlayerLog", e);
             Log.e(TAG, "Failed to prepare MediaPlayer.");
@@ -92,6 +103,13 @@ public class VoiceMessagePlayer {
         if(player != null) {
             player.stop();
             Log.d(TAG, "Stopping playback.");
+        }
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        if (listener != null) {
+            listener.playbackDone();
         }
     }
 }

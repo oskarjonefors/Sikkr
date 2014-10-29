@@ -40,13 +40,8 @@ public class SikkrVoiceMessage extends AbstractMessage implements VoiceMessage {
     }
 
     @Override
-    public void play(){
-        VoiceMessagePlayer.getSharedInstance().playMessage(this);
-    }
-
-    @Override
     public void play(PlaybackListener listener) {
-        play();
+        VoiceMessagePlayer.getSharedInstance().playMessage(this, listener);
     }
 
     @Override
