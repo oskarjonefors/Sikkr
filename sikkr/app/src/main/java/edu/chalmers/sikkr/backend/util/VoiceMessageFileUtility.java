@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -25,6 +26,7 @@ import java.util.Random;
 
 import edu.chalmers.sikkr.backend.messages.Message;
 import edu.chalmers.sikkr.backend.messages.ServerMessage;
+import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
  * Created by ivaldi on 2014-10-27.
@@ -43,7 +45,7 @@ public class VoiceMessageFileUtility {
         }
     }
 
-    public static List<Message> readMessages(Context context) {
+    public static List<Message> readMessages() {
         LogUtility.writeLogFile(TAG, "Reading messages from xml file");
         File file =  new File(new File(getAppPath()), "messages.xml");
         List<Message> messages = new ArrayList<>();
@@ -70,13 +72,20 @@ public class VoiceMessageFileUtility {
                 }
             }
         } catch (Exception e) {
-            LogUtility.toastInActivityThread((Activity) context, "Någon annan jävla exception", Toast.LENGTH_SHORT);
             LogUtility.writeLogFile(TAG, e);
         }
         return messages;
     }
 
-    public static void saveServerMessage(Context context, ServerMessage message) {
+    public static void saveVoiceMessage(VoiceMessage message, String receiver) {
+        try {
+            saveServerMessage(ServerInterface.convertToServerMessage(message, receiver));
+        } catch (IOException e) {
+            LogUtility.writeLogFile(TAG, e);
+        }
+    }
+
+    public static void saveServerMessage(ServerMessage message) {
         try {
             LogUtility.writeLogFile(TAG, "Saving a message");
             XmlSerializer writer = inputFactory.newSerializer();
@@ -105,7 +114,7 @@ public class VoiceMessageFileUtility {
                     throw new IOException("Could not create a new file!");
                 }
             } else {
-                previousMessages.addAll(readMessages(context));
+                previousMessages.addAll(readMessages());
                 if (!file.delete() || !file.createNewFile()) {
                     throw new IOException("Could not create a new file!");
                 }
@@ -156,7 +165,6 @@ public class VoiceMessageFileUtility {
             dos.flush();
             dos.close();
         } catch (IOException | XmlPullParserException e) {
-            LogUtility.toastInActivityThread((Activity) context, "Satans jävla exception", Toast.LENGTH_SHORT);
             LogUtility.writeLogFile(TAG, e);
         }
 

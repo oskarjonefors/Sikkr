@@ -40,6 +40,7 @@ import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
+import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 
 /**
@@ -53,6 +54,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ServerInterface.addSingletonInboxDoneLoadingListener(this);
+        VoiceMessageSender.addInboxDoneLoadingListener(this);
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

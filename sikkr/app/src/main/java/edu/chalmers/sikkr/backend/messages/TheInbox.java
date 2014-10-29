@@ -128,7 +128,7 @@ public class TheInbox implements ProgressListenable {
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
             for (ServerMessage msg : messages) {
-                VoiceMessageFileUtility.saveServerMessage(context, msg);
+                VoiceMessageFileUtility.saveServerMessage(msg);
                 notifyListeners(step, "Preparing web messages");
             }
         } else {
@@ -138,7 +138,7 @@ public class TheInbox implements ProgressListenable {
 
     public void collectLocalMessages() {
         LogUtility.writeLogFile("TheInbox", "Collecting messages from the device");
-        List<Message> messages = VoiceMessageFileUtility.readMessages(context);
+        List<Message> messages = VoiceMessageFileUtility.readMessages();
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
             for (Message msg : messages) {

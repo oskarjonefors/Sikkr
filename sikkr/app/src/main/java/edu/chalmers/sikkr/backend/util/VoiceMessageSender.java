@@ -14,8 +14,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.chalmers.sikkr.backend.MessageNotSentException;
+import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
+import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
@@ -31,8 +35,11 @@ public class VoiceMessageSender {
     private final static VoiceMessageSender singleton = new VoiceMessageSender();
     private Context context;
     private Settings mmsSettings;
+    private final List<InboxDoneLoadingListener> listeners;
 
-    private VoiceMessageSender() {}
+    private VoiceMessageSender() {
+        listeners = new ArrayList<>(2);
+    }
 
     private void setup(Context context) {
         if (context == null) {
@@ -83,10 +90,12 @@ public class VoiceMessageSender {
                 try {
                     if (ServerInterface.serverHasClient(MessageUtils.fixNumber(receiverNbr))) {
                         LogUtility.toastInActivityThread((Activity) context, "Sending voice message via server", Toast.LENGTH_SHORT);
-                        ServerInterface.sendVoiceMessage((Activity) context, MessageUtils.fixNumber(receiverNbr), vmsg);
+                        ServerInterface.sendVoiceMessage(MessageUtils.fixNumber(receiverNbr), vmsg);
                     } else {
                         LogUtility.toastInActivityThread((Activity) context, "Sending voice message via mms", Toast.LENGTH_SHORT);
                         sendMmsMessage(vmsg, receiverNbr);
+                        VoiceMessageFileUtility.saveVoiceMessage(vmsg, MessageUtils.fixNumber(receiverNbr));
+                        TheInbox.getInstance().loadInbox(listeners.toArray(new InboxDoneLoadingListener[listeners.size()]));
                     }
                 } catch (MessageNotSentException e) {
                     LogUtility.toastInActivityThread((Activity) context, "Could not send voice message", Toast.LENGTH_SHORT);
@@ -132,5 +141,9 @@ public class VoiceMessageSender {
         Log.d(TAG, "Sending message to " + msg.getAddresses()[0] + " with thread id " +
                 MessageUtils.getMessageThreadIdByContactId(context, receiverNbr));
         sendTransaction.sendNewMessage(msg, MessageUtils.getMessageThreadIdByContactId(context, receiverNbr));
+    }
+
+    public static void addInboxDoneLoadingListener(InboxDoneLoadingListener listener) {
+        singleton.listeners.add(listener);
     }
 }

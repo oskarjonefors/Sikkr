@@ -52,6 +52,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ServerInterface.addSingletonInboxDoneLoadingListener(this);
+        VoiceMessageSender.addInboxDoneLoadingListener(this);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
@@ -127,7 +128,6 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
             thisConversation = TheInbox.getInstance().getConversation(bundle.getString("number"));
             TextView tv = (TextView)findViewById(R.id.conversation_name);
             tv.setText(bundle.getString("name"));
-            messageSet = new HashSet<>();
             messageSet = thisConversation.getSmsList();
             messages.addAll(messageSet);
             Collections.sort(messages);
@@ -224,6 +224,8 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
 
     @Override
     public void onDone() {
-        adapter.notifyDataSetChanged();
+        LogUtility.writeLogFile("ConversationActivity", "Executing method onDone");
+        adapter.clear();
+        adapter.addAll(thisConversation.getSmsList());
     }
 }
