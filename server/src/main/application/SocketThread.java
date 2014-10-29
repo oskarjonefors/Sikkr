@@ -361,9 +361,10 @@ public class SocketThread extends Thread {
         }
 
         public void run() {
-            final int sleepyTime = 1000;
+            final int sleepyTime = 200;
+            long notificationTime = 0;
             while (client.allSocketsOpen()) {
-                while (contact.recievedMessages.size() == 0) {
+                while (contact.recievedMessages.size() == 0 || System.currentTimeMillis() - notificationTime < 10000) {
                     try {
                         sleep(sleepyTime);
                     } catch (InterruptedException e) {
@@ -375,6 +376,8 @@ public class SocketThread extends Thread {
                     bufferedWriter.append("new_messages");
                     bufferedWriter.newLine();
                     bufferedWriter.flush();
+                    notificationTime = System.currentTimeMillis();
+
                 } catch (IOException e) {
                     //NADA
                 }
