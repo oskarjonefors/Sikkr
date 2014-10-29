@@ -78,9 +78,9 @@ public class ConversationAdapter extends ArrayAdapter {
             holder.message.setLayoutParams(userNameParams);
         }
         if(!list.get(position).isRead()){
-            holder.playButton.setBackgroundResource(R.drawable.unread_play);
+            holder.playButton.setBackgroundResource(R.drawable.new_message_1);
         }else{
-            holder.playButton.setBackgroundResource(R.drawable.play);
+            holder.playButton.setBackgroundResource(R.drawable.old_message_1);
         }
         holder.message.setText(DateDiffUtility.callDateToString(list.get(position).getTimestamp().getTimeInMillis()));
         holder.playButton.setTag(list.get(position));
