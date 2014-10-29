@@ -25,7 +25,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -46,7 +48,7 @@ import edu.chalmers.sikkr.backend.util.ServerInterface;
 
 public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     private static List<Conversation> smsList;
-    ArrayAdapter adapter;
+    private SmsViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +168,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     @Override
     public void onDone() {
         try {
+            adapter.sortList();
             adapter.notifyDataSetChanged();
         } catch (Throwable t) {
             LogUtility.writeLogFile("Loaded_message_inbox_activity", t, this);
@@ -244,12 +247,26 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
 
             return view;
         }
+
+        public void sortList() {
+            Collections.sort(list, new LatestDateComparator());
+        }
     }
 
     static class ViewHolder {
         TextView contactName;
         TextView date;
 
+    }
+
+    class LatestDateComparator implements Comparator<Conversation> {
+
+        @Override
+        public int compare(Conversation conversation, Conversation conversation2) {
+            final Calendar cal1 = conversation.getLatestMessage().getTimestamp();
+            final Calendar cal2 = conversation2.getLatestMessage().getTimestamp();
+            return cal1.compareTo(cal2);
+        }
     }
 }
 

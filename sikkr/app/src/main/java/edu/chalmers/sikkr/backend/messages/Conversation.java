@@ -48,6 +48,9 @@ public class Conversation {
     public String getFixedNumber() {
         return fixedNumber;
     }
+    public ListableMessage getLatestMessage() {
+        return (ListableMessage) conversation.toArray()[conversation.size() - 1];
+    }
     public Set<ListableMessage> getSmsList() {
         return conversation;
     }
