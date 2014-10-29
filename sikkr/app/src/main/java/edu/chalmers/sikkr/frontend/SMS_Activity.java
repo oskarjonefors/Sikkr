@@ -5,12 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
+import android.provider.Telephony;
+import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +30,10 @@ import java.util.List;
 import java.util.Set;
 
 import edu.chalmers.sikkr.R;
-import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.messages.Conversation;
 import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
 import edu.chalmers.sikkr.backend.messages.ListableMessage;
+import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
 import edu.chalmers.sikkr.backend.util.LogUtility;
@@ -59,13 +62,13 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                     String messageBody = smsMessage.getMessageBody();
                     String phoneNbr = smsMessage.getOriginatingAddress();
                     String date = String.valueOf(smsMessage.getTimestampMillis());
-                    OneSms sms = new OneSms(messageBody, phoneNbr, date, false);
-                    ArrayList<SmsConversation> list = TheInbox.getInstance().getSmsInbox();
+                    OneSms sms = new OneSms(messageBody, date, false);
+                    List<Conversation> list = TheInbox.getInstance().getMessageInbox();
 
-                    for (int i = 0; i < list.size(); i++) {
-                        if (phoneNbr.equals(list.get(i).getAddress())) {
+                    for (Conversation conversation : list) {
+                        if (phoneNbr.equals(conversation.getAddress())) {
                             sms.markAsUnread();
-                            list.get(i).addSms(sms);
+                            conversation.addMessage(sms);
                         }
                     }
                 }
@@ -167,13 +170,13 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
     }
 
     //Inner adapter class
-    public class SmsViewAdapter extends ArrayAdapter {
+    public class SmsViewAdapter extends ArrayAdapter<Conversation> {
 
         private final Context context;
         private final List<Conversation> list;
         private final int layoutId;
 
-        private SmsViewAdapter(Context context, int layoutId, List list) {
+        private SmsViewAdapter(Context context, int layoutId, List<Conversation> list) {
             super(SMS_Activity.this, layoutId, list);
             this.context = context;
             this.list = list;
@@ -205,7 +208,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                 //get the current sms conversation
                 Conversation currentConv = list.get(i);
                 Set<ListableMessage> messageSet = currentConv.getSmsList();
-                List<ListableMessage> messageList = new ArrayList<ListableMessage>();
+                List<ListableMessage> messageList = new ArrayList<>();
                 messageList.addAll(messageSet);
                 Collections.sort(messageList);
                 ImageButton tryButton = (ImageButton)view.findViewById(R.id.imageButton);

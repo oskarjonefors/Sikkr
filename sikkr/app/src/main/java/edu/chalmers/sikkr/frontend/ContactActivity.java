@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
@@ -69,9 +71,17 @@ public class ContactActivity extends Activity {
         super.onPause();
         if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.RECORDING) {
             recorder.stopRecording();
-            recorder.discardRecording();
+            try {
+                recorder.discardRecording();
+            } catch (IOException e) {
+                LogUtility.writeLogFile("ContactActivity", e, this);
+            }
         }else if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.STOPPED){
-            recorder.discardRecording();
+            try {
+                recorder.discardRecording();
+            } catch (IOException e) {
+                LogUtility.writeLogFile("ContactActivity", e, this);
+            }
         }
     }
 
@@ -153,7 +163,11 @@ public class ContactActivity extends Activity {
     }
 
     public void cancelTheMessage(View v) {
-        recorder.discardRecording();
+        try {
+            recorder.discardRecording();
+        } catch (IOException e) {
+            LogUtility.writeLogFile("ContactActivity", e, this);
+        }
         hideButtons();
     }
 
