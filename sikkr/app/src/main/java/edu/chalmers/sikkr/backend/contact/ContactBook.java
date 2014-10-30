@@ -112,10 +112,6 @@ public class ContactBook implements ProgressListenable {
         return context != null;
     }
 
-    public static void setupSingleton(Context context) {
-        singleton.setup(context);
-    }
-
     /**
      * This method is used if another class wants to monitor the progress of the ContactBook initialization.
      * @param context   - Context used for retrieve the contacts. Cannot be null.
@@ -187,7 +183,7 @@ public class ContactBook implements ProgressListenable {
     /**
      * Get a list of all the contacts in the contact book.
      */
-    public Set<Contact> getContacts() {
+    Set<Contact> getContacts() {
         final Set<Contact> c = new TreeSet<Contact>();
         for (final Contact contact : contacts.values()) {
             c.add(contact);
@@ -223,10 +219,12 @@ public class ContactBook implements ProgressListenable {
     /**
      * Return the contact who's name best matches the given pattern.
      * If no suitable contacts can be found, null will be returned.
-     * @param searchPattern
-     * @return
+     *
+     * @param searchPattern  If search pattern is null, null will be returned.
+     *
+     * @return  A matching contact if found, or null if none is found.
      */
-    public Contact getClosestMatch(String searchPattern) {
+    Contact getClosestMatch(String searchPattern) {
         final List<Contact> matches = getClosestMatches(searchPattern);
         if (matches == null) {
             return null;
@@ -246,10 +244,11 @@ public class ContactBook implements ProgressListenable {
 
     /**
      * Return the contacts who's names best matches the given pattern.
-     * @param searchPattern
-     * @return
+     *
+     * @param searchPattern If search pattern is null, null will be returned.
+     * @return  List of matching contacts. This list will be empty if none are found.
      */
-    public List<Contact> getClosestMatches(String searchPattern) {
+    List<Contact> getClosestMatches(String searchPattern) {
 
         List<String> matches = FuzzySearchUtility.getSearchResults(searchPattern, contactNameMap.keySet());
 
@@ -265,7 +264,7 @@ public class ContactBook implements ProgressListenable {
         return results;
     }
 
-    public Set<Contact> getFavoriteContacts() {
+    Set<Contact> getFavoriteContacts() {
         final Set<Contact> favSet = new TreeSet<Contact>();
 
         for (Contact c : contacts.values()) {
