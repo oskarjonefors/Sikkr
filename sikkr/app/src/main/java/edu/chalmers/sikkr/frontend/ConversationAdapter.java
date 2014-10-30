@@ -18,7 +18,8 @@ import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
 
 /**
- * Created by Jesper on 2014-10-13.
+ * Adapter class for the conversations
+ * @author Jesper Olsson
  */
 public class ConversationAdapter extends ArrayAdapter {
     private Context context;
@@ -32,7 +33,14 @@ public class ConversationAdapter extends ArrayAdapter {
         this.list = list;
     }
 
-    
+    /**
+     * getView method for this adapter. Will change the layout of conversation item
+     * depending on wether it's a sent message or recieved messagee
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     public View getView(int position, View convertView, ViewGroup parent){
         View view = convertView;
         final ViewHolder holder;

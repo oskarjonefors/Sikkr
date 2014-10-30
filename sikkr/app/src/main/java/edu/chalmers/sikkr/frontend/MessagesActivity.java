@@ -60,7 +60,9 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.sms_layout);
         createSmsLayout();
-
+        /**
+         * Reciever to handle incoming text messages dynamically
+         */
         BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

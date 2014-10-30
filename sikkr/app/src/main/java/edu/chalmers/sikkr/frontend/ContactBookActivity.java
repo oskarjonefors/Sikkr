@@ -18,11 +18,12 @@ import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
 import edu.chalmers.sikkr.backend.util.SystemData;
 import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 
-
+/**
+ * A class to represent the Contact Book Grid.
+ * Uses ButtonAdapter to fill layout
+ * @author Jesper Olsson
+ */
 public class ContactBookActivity extends Activity {
-
-    private ArrayList<String> matches;
-    private BroadcastReceiver reciever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class ContactBookActivity extends Activity {
         gridview.setAdapter(new ButtonAdapter(this));
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
 
         if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
