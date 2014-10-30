@@ -51,7 +51,12 @@
              android:id="@+id/callButton"
              android:background ="@drawable/call_icon"
             />
-
+    <Space
+        android:id="@+id/start_screen_call_bottom_space"
+        android:layout_width="20dp"
+        android:layout_height="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 
     <RelativeLayout
@@ -59,10 +64,10 @@
         android:layout_height="wrap_content">
 
         <edu.chalmers.sikkr.frontend.TintFeedbackButton
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:id="@+id/recordButton"
-            android:background ="@drawable/redrec"
+            android:background ="@drawable/rec_button"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"
