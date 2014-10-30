@@ -174,7 +174,7 @@ public class LatestCallsActivity extends Activity {
 
             }
 
-            String callDate = DateDiffUtility.callDateToString(Long.parseLong( list.get(i).getCallDate()));
+            String callDate = DateDiffUtility.callDateToString(Long.parseLong( list.get(i).getCallDate()), context);
             holder.callTypeAmountAndDate.setText(list.get(i).getCallTypeAmount()<2 ? "" + callDate : "(" + list.get(i).getCallTypeAmount() + ")" + "\n" +  callDate);
 
 
