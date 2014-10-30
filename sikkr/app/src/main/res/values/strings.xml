@@ -83,6 +83,37 @@
         <item>clpa49</item>
         <item>clpa50</item>
     </string-array>
+
+    <string-array name="Tele2" translatable="false">
+        <item>http://mmsc.tele2.se</item>
+        <item>130.244.202.30</item>
+        <item>8080</item>
+    </string-array>
+
+    <string-array name="Telia" translatable="false">
+        <item>http://mmss/</item>
+        <item>193.209.134.132</item>
+        <item>8080</item>
+    </string-array>
+
+    <string-array name="Telenor" translatable="false">
+        <item>http://mms/</item>
+        <item>172.030.253.241</item>
+        <item>8799</item>
+    </string-array>
+
+    <string-array name="Halebop" translatable="false">
+        <item>http://mmss/</item>
+        <item>193.209.134.132</item>
+        <item>80</item>
+    </string-array>
+
+    <string-array name="Tre" translatable="false">
+        <item>http://mms.tre.se</item>
+        <item>mmsproxy.tre.se</item>
+        <item>8799</item>
+    </string-array>
+
     <color name="background_color">#ECEAE0</color>
     <color name="light_yellow">#CCFF00</color>
     <color name = "blue">#abcaf0</color>

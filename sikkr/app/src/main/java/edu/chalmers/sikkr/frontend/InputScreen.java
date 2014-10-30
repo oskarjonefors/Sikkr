@@ -24,7 +24,7 @@ import edu.chalmers.sikkr.R;
  * Created by Jingis on 2014-10-22.
  */
 public class InputScreen extends Activity {
-    private int operator;
+    private String operator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,38 +38,26 @@ public class InputScreen extends Activity {
 
     private void setupSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.operator_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.operator_spinner, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
+        //Save the spinners value and save it to operator variable
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                operator = getOperator((String) parent.getItemAtPosition(pos));
+                operator = (String) parent.getItemAtPosition(pos);
             }
             public void onNothingSelected(AdapterView<?> parent) {
-                operator = 1;
+                operator = "Tele2/Comviq";
             }
         });
     }
 
-    private int getOperator(String chosenOperator) {
-        switch (chosenOperator) {
-            case("Tele2/Comviq"): return 1;
-            case("Telia"): return 2;
-            case("Telenor"): return 3;
-            case("Halebop"): return 4;
-            case("Tre"): return 5;
-            default : return 0;
-        }
-    }
-
     private void numberExist() {
-        File f = new File(getFilesDir(), "number");
-        if(f.exists()) {
+        File f1 = new File(getFilesDir(), "number");
+        File f2 = new File(getFilesDir(), "operator");
+        if(f1.exists() && f2.exists()) {
             Intent intent = new Intent(this, StartActivity.class);
             startActivity(intent);
             finish();
@@ -77,28 +65,54 @@ public class InputScreen extends Activity {
     }
 
     public void enterNbr(View view) {
-        EditText tv = ((EditText)findViewById(R.id.editText));
+        final EditText tv = ((EditText)findViewById(R.id.editText));
         final String savedNbr = tv.getText().toString();
+        Toast.makeText(this, "Number = " + savedNbr + "\n" + " Operator= " + operator,Toast.LENGTH_SHORT).show();
         final File parent = getFilesDir();
-        final File file = new File(parent, "number");
+        final File numberFile = new File(parent, "number");
+        final File operatorFile = new File(parent, "operator");
+        BufferedWriter numberWriter = null, operatorWriter = null;
 
         try {
             if (!parent.exists() && !parent.mkdirs()) {
                 throw new IOException("Could not create parent folder");
             }
 
-            if (!file.exists() && !file.createNewFile()) {
-                throw new IOException("Could not create file");
+            if (!numberFile.exists() && !numberFile.createNewFile()) {
+                throw new IOException("Could not create number file");
             }
 
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-            writer.append(savedNbr + System.getProperty ("line.separator") + operator);
-            writer.newLine();
-            writer.flush();
-            writer.close();
+            if (!operatorFile.exists() && !operatorFile.createNewFile()) {
+                throw new IOException("Could not create operator file");
+            }
+
+            numberWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(numberFile)));
+            operatorWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(operatorFile)));
+            numberWriter.append(savedNbr);
+            numberWriter.newLine();
+            numberWriter.flush();
+
+            operatorWriter.append(operator);
+            operatorWriter.newLine();
+            operatorWriter.flush();
         } catch (Exception e) {
             Toast.makeText(this, "Exception when creating file", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+        } finally {
+            if (numberWriter != null) {
+                try {
+                    numberWriter.close();
+                } catch (IOException e) {
+                    Toast.makeText(this, "Exception when creating file", Toast.LENGTH_SHORT).show();
+                }
+            }
+            if (operatorWriter != null) {
+                try {
+                    operatorWriter.close();
+                } catch (IOException e) {
+                    Toast.makeText(this, "Exception when creating file", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
         numberExist();
     }

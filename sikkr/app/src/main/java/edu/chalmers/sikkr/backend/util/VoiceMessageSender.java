@@ -9,14 +9,19 @@ import com.klinker.android.send_message.Message;
 import com.klinker.android.send_message.Settings;
 import com.klinker.android.send_message.Transaction;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.MessageNotSentException;
 import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
@@ -42,16 +47,42 @@ public class VoiceMessageSender {
     }
 
     private void setup(Context context) {
+        BufferedReader reader;
+        String operator;
+        String[] operatorArray;
         if (context == null) {
             throw new InvalidParameterException("Cannot create instance with null as context");
         }
         this.context = context;
 
-        /* Configure MMS settings - hard-coded for now */
+        LogUtility.writeLogFile("VoiceMessageSender", "Received non-null context, proceeding");
+
+        /* read what operator this phone is using*/
+        try {
+            LogUtility.writeLogFile("VoiceMessageSender", "Trying to create a BufferedReader");
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(context.getFilesDir(), "operator"))));
+            LogUtility.writeLogFile("VoiceMessageSender", "Trying to read from our BufferedReader");
+            operator = reader.readLine();
+            LogUtility.writeLogFile("VoiceMessageSender", "We have read the desired line from our BufferedReader");
+            reader.close();
+            LogUtility.writeLogFile("VoiceMessageSender", "We have closed the buffered reader. We received the line: \""+operator+"\"");
+        } catch (Exception e) {
+            LogUtility.writeLogFile("VoiceMessageSender", e);
+            return;
+        }
+
+        operatorArray = getOperatorArray(operator);
+        if (operatorArray == null) {
+            throw new IllegalStateException("The client is required to have an operator");
+        }
+
+        LogUtility.writeLogFile("VoiceMessageSender", "Setting up MMS settings");
+        /* Configure MMS settings  */
         mmsSettings = new Settings();
-        mmsSettings.setMmsc("http://mmsc.tele2.se");
-        mmsSettings.setProxy("130.244.202.30");
-        mmsSettings.setPort("8080");
+        mmsSettings.setMmsc(operatorArray[0]);
+        mmsSettings.setProxy(operatorArray[1]);
+        mmsSettings.setPort(operatorArray[2]);
+        LogUtility.writeLogFile("VoiceMessageSender", "MMS Settings are set up");
     }
 
     private byte[] getBytes(InputStream inputStream) throws IOException {
@@ -146,4 +177,29 @@ public class VoiceMessageSender {
     public static void addInboxDoneLoadingListener(InboxDoneLoadingListener listener) {
         singleton.listeners.add(listener);
     }
+
+    private String[] getOperatorArray(String operator) {
+        String[] operatorArray;
+        switch (operator.toLowerCase()) {
+            case "tele2/comviq":
+                operatorArray = context.getResources().getStringArray(R.array.Tele2);
+                break;
+            case "telia":
+                operatorArray = context.getResources().getStringArray(R.array.Telia);
+                break;
+            case "halebop":
+                operatorArray = context.getResources().getStringArray(R.array.Halebop);
+                break;
+            case "telenor":
+                operatorArray = context.getResources().getStringArray(R.array.Telenor);
+                break;
+            case "tre":
+                operatorArray = context.getResources().getStringArray(R.array.Tre);
+                break;
+            default:
+                operatorArray = null;
+        }
+        return operatorArray;
+    }
+
 }
