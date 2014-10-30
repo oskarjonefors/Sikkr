@@ -10,14 +10,8 @@ import edu.chalmers.sikkr.backend.util.MessageUtils;
  */
 public class Conversation {
     private String phoneNbr;
-    private String fixedNumber;
+    private final String fixedNumber;
     final private Set<ListableMessage> conversation;
-
-    private Conversation(String address, String fixedNumber) {
-        conversation = new TreeSet<>();
-        this.phoneNbr = address;
-        this.fixedNumber = fixedNumber;
-    }
 
     public Conversation(String address, boolean fixed) {
         conversation = new TreeSet<>();
