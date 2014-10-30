@@ -1,6 +1,5 @@
 package edu.chalmers.sikkr.backend.messages;
 
-import android.content.Context;
 import android.net.Uri;
 
 import java.util.Calendar;
@@ -15,17 +14,15 @@ public class SikkrVoiceMessage extends AbstractMessage implements VoiceMessage {
 
     private final Calendar timestamp;
     private final Uri part;
-    private final Context context;
     private final boolean sent;
 
     private boolean read;
 
-    public SikkrVoiceMessage(final Calendar timestamp, final Uri part, final boolean sent, final Context context) {
+    public SikkrVoiceMessage(final Calendar timestamp, final Uri part, final boolean sent) {
         this.timestamp = timestamp;
         this.part = part;
         this.sent = sent;
         this.read = false;
-        this.context = context;
     }
 
 
