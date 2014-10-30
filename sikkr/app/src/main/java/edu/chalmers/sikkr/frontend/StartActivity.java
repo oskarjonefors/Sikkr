@@ -69,7 +69,7 @@ public class StartActivity extends Activity {
                 startActivity(intent);
                 break;
             case R.id.message:
-                intent = new Intent(this, SMS_Activity.class);
+                intent = new Intent(this, MessagesActivity.class);
                 startActivity(intent);
                 break;
             case R.id.fav_contacts:
@@ -143,7 +143,7 @@ public class StartActivity extends Activity {
             startActivity(intent);
         } else if (getDifference(text, getString(R.string.three)) <= 1 || getDifference(text, getString(R.string.messages)) <= 2) {
             TextToSpeechUtility.readAloud(getString(R.string.entering) + " " + getString(R.string.messages));
-            intent = new Intent(this, SMS_Activity.class);
+            intent = new Intent(this, MessagesActivity.class);
             startActivity(intent);
         } else if (getDifference(text, getString(R.string.four)) <= 1 || getDifference(text, getString(R.string.contacts)) <= 2) {
             words = text.split(" ");

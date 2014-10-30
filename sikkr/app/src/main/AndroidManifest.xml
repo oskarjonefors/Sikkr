@@ -55,7 +55,7 @@
             android:label="contact_grid_activity" >
         </activity>
         <activity
-            android:name=".frontend.SMS_Activity"
+            android:name=".frontend.MessagesActivity"
             android:configChanges="orientation|screenSize"
             android:label="Sms" >
         </activity>

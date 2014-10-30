@@ -21,7 +21,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -48,7 +47,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
  * Activity for showing the sms inbox
  */
 
-public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
+public class MessagesActivity extends Activity implements InboxDoneLoadingListener {
     private static List<Conversation> smsList;
     private SmsViewAdapter adapter;
 
@@ -189,7 +188,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
         private final int layoutId;
 
         private SmsViewAdapter(Context context, int layoutId, List<Conversation> list) {
-            super(SMS_Activity.this, layoutId, list);
+            super(MessagesActivity.this, layoutId, list);
             this.context = context;
             this.list = list;
             this.layoutId = layoutId;
@@ -248,7 +247,7 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                 holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage)
                         messages[messages.length - 1]).getTimestamp().getTimeInMillis(), context));
             } catch (Exception e) {
-                LogUtility.writeLogFile("SmsViewAdapterLogs", e, SMS_Activity.this);
+                LogUtility.writeLogFile("SmsViewAdapterLogs", e, MessagesActivity.this);
             }
 
             return view;
