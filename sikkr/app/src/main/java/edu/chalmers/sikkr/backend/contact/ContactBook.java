@@ -224,7 +224,7 @@ public class ContactBook implements ProgressListenable {
      *
      * @return  A matching contact if found, or null if none is found.
      */
-    Contact getClosestMatch(String searchPattern) {
+    public Contact getClosestMatch(String searchPattern) {
         final List<Contact> matches = getClosestMatches(searchPattern);
         if (matches == null) {
             return null;
@@ -248,7 +248,7 @@ public class ContactBook implements ProgressListenable {
      * @param searchPattern If search pattern is null, null will be returned.
      * @return  List of matching contacts. This list will be empty if none are found.
      */
-    List<Contact> getClosestMatches(String searchPattern) {
+    public List<Contact> getClosestMatches(String searchPattern) {
 
         List<String> matches = FuzzySearchUtility.getSearchResults(searchPattern, contactNameMap.keySet());
 
