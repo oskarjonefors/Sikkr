@@ -182,7 +182,9 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
         }
     }
 
-    //Inner adapter class
+    /**
+     * Adapter class to handle filling the layout
+     */
     public class SmsViewAdapter extends ArrayAdapter<Conversation> {
 
         private final Context context;

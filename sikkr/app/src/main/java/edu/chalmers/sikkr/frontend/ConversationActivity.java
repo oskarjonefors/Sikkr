@@ -113,7 +113,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     }
 
     /**
-     * Method to makee the recording button appear and the other buttons dissapear
+     * Method to make the recording button appear and the other buttons dissapear
      */
     private void setButtonVisability() {
         sendButton = (ImageButton) findViewById(R.id.conversation_send);
@@ -129,7 +129,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     }
 
     /**
-     * Mehtod to be run in onCreate. Setup all thing needed for this activity.
+     * Method to be run in onCreate. Setup all thing needed for this activity.
      */
     public void createConversationLayout(){
         final Bundle bundle = getIntent().getExtras();

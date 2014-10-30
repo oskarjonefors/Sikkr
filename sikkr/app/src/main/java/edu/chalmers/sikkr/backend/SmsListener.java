@@ -14,7 +14,8 @@ import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 
 /**
- * Created by Jesper on 2014-10-17.
+ * A class to handle incoming SMS
+ * @author Jesper Olsson
  */
 
 public class SmsListener extends BroadcastReceiver {
@@ -24,6 +25,8 @@ public class SmsListener extends BroadcastReceiver {
         IntentFilter filter1 = new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
         context.registerReceiver(SmsListener.this, filter1);
     }
+
+    @Override
     public void onReceive(Context context, Intent intent){
         if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(intent.getAction())) {
             for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
