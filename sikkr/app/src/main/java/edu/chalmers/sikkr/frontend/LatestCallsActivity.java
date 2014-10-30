@@ -162,10 +162,12 @@ public class LatestCallsActivity extends Activity {
                     holder.contactDrawable = null;
                     holder.contactImage.setImageDrawable(null);
                 }
+                view.setOnClickListener(new ContactGridClickListener(contact));
             } else {
                 holder.contact = null;
                 holder.contactDrawable = null;
                 holder.contactImage.setImageDrawable(null);
+                view.setOnClickListener(new ContactGridClickListener(list.get(i).getCallNumber()));
             }
 
             String callDate = DateDiffUtility.callDateToString(Long.parseLong( list.get(i).getCallDate()), LatestCallsActivity.this);
