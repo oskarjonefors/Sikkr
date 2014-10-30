@@ -3,6 +3,7 @@ package edu.chalmers.sikkr.frontend;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -121,11 +122,13 @@ public class ContactActivity extends Activity {
         switch (recorder.getRecordingState()) {
             case RESET:
                 recorder.startRecording();
-                recordButton.setBackgroundResource(R.drawable.stop_record);
+                recordButton.setBackgroundResource(R.drawable.rec_button_active);
+                AnimationDrawable anim = (AnimationDrawable) recordButton.getBackground();
+                anim.start();
                 break;
             case RECORDING:
                 recorder.stopRecording();
-                recordButton.setBackgroundResource(R.drawable.redrec);
+                recordButton.setVisibility(View.INVISIBLE);
                 sendButton.setVisibility(View.VISIBLE);
                 cancelButton.setVisibility(View.VISIBLE);
                 sendButton.setEnabled(true);
@@ -151,6 +154,8 @@ public class ContactActivity extends Activity {
         cancelButton.setEnabled(false);
         sendButton.setEnabled(false);
         recordButton.setEnabled(true);
+        recordButton.setBackgroundResource(R.drawable.rec_button);
+        recordButton.setVisibility(View.VISIBLE);
     }
     public void sendTheMessage(View v) {
         try {
