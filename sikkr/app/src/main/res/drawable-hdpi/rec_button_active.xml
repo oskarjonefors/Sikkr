@@ -1,0 +1,25 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rec_button_active"
+    android:oneshot="false">
+    <item android:drawable="@drawable/rec_button_active_1" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_2" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_3" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_4" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_5" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_6" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_7" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_8" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_9" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_10" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_11" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_10" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_9" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_8" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_7" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_6" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_5" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_4" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_3" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_2" android:duration="50" />
+    <item android:drawable="@drawable/rec_button_active_1" android:duration="50" />
+</animation-list>
