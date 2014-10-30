@@ -22,8 +22,14 @@
     <string name="found_no_contact">Found no matching contact.</string>
     <string name="unknown_command">Unknown command</string>
     <string name="entering">entering</string>
-    <string name="title_activity_conversation">ConversationActivity</string>
-    <string name="title_activity_latest_calls">LatestCallsActivity</string>
+
+    <string name="weeks_abbrev">w</string>
+    <string name="days_abbrev">d</string>
+    <string name="hours_abbrev">h</string>
+    <string name="minutes_abbrev">min</string>
+    <string name="earlier">Earlier</string>
+    <string name="just_now">Just now</string>
+
     <string-array name="clipart_list" translatable="false">
         <item>clpa01</item>
         <item>clpa02</item>
