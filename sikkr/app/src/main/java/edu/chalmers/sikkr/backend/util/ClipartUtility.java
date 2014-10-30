@@ -24,18 +24,16 @@ import edu.chalmers.sikkr.R;
  */
 public class ClipartUtility {
 
-    public final static String TAG = "ClipartUtility";
+    private final static String TAG = "ClipartUtility";
     private final static String FILE_NAME = "contact_clipart_connections.ser";
-    private Map<String,String> regMap;
-    private Context context;
-    private String mapFilePath;
+    private final Map<String,String> regMap;
+    private final Context context;
+    private final String mapFilePath;
 
     public ClipartUtility(Context context) {
         mapFilePath = getDataDirectory() + FILE_NAME;
         regMap = getRegMap();
         this.context = context;
-        Resources res = context.getResources();
-
     }
 
     private Map<String, String> getRegMap() {
@@ -73,7 +71,7 @@ public class ClipartUtility {
     public void saveChanges() {
         try {
 
-            File mapFile = new File("mapFilePath");
+            File mapFile = new File(mapFilePath);
             if (!mapFile.exists()) {
                 File dir = new File(getDataDirectory());
                 dir.mkdirs();
@@ -127,11 +125,7 @@ public class ClipartUtility {
         }
     }
 
-    private String getImageDirectory() {
-        return null;
-    }
-
-    public static String getDataDirectory() {
+    private static String getDataDirectory() {
         String dataPath;
         if(Environment.getExternalStorageState().equals("mounted")){
             dataPath = Environment.getExternalStorageDirectory().getAbsolutePath();

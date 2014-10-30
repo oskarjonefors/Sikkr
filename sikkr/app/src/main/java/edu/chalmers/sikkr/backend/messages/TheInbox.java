@@ -227,13 +227,8 @@ public class TheInbox implements ProgressListenable {
         public InboxDoneLoadingListener[] listeners;
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
         protected Boolean doInBackground(InboxDoneLoadingListener... params) {
-            boolean success = false;
+            boolean success = true;
             listeners = params;
             LogUtility.writeLogFile("load_inbox_throws", "Hämtar och sparar meddelanden från servern");
             try {

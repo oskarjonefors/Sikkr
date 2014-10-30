@@ -3,7 +3,7 @@ package edu.chalmers.sikkr.backend.messages;
 import android.net.Uri;
 
 /**
- * Created by ivaldi on 2014-10-01.
+ * @author Oskar Jönefors
  */
 public interface VoiceMessage extends ListableMessage {
 
