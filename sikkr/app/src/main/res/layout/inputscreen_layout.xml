@@ -10,7 +10,8 @@
         android:layout_height="80dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/sikkr_logo"/>
+        android:src="@drawable/sikkr_logo"
+        android:id="@+id/imageView3" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -18,7 +19,7 @@
         android:inputType="phone"
         android:ems="10"
         android:id="@+id/editText"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -27,16 +28,37 @@
         android:text="@string/enter_your_phone_number"
         android:id="@+id/textView"
         android:textSize="25dp"
-        android:layout_above="@+id/editText"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/imageView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="53dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/accept"
         android:id="@+id/button"
-        android:layout_below="@+id/editText"
-        android:layout_centerHorizontal="true"
         android:textSize="25dp"
-        android:onClick="enterNbr"/>
+        android:onClick="enterNbr"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="70dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/operator_spinner"
+        android:spinnerMode="dropdown"
+        android:layout_below="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_alignEnd="@+id/textView2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select your operator"
+        android:id="@+id/textView2"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="25dp" />
+
 </RelativeLayout>

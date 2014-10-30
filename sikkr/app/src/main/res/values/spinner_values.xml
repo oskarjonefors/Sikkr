@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="operator_spinner" translatable="false">
+
+        <item>Tele2/Comviq</item>
+        <item>Telia</item>
+        <item>Telenor</item>
+        <item>Halebop</item>
+        <item>Tre</item>
+
+    </string-array>
+
+</resources>
