@@ -19,7 +19,9 @@ import java.io.IOException;
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
+import edu.chalmers.sikkr.backend.messages.PlaybackListener;
 import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.util.SoundClipPlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
@@ -121,6 +123,7 @@ public class ContactActivity extends Activity {
     public void recordTheMessage(View v){
         switch (recorder.getRecordingState()) {
             case RESET:
+                SoundClipPlayer.playSound(this, R.raw.rec_beepbeep, new RecordingWaiter());
                 recorder.startRecording();
                 recordButton.setBackgroundResource(R.drawable.rec_button_active);
                 AnimationDrawable anim = (AnimationDrawable) recordButton.getBackground();
@@ -174,6 +177,24 @@ public class ContactActivity extends Activity {
             LogUtility.writeLogFile("ContactActivity", e, this);
         }
         hideButtons();
+    }
+
+    class RecordingWaiter implements PlaybackListener {
+
+        @Override
+        public void playbackStarted() {
+            /* Do a little dance */
+        }
+
+        @Override
+        public void playbackDone() {
+            recorder.startRecording();
+        }
+
+        @Override
+        public void playbackError() {
+            playbackDone();
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
@@ -32,9 +33,11 @@ import edu.chalmers.sikkr.backend.messages.Conversation;
 import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
 import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.messages.OneSms;
+import edu.chalmers.sikkr.backend.messages.PlaybackListener;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
+import edu.chalmers.sikkr.backend.util.SoundClipPlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
@@ -165,7 +168,8 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     public void recordMessage(View v){
         switch (recorder.getRecordingState()) {
             case RESET:
-                recorder.startRecording();
+                SoundClipPlayer.playSound(this, R.raw.rec_beepbeep, new RecordingWaiter());
+
                 recordButton.setBackgroundResource(R.drawable.rec_button_active);
                 AnimationDrawable anim = (AnimationDrawable) recordButton.getBackground();
                 anim.start();
@@ -226,5 +230,23 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
         LogUtility.writeLogFile("ConversationActivity", "Executing method onDone");
         adapter.clear();
         adapter.addAll(thisConversation.getSmsList());
+    }
+
+    class RecordingWaiter implements PlaybackListener {
+
+        @Override
+        public void playbackStarted() {
+            /* Do a little dance */
+        }
+
+        @Override
+        public void playbackDone() {
+            recorder.startRecording();
+        }
+
+        @Override
+        public void playbackError() {
+            playbackDone();
+        }
     }
 }
