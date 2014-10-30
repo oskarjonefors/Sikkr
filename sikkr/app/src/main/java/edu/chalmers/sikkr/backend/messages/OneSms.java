@@ -9,9 +9,9 @@ import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
  * Created by Jingis on 2014-09-30.
  */
 public class OneSms extends AbstractMessage {
-    private String message;
-    private Calendar calendar;
-    private boolean isSent;
+    private final String message;
+    private final Calendar calendar;
+    private final boolean isSent;
     private boolean isRead;
 
     public OneSms(String msg, String date, boolean isSent) {
