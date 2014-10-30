@@ -25,6 +25,7 @@ import java.util.TreeSet;
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.util.ClipartUtility;
 import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
+import edu.chalmers.sikkr.backend.util.MessageUtils;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 
 import static android.provider.ContactsContract.CommonDataKinds.Phone;
@@ -37,10 +38,10 @@ public class ContactBook implements ProgressListenable {
     private Context context;
 
     /* Maps a contact ID to a contact */
-    private final Map<String, Contact> contacts = new TreeMap<String, Contact>();
+    private final Map<String, Contact> contacts = new TreeMap<>();
 
     /* This map uses contact name as key and contact id as value */
-    private final Map<String, String> contactNameMap = new TreeMap<String, String>();
+    private final Map<String, String> contactNameMap = new TreeMap<>();
 
     /* Chooses display pictures for the contacts who do not have display pictures. */
     private ClipartUtility clipartUtility;
@@ -52,7 +53,7 @@ public class ContactBook implements ProgressListenable {
     private final static ContactBook singleton = new ContactBook();
 
     private ContactBook() {
-        listeners = new ArrayList<ProgressListener>();
+        listeners = new ArrayList<>();
     }
 
     /* These characters are the only valid initial characters that the contacts will be sorted by */
@@ -165,9 +166,9 @@ public class ContactBook implements ProgressListenable {
      */
     public Set<Character> getInitialLetters() {
 
-        Set<Character> validChars = new HashSet<Character>(Arrays.asList(VALID_INITIAL_CHARACTERS));
+        Set<Character> validChars = new HashSet<>(Arrays.asList(VALID_INITIAL_CHARACTERS));
 
-        final Set<Character> letters = new TreeSet<Character>();
+        final Set<Character> letters = new TreeSet<>();
         for (final Contact contact : contacts.values()) {
             Character c = Character.toUpperCase(contact.getName().charAt(0));
 
@@ -184,7 +185,7 @@ public class ContactBook implements ProgressListenable {
      * Get a list of all the contacts in the contact book.
      */
     Set<Contact> getContacts() {
-        final Set<Contact> c = new TreeSet<Contact>();
+        final Set<Contact> c = new TreeSet<>();
         for (final Contact contact : contacts.values()) {
             c.add(contact);
         }
@@ -197,7 +198,7 @@ public class ContactBook implements ProgressListenable {
      * @return a set of contacts in alphabetic order.
      */
     public Set<Contact> getContacts(char initialLetter) {
-        final Set<Contact> c = new TreeSet<Contact>();
+        final Set<Contact> c = new TreeSet<>();
         final List<Character> validChars = Arrays.asList(VALID_INITIAL_CHARACTERS);
 
         for (final Contact contact : contacts.values()) {
@@ -214,6 +215,15 @@ public class ContactBook implements ProgressListenable {
 
     public Contact getContact(String id) {
         return contacts.get(id);
+    }
+
+    public Contact getFirstContactByName(CharSequence name) {
+        for (Contact contact : contacts.values()) {
+            if (contact.getName().trim().equals(name)) {
+                return contact;
+            }
+        }
+        return null;
     }
 
     /**
@@ -256,7 +266,7 @@ public class ContactBook implements ProgressListenable {
             return null;
         }
 
-        List<Contact> results = new ArrayList<Contact>();
+        List<Contact> results = new ArrayList<>();
 
         for (String str : matches) {
             results.add(getContact(contactNameMap.get(str)));
@@ -265,7 +275,7 @@ public class ContactBook implements ProgressListenable {
     }
 
     Set<Contact> getFavoriteContacts() {
-        final Set<Contact> favSet = new TreeSet<Contact>();
+        final Set<Contact> favSet = new TreeSet<>();
 
         for (Contact c : contacts.values()) {
             if (c.isFavorite()) {
@@ -277,8 +287,8 @@ public class ContactBook implements ProgressListenable {
     }
 
     public List<Contact> getTopContacts(int nbrOfContacts) {
-        final List<Contact> topList = new ArrayList<Contact>();
-        final List<Contact> favList = new ArrayList<Contact>();
+        final List<Contact> topList = new ArrayList<>();
+        final List<Contact> favList = new ArrayList<>();
         favList.addAll(getFavoriteContacts());
         Collections.sort(favList, new PriorityComparator());
 
@@ -292,7 +302,7 @@ public class ContactBook implements ProgressListenable {
                 topList.add(contact);
             }
 
-            final List<Contact> allList = new ArrayList<Contact>();
+            final List<Contact> allList = new ArrayList<>();
             allList.addAll(getContacts());
 
             Collections.sort(allList, new PriorityComparator());

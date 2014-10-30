@@ -1,14 +1,18 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.BaseColumns;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +28,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
@@ -49,14 +52,14 @@ public class LatestCallsActivity extends Activity {
 
 
     private List<OneCall> createRefinedList (List<OneCall> callList){
-        Map <String, OneCall > map = new LinkedHashMap <String,OneCall>();
+        Map <String, OneCall > map = new LinkedHashMap<>();
         OneCall iCall, jCall;
         String iCallNumber, jCallNumber;
         int iCallType, jCallType;
 
         for (int i = 0; i < callList.size(); i++) {
             iCall = callList.get(i);
-            iCallNumber = iCall.getCallNumber();
+            iCallNumber = MessageUtils.fixNumber(iCall.getCallNumber());
             iCallType = iCall.getCallType();
             LogUtility.writeLogFile("CreateRefinedList", "Found number " + iCallNumber);
 
@@ -66,7 +69,7 @@ public class LatestCallsActivity extends Activity {
                 LogUtility.writeLogFile("CreateRefinedList", "Adding new number to latest calls: " + iCallNumber);
                 for (int j = i + 1; j < callList.size(); j++) {
                     jCall = callList.get(j);
-                    jCallNumber = jCall.getCallNumber();
+                    jCallNumber = MessageUtils.fixNumber(jCall.getCallNumber());
                     jCallType = jCall.getCallType();
 
                     LogUtility.writeLogFile("CreateRefinedList", "Testing number " + iCallNumber
@@ -84,7 +87,7 @@ public class LatestCallsActivity extends Activity {
             }
         }
 
-        return new ArrayList(map.values());
+        return new ArrayList<>(map.values());
 
     }
 
@@ -111,7 +114,7 @@ public class LatestCallsActivity extends Activity {
         ImageView image;
     }
 
-    private class LatestCallItemAdapter extends ArrayAdapter {
+    private class LatestCallItemAdapter extends ArrayAdapter<OneCall> {
         private final Context context;
         private final List<OneCall> list;
         private final int layoutId;
@@ -128,8 +131,7 @@ public class LatestCallsActivity extends Activity {
             View view = convertView;
             final ViewHolder holder;
             Resources res = context.getResources();
-            String contactID = list.get(i).getContactID();
-
+            Contact contact;
 
             if (view == null) {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -144,33 +146,29 @@ public class LatestCallsActivity extends Activity {
                 holder = (ViewHolder) view.getTag();
             }
 
-            if (contactID != null && ContactBook.getSharedInstance().getContact(contactID) != null) {
+            if(list.get(i).getCallNumber().startsWith("-")) {
+                holder.name.setText("Private number");
+            } else {
+                holder.name.setText(getContactNameByNbr(MessageUtils.fixNumber(list.get(i).getCallNumber())));
+            }
 
-                holder.contact = ContactBook.getSharedInstance().getContact(contactID);
-                holder.name.setText(holder.contact.getName());
-
-                if (holder.contact.getPhoto() != null) {
+            contact = ContactBook.getSharedInstance().getFirstContactByName((holder.name.getText() + "").trim());
+            if (contact != null) {
+                holder.contact = contact;
+                if (contact.getPhoto() != null) {
                     holder.contactDrawable = new BitmapDrawable(getResources(), holder.contact.getPhoto());
                     holder.contactImage.setImageDrawable(holder.contactDrawable);
+                } else {
+                    holder.contactDrawable = null;
+                    holder.contactImage.setImageDrawable(null);
                 }
-
-                view.setOnClickListener(new ContactGridClickListener(holder.contact));
-
             } else {
-
-                try{
-
-                    if(Integer.parseInt(list.get(i).getCallNumber())<0){  holder.name.setText("Private number"); }
-
-                    else{  holder.name.setText(list.get(i).getCallNumber()); }
-
-                        holder.contactDrawable = null;
-                        holder.contactImage.setImageDrawable(null);
-
-                }catch (NumberFormatException e){ Log.e("NF-Exeption"," Integer.parseInt in getView "); }
-
+                holder.contact = null;
+                holder.contactDrawable = null;
+                holder.contactImage.setImageDrawable(null);
             }
-            String callDate = DateDiffUtility.callDateToString(Long.parseLong( list.get(i).getCallDate()));
+
+            String callDate = DateDiffUtility.callDateToString(Long.parseLong( list.get(i).getCallDate()), LatestCallsActivity.this);
             holder.callTypeAmountAndDate.setText
                     (list.get(i).getCallTypeAmount()<2 ? "" + callDate : "(" + list.get(i).getCallTypeAmount() + ")" + "\n" +  callDate);
 
@@ -201,6 +199,36 @@ public class LatestCallsActivity extends Activity {
 
             }
             return view;
+        }
+
+        /**
+         * Get the saved contact name related to the number from the phonebook
+         * @param number the number to get the contact name from
+         * @return the name of the contact
+         */
+        public String getContactNameByNbr(String number) {
+            String contact = "";
+
+            Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                    Uri.encode(number));
+            ContentResolver contentResolver = getContentResolver();
+            Cursor cursor = contentResolver.query(uri, new String[]{ BaseColumns._ID,
+                    ContactsContract.PhoneLookup.DISPLAY_NAME}, null, null, null);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                try {
+                    cursor.moveToNext();
+                    contact = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
+                } catch(Exception e){
+                    LogUtility.writeLogFile("getting_contacts_log", e, LatestCallsActivity.this);
+                }
+                finally {
+                    cursor.close();
+                }
+            }
+            if(contact.length() == 0)
+                return number;
+            return contact;
         }
     }
 }

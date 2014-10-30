@@ -80,13 +80,13 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="logger-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="ion-1.1.7" level="project" />
     <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
     <orderEntry type="library" exported="" name="bcprov-jdk15on-1.51" level="project" />
-    <orderEntry type="library" exported="" name="logger-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="android-smsmms-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="androidasync-1.1.6" level="project" />
     <orderEntry type="library" exported="" name="commons-lang3-3.3.2" level="project" />
-    <orderEntry type="library" exported="" name="ion-1.1.7" level="project" />
-    <orderEntry type="library" exported="" name="android-smsmms-1.0.1" level="project" />
   </component>
 </module>
 
