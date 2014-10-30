@@ -105,6 +105,11 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
         }
     }
 
+    /**
+     * OnClick for play button
+     * Will play the latest recieved message
+     * @param view the view that called this method
+     */
     public void readMsg(View view) {
         try {
             ListableMessage message = (ListableMessage) view.getTag();

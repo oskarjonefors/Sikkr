@@ -62,6 +62,9 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
         recorder = VoiceMessageRecorder.getSharedInstance();
         adapter.setNotifyOnChange(true);
 
+        /**
+         * Reciever to handle incoming text messages dynamically
+         */
         BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
