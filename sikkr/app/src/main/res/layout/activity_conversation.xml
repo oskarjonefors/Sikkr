@@ -16,8 +16,8 @@
         android:layout_height="wrap_content">
 
         <edu.chalmers.sikkr.frontend.TintFeedbackButton
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:id="@+id/conversation_record"
             android:background ="@drawable/rec_button"
             android:layout_alignParentBottom="true"
