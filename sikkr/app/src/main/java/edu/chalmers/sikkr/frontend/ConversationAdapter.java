@@ -82,7 +82,8 @@ public class ConversationAdapter extends ArrayAdapter {
         }else{
             holder.playButton.setBackgroundResource(R.drawable.old_message_1);
         }
-        holder.message.setText(DateDiffUtility.callDateToString(list.get(position).getTimestamp().getTimeInMillis()));
+        holder.message.setText(DateDiffUtility.callDateToString(
+                list.get(position).getTimestamp().getTimeInMillis(), context));
         holder.playButton.setTag(list.get(position));
         return view;
     }

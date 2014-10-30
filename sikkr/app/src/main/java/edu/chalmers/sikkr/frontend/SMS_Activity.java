@@ -245,7 +245,8 @@ public class SMS_Activity extends Activity implements InboxDoneLoadingListener {
                 holder.contactName.setTag(i);
 
                 Object[] messages = list.get(i).getSmsList().toArray();
-                holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage) messages[messages.length - 1]).getTimestamp().getTimeInMillis()));
+                holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage)
+                        messages[messages.length - 1]).getTimestamp().getTimeInMillis(), context));
             } catch (Exception e) {
                 LogUtility.writeLogFile("SmsViewAdapterLogs", e, SMS_Activity.this);
             }
