@@ -40,8 +40,9 @@ public interface Contact extends Comparable<Contact> {
     String getDefaultNumber();
 
     /**
-     * Get the priority of the contact, where higher number means more prioritized. This
-     * @return
+     * Get the priority of the contact, where higher number means more prioritized.
+     *
+     * @return  A long value. This may be negative or zero.
      */
     long getPriority();
 
@@ -57,9 +58,5 @@ public interface Contact extends Comparable<Contact> {
      */
     void calculatePriority(boolean isFavorite, int timesContacted, long lastContacted);
 
-    /**
-     * Set whether or not this contact is a favorite.
-     * @param isFavorite
-     */
     void setFavorite(boolean isFavorite);
 }
