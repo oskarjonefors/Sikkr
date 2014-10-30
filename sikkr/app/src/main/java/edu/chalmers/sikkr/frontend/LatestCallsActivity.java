@@ -21,7 +21,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.calls.CallLog;
@@ -29,6 +32,8 @@ import edu.chalmers.sikkr.backend.calls.OneCall;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
+import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.util.MessageUtils;
 
 public class LatestCallsActivity extends Activity {
 
@@ -42,61 +47,53 @@ public class LatestCallsActivity extends Activity {
         createCallLogLayout();
     }
 
-    private void callDateSetter(int i, int counter, List<OneCall> callList, Long callDate){
 
+    private List<OneCall> createRefinedList (List<OneCall> callList){
+        Map <String, OneCall > map = new LinkedHashMap <String,OneCall>();
+        OneCall iCall, jCall;
+        String iCallNumber, jCallNumber;
+        int iCallType, jCallType;
 
-    }
+        for (int i = 0; i < callList.size(); i++) {
+            iCall = callList.get(i);
+            iCallNumber = iCall.getCallNumber();
+            iCallType = iCall.getCallType();
+            LogUtility.writeLogFile("CreateRefinedList", "Found number " + iCallNumber);
 
+            if (!map.containsKey(iCallNumber)) {
+                iCall.setCallTypeAmount(1); //Sätt till ett eftersom det är första gången numret uppkommer
+                map.put(iCallNumber, iCall); //Lägg till nummer eftersom det är första gången det uppkommer
+                LogUtility.writeLogFile("CreateRefinedList", "Adding new number to latest calls: " + iCallNumber);
+                for (int j = i + 1; j < callList.size(); j++) {
+                    jCall = callList.get(j);
+                    jCallNumber = jCall.getCallNumber();
+                    jCallType = jCall.getCallType();
 
-    private List<OneCall> createRefinedcallList (List<OneCall> callList){
-
-        List<OneCall> refinedList = new ArrayList<OneCall>();
-
-        //Vi kollar igenom listan som vi har. har vi två personer av samma id eller samma nummer som ringt flera gånger på rad
-        // så lägger vi in dem i en item
-
-        int i=0;
-        while( i < callList.size() -2 ){
-
-            int counter = 1;
-            long callDate= 12345678910L;
-
-                while (callList.get(i).getCallNumber().equals(callList.get(i + 1).getCallNumber())
-                        && (callList.get(i).getCallType() == callList.get(i + 1).getCallType())) {
-
-                    if (Long.parseLong(callList.get(i).getCallDate()) > Long.parseLong(callList.get(i + 1).getCallDate())) {
-
-                        callDate = Long.parseLong(callList.get(i).getCallDate());
-                        counter++;
-                        i++;
-                        callList.get(i).setCallDate("" + callDate);
-
+                    LogUtility.writeLogFile("CreateRefinedList", "Testing number " + iCallNumber
+                            + " with type " + iCallType + " against " + jCallNumber + " with type "
+                            + jCallType);
+                    if (iCallNumber.equals(jCallNumber)
+                            && iCall.getCallType() == jCallType) {
+                        iCall.setCallTypeAmount(iCall.getCallTypeAmount() + 1);
                     } else {
-
-                        callDate = Long.parseLong(callList.get(i + 1).getCallDate());
-                        counter++;
-                        i++;
-                        callList.get(i).setCallDate("" + callDate);
+                        break;
+                    }
                 }
+            } else {
+                LogUtility.writeLogFile("CreateRefinedList", "The number was already in the list");
             }
-
-            callList.get(i).setCallTypeAmount(counter);
-            refinedList.add(callList.get(i));
-            i++;
-
         }
-        //ta hänsyn till det sista elementet
 
-        return refinedList;
+        return new ArrayList(map.values());
 
     }
-
 
     private void createCallLogLayout() {
 
         List<OneCall> callList = CallLog.getInstance().getCallList();
         Collections.sort(callList);
-        List<OneCall> refinedList = this.createRefinedcallList(callList);
+
+        List<OneCall> refinedList = this.createRefinedList(callList);
 
         ArrayAdapter adapter = new LatestCallItemAdapter(this, R.layout.latest_call_item, refinedList);
         ListView listV = (ListView) findViewById(R.id.listView);
@@ -173,12 +170,9 @@ public class LatestCallsActivity extends Activity {
                 }catch (NumberFormatException e){ Log.e("NF-Exeption"," Integer.parseInt in getView "); }
 
             }
-
-            String callDate = DateDiffUtility.callDateToString(Long.parseLong( list.get(i).getCallDate()), context);
-            holder.callTypeAmountAndDate.setText(list.get(i).getCallTypeAmount()<2 ? "" + callDate : "(" + list.get(i).getCallTypeAmount() + ")" + "\n" +  callDate);
-
-
-
+            String callDate = DateDiffUtility.callDateToString(Long.parseLong( list.get(i).getCallDate()));
+            holder.callTypeAmountAndDate.setText
+                    (list.get(i).getCallTypeAmount()<2 ? "" + callDate : "(" + list.get(i).getCallTypeAmount() + ")" + "\n" +  callDate);
 
             switch (list.get(i).getCallType()) {
                 case android.provider.CallLog.Calls.INCOMING_TYPE:

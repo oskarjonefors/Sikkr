@@ -50,9 +50,10 @@ public class CallLog {
             call.setContactID(getContactIDFromNumber(call.getCallNumber()));
             Log.d("CallLog", "Get ContactID " + call.getContactID());
 
-            if(!isCallOld(call.getCallDate())) {
-                callList.add(call);
+            if(isCallOld(call.getCallDate())) {
+               break;
             }
+            callList.add(call);
         }
         cursor.close();
     }
