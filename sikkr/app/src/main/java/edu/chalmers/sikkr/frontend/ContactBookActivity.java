@@ -13,8 +13,10 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 import edu.chalmers.sikkr.R;
+import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
 import edu.chalmers.sikkr.backend.util.SystemData;
+import edu.chalmers.sikkr.backend.util.TextToSpeechUtility;
 
 
 public class ContactBookActivity extends Activity {
@@ -37,10 +39,16 @@ public class ContactBookActivity extends Activity {
         if(requestCode == SystemData.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (matches.size() > 0) {
-                Intent intent = new Intent(this, ContactGridActivity.class);
-                intent.putExtra("initial_letter", matches.get(0).charAt(0));
-                startActivity(intent);
+                final char firstChar = matches.get(0).charAt(0);
 
+                if(ContactBook.getSharedInstance().getContacts(firstChar).size() > 0) {
+                    Intent intent = new Intent(this, ContactGridActivity.class);
+                    intent.putExtra("initial_letter", firstChar);
+                    startActivity(intent);
+                } else {
+                    TextToSpeechUtility.readAloud(getString(
+                            R.string.found_no_contacts_initial_letter) + " " + firstChar);
+                }
             }
         }
     }

@@ -148,9 +148,16 @@ public class StartActivity extends Activity {
         } else if (getDifference(text, getString(R.string.four)) <= 1 || getDifference(text, getString(R.string.contacts)) <= 2) {
             words = text.split(" ");
             if (words.length > 1) {
-                intent = new Intent(this, ContactGridActivity.class);
-                intent.putExtra("initial_letter", words[1].toLowerCase().charAt(0));
-                startActivity(intent);
+                final char firstChar = words[1].toLowerCase().charAt(0);
+
+                if(ContactBook.getSharedInstance().getContacts(firstChar).size() > 0) {
+                    intent = new Intent(this, ContactGridActivity.class);
+                    intent.putExtra("initial_letter", firstChar);
+                    startActivity(intent);
+                } else {
+                    TextToSpeechUtility.readAloud(getString(
+                            R.string.found_no_contacts_initial_letter) + " " + firstChar);
+                }
             } else {
                 TextToSpeechUtility.readAloud(getString(R.string.entering) + " " + getString(R.string.contacts));
                 intent  = new Intent(this, ContactBookActivity.class);

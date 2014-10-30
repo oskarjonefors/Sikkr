@@ -20,6 +20,7 @@
     <string name="show">show</string>
     <string name="calling">calling</string>
     <string name="found_no_contact">Found no matching contact.</string>
+    <string name="found_no_contacts_initial_letter">Found no contacts with initial letter</string>
     <string name="unknown_command">Unknown command</string>
     <string name="entering">entering</string>
 
