@@ -15,11 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageButton
+        <edu.chalmers.sikkr.frontend.TintFeedbackButton
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:id="@+id/conversation_record"
-            android:background ="@drawable/redrec"
+            android:background ="@drawable/rec_button"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"

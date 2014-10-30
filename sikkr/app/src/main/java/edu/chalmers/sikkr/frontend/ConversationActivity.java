@@ -5,9 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,7 +49,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     private VoiceMessageRecorder recorder;
     private ImageButton sendButton;
     private ImageButton cancelButton;
-    private ImageButton recordButton;
+    private Button recordButton;
     ArrayAdapter adapter;
 
     @Override
@@ -113,7 +115,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     private void setButtonVisability() {
         sendButton = (ImageButton) findViewById(R.id.conversation_send);
         cancelButton = (ImageButton) findViewById(R.id.conversation_cancel);
-        recordButton = (ImageButton) findViewById(R.id.conversation_record);
+        recordButton = (Button) findViewById(R.id.conversation_record);
         recordButton.setVisibility(View.VISIBLE);
         sendButton.setVisibility(View.GONE);
         sendButton.setEnabled(false);
@@ -164,11 +166,13 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
         switch (recorder.getRecordingState()) {
             case RESET:
                 recorder.startRecording();
-                recordButton.setBackgroundResource(R.drawable.stop_record);
+                recordButton.setBackgroundResource(R.drawable.rec_button_active);
+                AnimationDrawable anim = (AnimationDrawable) recordButton.getBackground();
+                anim.start();
                 break;
             case RECORDING:
+                recordButton.setVisibility(View.INVISIBLE);
                 recorder.stopRecording();
-                recordButton.setBackgroundResource(R.drawable.redrec);
                 sendButton.setVisibility(View.VISIBLE);
                 cancelButton.setVisibility(View.VISIBLE);
                 sendButton.setEnabled(true);
@@ -197,6 +201,8 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
         cancelButton.setEnabled(false);
         sendButton.setEnabled(false);
         recordButton.setEnabled(true);
+        recordButton.setBackgroundResource(R.drawable.rec_button);
+        recordButton.setVisibility(View.VISIBLE);
     }
 
     /**
