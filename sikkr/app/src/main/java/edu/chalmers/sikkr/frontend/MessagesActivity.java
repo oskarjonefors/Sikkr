@@ -104,7 +104,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
             TheInbox.getInstance().loadInbox(this);
             msgList = TheInbox.getInstance().getMessageInbox();
             findViewById(R.id.inboxProgressBar).setVisibility(View.GONE);
-            adapter = new SmsViewAdapter(this, R.layout.sms_item, msgList);
+            adapter = new SmsViewAdapter(this, msgList);
             ListView listV = (ListView) findViewById(R.id.listView);
             listV.setAdapter(adapter);
         } catch (Exception e) {
@@ -194,13 +194,11 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
 
         private final Context context;
         private final List<Conversation> list;
-        private final int layoutId;
 
-        private SmsViewAdapter(Context context, int layoutId, List<Conversation> list) {
-            super(MessagesActivity.this, layoutId, list);
+        private SmsViewAdapter(Context context, List<Conversation> list) {
+            super(MessagesActivity.this, R.layout.sms_item, list);
             this.context = context;
             this.list = list;
-            this.layoutId = layoutId;
         }
 
         @Override
@@ -216,7 +214,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
 
                 if (view == null) {
                     LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-                    view = inflater.inflate(layoutId, viewGroup, false);
+                    view = inflater.inflate(R.layout.sms_item, viewGroup, false);
                     holder = new ViewHolder();
                     holder.contactName = (TextView) view.findViewById(R.id.sender);
                     holder.date = (TextView) view.findViewById(R.id.date);

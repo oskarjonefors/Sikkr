@@ -131,7 +131,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
             tv.setText(bundle.getString("name"));
             messages.addAll(thisConversation.getSmsList());
             Collections.sort(messages);
-            adapter = new ConversationAdapter(this, R.layout.conversationitem_left,messages );
+            adapter = new ConversationAdapter(this, messages );
             ListView listV = (ListView)findViewById(R.id.conversation_list);
             listV.setAdapter(adapter);
         }

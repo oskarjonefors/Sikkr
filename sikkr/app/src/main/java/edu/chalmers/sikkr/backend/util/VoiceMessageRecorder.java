@@ -153,7 +153,7 @@ public class VoiceMessageRecorder {
 
             Log.d(TAG, "MMS timestamp set to " + c);
             state = RecordingState.RESET;
-            return new SikkrRecording(c, Uri.fromFile(new File(currentFilePath)), true);
+            return new SikkrRecording(c, Uri.fromFile(new File(currentFilePath)));
         } else {
             throw new IllegalArgumentException(state == RecordingState.RECORDING ? "Cannot get voice message," +
                     "recording has not been stopped." : "Cannot get voice message since one has not been recorded.");

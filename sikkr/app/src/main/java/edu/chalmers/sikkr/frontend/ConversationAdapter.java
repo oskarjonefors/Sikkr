@@ -20,13 +20,11 @@ import edu.chalmers.sikkr.backend.util.DateDiffUtility;
  */
 public class ConversationAdapter extends ArrayAdapter {
     private final Context context;
-    private final int layoutId;
     private final List<ListableMessage> list;
 
-    public ConversationAdapter(Context context, int layoutId, List list){
-        super(context, layoutId, list);
+    public ConversationAdapter(Context context, List list){
+        super(context, R.layout.conversationitem_left, list);
         this.context = context;
-        this.layoutId = layoutId;
         this.list = list;
     }
 
@@ -43,7 +41,7 @@ public class ConversationAdapter extends ArrayAdapter {
         final ViewHolder holder;
         if(view == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            view = inflater.inflate(layoutId, parent, false);
+            view = inflater.inflate(R.layout.conversationitem_left, parent, false);
             holder = new ViewHolder();
             holder.message = (TextView)view.findViewById(R.id.conversation_message);
 

@@ -91,7 +91,7 @@ public class LatestCallsActivity extends Activity {
 
         List<OneCall> refinedList = this.createRefinedList(callList);
 
-        ArrayAdapter adapter = new LatestCallItemAdapter(this, R.layout.latest_call_item, refinedList);
+        ArrayAdapter adapter = new LatestCallItemAdapter(this, refinedList);
         ListView listV = (ListView) findViewById(R.id.listView);
         listV.setAdapter(adapter);
     }
@@ -110,13 +110,11 @@ public class LatestCallsActivity extends Activity {
     private class LatestCallItemAdapter extends ArrayAdapter<OneCall> {
         private final Context context;
         private final List<OneCall> list;
-        private final int layoutId;
 
-        private LatestCallItemAdapter(Context context, int layoutId, List<OneCall> list) {
-            super(LatestCallsActivity.this, layoutId, list);
+        private LatestCallItemAdapter(Context context, List<OneCall> list) {
+            super(LatestCallsActivity.this, R.layout.latest_call_item, list);
             this.context = context;
             this.list = list;
-            this.layoutId = layoutId;
         }
 
         @Override
@@ -128,7 +126,7 @@ public class LatestCallsActivity extends Activity {
 
             if (view == null) {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-                view = inflater.inflate(layoutId, viewGroup, false);
+                view = inflater.inflate(R.layout.latest_call_item, viewGroup, false);
                 holder = new ViewHolder();
                 holder.name = (TextView) view.findViewById(R.id.nameText);
                 holder.contactImage = (ImageView) view.findViewById(R.id.latest_call_image);
