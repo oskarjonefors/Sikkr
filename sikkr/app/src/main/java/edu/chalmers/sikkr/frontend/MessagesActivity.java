@@ -14,6 +14,7 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,11 +45,11 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
 
 /**
- * Activity for showing the sms inbox
+ * Activity for showing the message inbox
  */
 
 public class MessagesActivity extends Activity implements InboxDoneLoadingListener {
-    private static List<Conversation> smsList;
+    private static List<Conversation> msgList;
     private SmsViewAdapter adapter;
 
     @Override
@@ -93,12 +94,12 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
         try {
             TheInbox.getInstance().loadInbox(this);
             LogUtility.writeLogFile("Loaded_message_inbox_activity", "Loading the message inbox list");
-            smsList = TheInbox.getInstance().getMessageInbox();
+            msgList = TheInbox.getInstance().getMessageInbox();
             LogUtility.writeLogFile("Loaded_message_inbox_activity", "Loaded the message inbox list");
             findViewById(R.id.inboxProgressBar).setVisibility(View.GONE);
             LogUtility.writeLogFile("Loaded_message_inbox_activity", "Removed the progressbar");
-            LogUtility.writeLogFile("smLsiT", "" + smsList.size());
-            adapter = new SmsViewAdapter(this, R.layout.sms_item, smsList);
+            LogUtility.writeLogFile("smLsiT", "" + msgList.size());
+            adapter = new SmsViewAdapter(this, R.layout.sms_item, msgList);
             ListView listV = (ListView) findViewById(R.id.listView);
             listV.setAdapter(adapter);
         } catch (Exception e) {
@@ -129,7 +130,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
     public void clickedText(View view) {
         try {
             final int position = (Integer) view.getTag();
-            final Conversation conversation = smsList.get(position);
+            final Conversation conversation = msgList.get(position);
             final String address = conversation.hasLocalNumber() ? conversation.getAddress()
                     : conversation.getFixedNumber();
 
@@ -178,7 +179,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
         try {
             adapter.notifyDataSetChanged();
         } catch (Throwable t) {
-            LogUtility.writeLogFile("Loaded_message_inbox_activity", t, this);
+            Log.e("")
         }
     }
 
