@@ -38,7 +38,6 @@ import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
-import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 
@@ -102,12 +101,8 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
     private void createSmsLayout() {
         try {
             TheInbox.getInstance().loadInbox(this);
-            LogUtility.writeLogFile("Loaded_message_inbox_activity", "Loading the message inbox list");
             msgList = TheInbox.getInstance().getMessageInbox();
-            LogUtility.writeLogFile("Loaded_message_inbox_activity", "Loaded the message inbox list");
             findViewById(R.id.inboxProgressBar).setVisibility(View.GONE);
-            LogUtility.writeLogFile("Loaded_message_inbox_activity", "Removed the progressbar");
-            LogUtility.writeLogFile("smLsiT", "" + msgList.size());
             adapter = new SmsViewAdapter(this, R.layout.sms_item, msgList);
             ListView listV = (ListView) findViewById(R.id.listView);
             listV.setAdapter(adapter);

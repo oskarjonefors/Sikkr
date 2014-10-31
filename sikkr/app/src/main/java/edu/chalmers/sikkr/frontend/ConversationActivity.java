@@ -108,7 +108,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
                 recorder.discardRecording();
             }
         } catch (IOException e) {
-            LogUtility.writeLogFile("ConversationActivityLogs", e);
+
         }
     }
 
@@ -156,7 +156,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
             recorder.discardRecording();
             hideButtons();
         } catch (IOException e) {
-            LogUtility.writeLogFile("ConversationActivity", e);
+
         }
     }
 
@@ -230,7 +230,6 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
 
     @Override
     public void onDone() {
-        LogUtility.writeLogFile("ConversationActivity", "Executing method onDone");
         adapter.clear();
         adapter.addAll(thisConversation.getSmsList());
     }

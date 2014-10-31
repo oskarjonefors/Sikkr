@@ -94,7 +94,6 @@ public class VoiceMessagePlayer implements MediaPlayer.OnCompletionListener {
             player.start();
             listener.playbackStarted();
         }  catch (Exception e) {
-            LogUtility.writeLogFile("VoiceMessagePlayerLog", e);
             Log.e(TAG, "Failed to prepare MediaPlayer.");
         }
     }
