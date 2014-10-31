@@ -15,7 +15,6 @@ import java.util.TreeMap;
 
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.ProgressListenable;
-import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.MessageUtils;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
@@ -123,7 +122,6 @@ public class TheInbox implements ProgressListenable {
     }
 
     private void collectAndSaveServerMessages() throws Exception {
-        LogUtility.writeLogFile("TheInbox", "Collecting messages from the server and saving them");
         final List<ServerMessage> messages = ServerInterface.getReceivedMessages();
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
@@ -137,7 +135,6 @@ public class TheInbox implements ProgressListenable {
     }
 
     public void collectLocalMessages() {
-        LogUtility.writeLogFile("TheInbox", "Collecting messages from the device");
         List<Message> messages = VoiceMessageFileUtility.readMessages(null);
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
@@ -161,7 +158,7 @@ public class TheInbox implements ProgressListenable {
             try {
                 loader.cancel(true);
             } catch (Exception e) {
-                LogUtility.writeLogFile("TheInbox", e);
+
             }
         }
 
@@ -176,7 +173,7 @@ public class TheInbox implements ProgressListenable {
         try {
             ServerInterface.addSingletonProgressListener(loader);
         } catch (NullPointerException e) {
-            LogUtility.writeLogFile("TheInbox", e);
+
         }
         loader.execute(listener);
     }
@@ -230,38 +227,29 @@ public class TheInbox implements ProgressListenable {
         protected Boolean doInBackground(InboxDoneLoadingListener... params) {
             boolean success = true;
             listeners = params;
-            LogUtility.writeLogFile("load_inbox_throws", "Hämtar och sparar meddelanden från servern");
             try {
                 collectAndSaveServerMessages();
             } catch (Throwable t) {
-                LogUtility.writeLogFile("load_inbox_throws", t);
                 success = false;
             }
 
-            LogUtility.writeLogFile("load_inbox_throws", "Öppnar ljudmeddelanden på lokal enhet");
             try {
                 collectLocalMessages();
             } catch (Throwable t) {
-                LogUtility.writeLogFile("load_inbox_throws", t);
                 success = false;
             }
 
-            LogUtility.writeLogFile("load_inbox_throws", "Kollar om den skall hämta sms");
 
                 if (listeners != null && listeners.length > 0) {
-                    LogUtility.writeLogFile("load_inbox_throws", "Hämtar sms");
                     try {
                         collectSms();
                     } catch (Throwable t) {
-                        LogUtility.writeLogFile("load_inbox_throws", t);
                         success = false;
                     }
 
-                    LogUtility.writeLogFile("load_inbox_throws", "Hämtar skickade sms");
                     try {
                         collectSentSms();
                     } catch (Throwable t) {
-                        LogUtility.writeLogFile("load_inbox_throws", t);
                         success = false;
                     }
                 }

@@ -77,13 +77,13 @@ public class ContactActivity extends Activity {
             try {
                 recorder.discardRecording();
             } catch (IOException e) {
-                LogUtility.writeLogFile("ContactActivity", e, this);
+
             }
         }else if(recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.STOPPED){
             try {
                 recorder.discardRecording();
             } catch (IOException e) {
-                LogUtility.writeLogFile("ContactActivity", e, this);
+
             }
         }
     }
@@ -92,8 +92,6 @@ public class ContactActivity extends Activity {
         //Brings out the phone dialer
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
 
-        //contact.getMobilePhoneNumbers().get(0);
-        //contact.getPhoneNumbers().get(0)))
         //Sets the data for which number to call
         phoneIntent.setData(Uri.parse("tel:" + contact.getPhoneNumbers().get(0)));
         try {
@@ -174,7 +172,7 @@ public class ContactActivity extends Activity {
         try {
             recorder.discardRecording();
         } catch (IOException e) {
-            LogUtility.writeLogFile("ContactActivity", e, this);
+
         }
         hideButtons();
     }

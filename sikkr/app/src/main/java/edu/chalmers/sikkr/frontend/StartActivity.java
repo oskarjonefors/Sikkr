@@ -103,11 +103,9 @@ public class StartActivity extends Activity {
                 String firstLine = matches.get(0);
                 String firstWord = firstLine.split(" ")[0];
 
-                LogUtility.writeLogFile("onActivityResult", true, firstLine);
-
                 if (getDifference(firstWord, getString(R.string.call)) <= 2 && firstLine.split(" ").length > 1) {
                     callContactByName(firstLine.split(" ", 2)[1]);
-                    LogUtility.writeLogFile("onActivityResult", true, firstLine.split(" ", 2)[1]);
+
                 } else if (getDifference(firstWord, getString(R.string.show)) <= 2) {
                     showContactByName(firstLine.split(" ", 2)[1]);
                 } else {
@@ -130,8 +128,6 @@ public class StartActivity extends Activity {
      * Will redirect user to the selected activity
      */
     private void selectFunctionality(String text) {
-
-        LogUtility.writeLogFile("selectFunctionality", true, text);
 
         if (getDifference(text, getString(R.string.one)) <= 1 || getDifference(text, getString(R.string.calls)) <= 2) {
             TextToSpeechUtility.readAloud(getString(R.string.entering) + " " + getString(R.string.calls));

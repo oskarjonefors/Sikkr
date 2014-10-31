@@ -112,7 +112,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
             ListView listV = (ListView) findViewById(R.id.listView);
             listV.setAdapter(adapter);
         } catch (Exception e) {
-            LogUtility.writeLogFile("load_inbox_throws", e, this);
+
         }
     }
 
@@ -128,7 +128,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
             message.play(new PlayButtonHandler(tryButton, message, this));
             message.markAsRead();
         } catch (Exception e) {
-            LogUtility.writeLogFile("ReadMessageLogs", e, this);
+
         }
     }
 
@@ -149,7 +149,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
             intent.putExtra("number", conversation.getFixedNumber());
             startActivity(intent);
         } catch (Exception e) {
-            LogUtility.writeLogFile("ClickedConversation", e, this);
+
         }
     }
 
@@ -172,7 +172,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
                 cursor.moveToNext();
                 contact = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
             } catch(Exception e){
-                LogUtility.writeLogFile("getting_contacts_log", e, this);
+
             }
             finally {
                 cursor.close();
@@ -260,7 +260,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
                 holder.date.setText(DateDiffUtility.callDateToString(((ListableMessage)
                         messages[messages.length - 1]).getTimestamp().getTimeInMillis(), context));
             } catch (Exception e) {
-                LogUtility.writeLogFile("SmsViewAdapterLogs", e, MessagesActivity.this);
+
             }
 
             return view;

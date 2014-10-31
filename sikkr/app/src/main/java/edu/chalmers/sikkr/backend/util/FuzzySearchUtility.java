@@ -12,8 +12,6 @@ import java.util.TreeSet;
  */
 public class FuzzySearchUtility {
 
-    public static final String TAG = "FuzzySearchUtility";
-
     /**
      * Return a sorted list of the search elements that best match the given pattern,
      * with the best match first. If no suitable results are found, return results;null is returned.
@@ -46,7 +44,6 @@ public class FuzzySearchUtility {
             }
 
             int match = StringUtils.getLevenshteinDistance(pattern.toLowerCase(), element.toLowerCase(), element.length()/3 + 1);
-            LogUtility.writeLogFile(TAG, "Match between " + pattern + " and " + element + " is " + match);
 
             if (match >= 0 && match <= topMatch) {
                 if (match < topMatch) {
@@ -75,7 +72,6 @@ public class FuzzySearchUtility {
     }
 
     public static int getDifference(String s, String t) {
-        LogUtility.writeLogFile("DIFF", s + " --- " + t);
         return StringUtils.getLevenshteinDistance(s.toLowerCase(), t.toLowerCase());
     }
 

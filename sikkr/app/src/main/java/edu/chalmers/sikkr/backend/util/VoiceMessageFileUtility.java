@@ -39,7 +39,6 @@ public class VoiceMessageFileUtility {
         try {
             return XmlPullParserFactory.newInstance();
         } catch (XmlPullParserException e) {
-            LogUtility.writeLogFile(TAG, e);
             return null;
         }
     }
@@ -63,7 +62,7 @@ public class VoiceMessageFileUtility {
      * @return  A list of messages. This may be empty but never null.
      */
     public static List<Message> readMessages(String markReadMessageName) {
-        LogUtility.writeLogFile(TAG, "Reading messages from xml file");
+
         File file =  new File(new File(getAppPath()), "messages.xml");
         List<Message> messages = new ArrayList<>();
 
@@ -74,7 +73,7 @@ public class VoiceMessageFileUtility {
                 reader.setInput(new InputStreamReader(new FileInputStream(file)));
                 int next;
                 while ((next = reader.next()) != XmlPullParser.END_DOCUMENT) {
-                    LogUtility.writeLogFile(TAG, "Next type: "+next+"\tName: "+reader.getName());
+
                     if (next == XmlPullParser.START_TAG
                             && reader.getName().equals("Message")) {
                         String sender = reader.getAttributeValue(0); //Sender
@@ -96,7 +95,7 @@ public class VoiceMessageFileUtility {
                 }
             }
         } catch (Exception e) {
-            LogUtility.writeLogFile(TAG, e);
+
         }
         return messages;
     }
@@ -105,7 +104,7 @@ public class VoiceMessageFileUtility {
         try {
             saveServerMessage(ServerInterface.convertToServerMessage(message, receiver));
         } catch (IOException e) {
-            LogUtility.writeLogFile(TAG, e);
+
         }
     }
 
@@ -115,7 +114,7 @@ public class VoiceMessageFileUtility {
 
     public static void saveServerMessage(ServerMessage message, String markReadMessageName) {
         try {
-            LogUtility.writeLogFile(TAG, "Saving a message");
+
             XmlSerializer writer = inputFactory.newSerializer();
             Collection<Message> previousMessages = new ArrayList<>();
             File sikkrDirectory, file;
@@ -199,7 +198,7 @@ public class VoiceMessageFileUtility {
             writer.flush();
 
         } catch (IOException | XmlPullParserException e) {
-            LogUtility.writeLogFile(TAG, e);
+
         }
 
     }

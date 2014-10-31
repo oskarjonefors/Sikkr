@@ -22,7 +22,6 @@ public final class Message extends AbstractMessage implements VoiceMessage {
 
     public Message(final String SENDER, final String RECEIVER, final Uri path,
             final long TIMESTAMP, final boolean sent, final boolean isRead) {
-        LogUtility.writeLogFile("Message", "Constructed new message");
         this.SENDER = SENDER;
         this.RECEIVER = RECEIVER;
         this.TIMESTAMP = new GregorianCalendar();

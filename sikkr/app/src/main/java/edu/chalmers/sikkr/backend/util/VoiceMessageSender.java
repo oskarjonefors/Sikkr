@@ -55,19 +55,12 @@ public class VoiceMessageSender {
         }
         this.context = context;
 
-        LogUtility.writeLogFile("VoiceMessageSender", "Received non-null context, proceeding");
-
         /* read what operator this phone is using*/
         try {
-            LogUtility.writeLogFile("VoiceMessageSender", "Trying to create a BufferedReader");
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(context.getFilesDir(), "operator"))));
-            LogUtility.writeLogFile("VoiceMessageSender", "Trying to read from our BufferedReader");
             operator = reader.readLine();
-            LogUtility.writeLogFile("VoiceMessageSender", "We have read the desired line from our BufferedReader");
             reader.close();
-            LogUtility.writeLogFile("VoiceMessageSender", "We have closed the buffered reader. We received the line: \""+operator+"\"");
         } catch (Exception e) {
-            LogUtility.writeLogFile("VoiceMessageSender", e);
             return;
         }
 
@@ -76,13 +69,11 @@ public class VoiceMessageSender {
             throw new IllegalStateException("The client is required to have an operator");
         }
 
-        LogUtility.writeLogFile("VoiceMessageSender", "Setting up MMS settings");
         /* Configure MMS settings  */
         mmsSettings = new Settings();
         mmsSettings.setMmsc(operatorArray[0]);
         mmsSettings.setProxy(operatorArray[1]);
         mmsSettings.setPort(operatorArray[2]);
-        LogUtility.writeLogFile("VoiceMessageSender", "MMS Settings are set up");
     }
 
     private byte[] getBytes(InputStream inputStream) throws IOException {
@@ -130,7 +121,6 @@ public class VoiceMessageSender {
                     }
                 } catch (MessageNotSentException e) {
                     LogUtility.toastInActivityThread((Activity) context, "Could not send voice message", Toast.LENGTH_SHORT);
-                    LogUtility.writeLogFile(TAG, e, context);
                 }
             }
         };
@@ -138,7 +128,7 @@ public class VoiceMessageSender {
             Thread t = new Thread(runnable, "MessageSenderThread");
             t.start();
         } catch (Throwable t) {
-            LogUtility.writeLogFile(TAG, t, context);
+
         }
     }
 

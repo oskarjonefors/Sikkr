@@ -37,7 +37,6 @@ public class LogUtility {
             stacktrace[i] = trace[i - 1].toString();
         }
         writeLogFile(fileName, true, stacktrace);
-        TextToSpeechUtility.readAloud("Kuken");
     }
 
     public static void toastInActivityThread(Activity activity, CharSequence text, int length) {

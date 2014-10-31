@@ -1,10 +1,8 @@
 package edu.chalmers.sikkr.backend.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -272,7 +270,6 @@ public final class ServerInterface implements ProgressListenable {
                 singleton = new ServerInterface(context.getApplicationContext());
             } catch (Exception e) {
                 singleton = null;
-                LogUtility.writeLogFile("ServerInterface", e);
             }
         }
     }
@@ -452,7 +449,7 @@ public final class ServerInterface implements ProgressListenable {
             OUTPUT_STREAM.flush();
 
         } catch (Exception e) {
-            LogUtility.writeLogFile("ServerInterface", e);
+
         }
     }
 
@@ -609,7 +606,7 @@ public final class ServerInterface implements ProgressListenable {
                     }
                     sleep(sleepyTime);
                 } catch (Throwable e) {
-                    LogUtility.writeLogFile("MessageNotificationThread", e, context);
+
                 }
             }
         }
