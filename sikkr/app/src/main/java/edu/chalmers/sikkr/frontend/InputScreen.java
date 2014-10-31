@@ -96,21 +96,20 @@ public class InputScreen extends Activity {
             operatorWriter.newLine();
             operatorWriter.flush();
         } catch (Exception e) {
-            Toast.makeText(this, "Exception when creating file", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         } finally {
             if (numberWriter != null) {
                 try {
                     numberWriter.close();
                 } catch (IOException e) {
-                    Toast.makeText(this, "Exception when creating file", Toast.LENGTH_SHORT).show();
+
                 }
             }
             if (operatorWriter != null) {
                 try {
                     operatorWriter.close();
                 } catch (IOException e) {
-                    Toast.makeText(this, "Exception when creating file", Toast.LENGTH_SHORT).show();
+
                 }
             }
         }
