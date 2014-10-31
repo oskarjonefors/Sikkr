@@ -85,7 +85,7 @@ public class ClipartUtility {
                 throw new IOException("Could not remove old map file");
             }
 
-            if (!mapFile.exists() && mapFile.createNewFile()) {
+            if (!mapFile.exists() && !mapFile.createNewFile()) {
                 throw new IOException("Could not create new map file");
             }
 
