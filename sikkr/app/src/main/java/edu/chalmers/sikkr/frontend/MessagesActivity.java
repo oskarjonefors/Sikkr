@@ -70,20 +70,7 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
         broadcastReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
-                    String messageBody = smsMessage.getMessageBody();
-                    String phoneNbr = smsMessage.getOriginatingAddress();
-                    String date = String.valueOf(smsMessage.getTimestampMillis());
-                    OneSms sms = new OneSms(messageBody, date, false);
-                    List<Conversation> list = TheInbox.getInstance().getMessageInbox();
-
-                    for (Conversation conversation : list) {
-                        if (phoneNbr.equals(conversation.getAddress())) {
-                            sms.markAsUnread();
-                            conversation.addMessage(sms);
-                        }
-                    }
-                }
+                TheInbox.getInstance().loadInbox(MessagesActivity.this);
                 adapter.notifyDataSetChanged();
                 adapter.setNotifyOnChange(true);
 
@@ -95,7 +82,21 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
     @Override
     protected void onPause(){
         super.onPause();
-        unregisterReceiver(broadcastReciever);
+        try{
+            unregisterReceiver(broadcastReciever);
+        }catch (Exception e){
+
+        }
+    }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        try{
+            unregisterReceiver(broadcastReciever);
+        }catch (Exception e){
+
+        }
+
     }
 
     private void createSmsLayout() {

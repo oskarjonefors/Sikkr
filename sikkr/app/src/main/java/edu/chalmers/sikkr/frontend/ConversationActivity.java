@@ -71,26 +71,9 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
         broadcastReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
-                    String messageBody = smsMessage.getMessageBody();
-                    String phoneNbr = smsMessage.getOriginatingAddress();
-                    String date = String.valueOf(smsMessage.getTimestampMillis());
-                    OneSms sms = new OneSms(messageBody, date, false);
-                    List<Conversation> list = TheInbox.getInstance().getMessageInbox();
-                    for(Conversation conv : list){
-                        if(phoneNbr.equals(conv.getAddress())){
-                            sms.markAsUnread();
-                            conv.addMessage(sms);
-                        }
-                    }
-                    if(phoneNbr.equals(thisConversation.getAddress())){
-                        messages.add(sms);
-                    }
-                }
+                TheInbox.getInstance().loadInbox(ConversationActivity.this);
                 adapter.notifyDataSetChanged();
                 adapter.setNotifyOnChange(true);
-                Collections.sort(messages);
-
             }
         };
         registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
@@ -98,7 +81,11 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     @Override
     protected void onPause(){
         super.onPause();
-        unregisterReceiver(broadcastReciever);
+        try{
+            unregisterReceiver(broadcastReciever);
+        }catch (Exception e){
+
+        }
         try {
             if (recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.RECORDING) {
                 recorder.stopRecording();
@@ -107,6 +94,14 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
                 recorder.discardRecording();
             }
         } catch (IOException e) {
+
+        }
+    }
+    protected void onDestroy(){
+        super.onDestroy();
+        try{
+            unregisterReceiver(broadcastReciever);
+        }catch (Exception e){
 
         }
     }

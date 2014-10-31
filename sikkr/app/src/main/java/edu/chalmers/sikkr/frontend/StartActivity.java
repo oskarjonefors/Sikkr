@@ -1,7 +1,6 @@
 package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import edu.chalmers.sikkr.R;
-import edu.chalmers.sikkr.backend.SmsListener;
 import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
@@ -43,14 +41,13 @@ public class StartActivity extends Activity {
     private Intent intent;
     private String[] words;
     private Contact contact;
-    private BroadcastReceiver reciever;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        reciever = new SmsListener(this);
         new Initializer().execute(this);
     }
 

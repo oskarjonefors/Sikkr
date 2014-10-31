@@ -63,7 +63,7 @@ public class OneSms extends AbstractMessage {
             return false;
         }else{
             OneSms tmp = (OneSms)rhs;
-            return message.equals(tmp.message) && isSent == tmp.isSent() && calendar.equals(tmp.calendar);
+            return message.equals(tmp.message) && isSent == tmp.isSent() && calendar.getTimeInMillis() == tmp.getTimestamp().getTimeInMillis();
         }
     }
 
