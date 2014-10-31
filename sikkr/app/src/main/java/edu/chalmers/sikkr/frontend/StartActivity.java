@@ -39,9 +39,6 @@ public class StartActivity extends Activity {
     private final static int MY_TTS_CHECK_CODE = 1337;
 
     private Intent intent;
-    private String[] words;
-    private Contact contact;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +134,7 @@ public class StartActivity extends Activity {
             intent = new Intent(this, MessagesActivity.class);
             startActivity(intent);
         } else if (getDifference(text, getString(R.string.four)) <= 1 || getDifference(text, getString(R.string.contacts)) <= 2) {
-            words = text.split(" ");
+            String[] words = text.split(" ");
             if (words.length > 1) {
                 final char firstChar = words[1].toLowerCase().charAt(0);
 
@@ -169,7 +166,7 @@ public class StartActivity extends Activity {
         final ContactBook cb = ContactBook.getSharedInstance();
         try {
             intent = new Intent(Intent.ACTION_CALL);
-            contact = cb.getClosestMatch(text);
+            final Contact contact = cb.getClosestMatch(text);
 
             if (contact == null) {
                 TextToSpeechUtility.readAloud(getString(R.string.found_no_contact));

@@ -69,7 +69,7 @@ public class ButtonAdapter extends BaseAdapter {
         btn.setBackground(null);
         btn.setId(position);
 
-        btn.setOnClickListener(new ContactBookClickListener(position, btn.getText().charAt(0)));
+        btn.setOnClickListener(new ContactBookClickListener(btn.getText().charAt(0)));
 
         return btn;
     }

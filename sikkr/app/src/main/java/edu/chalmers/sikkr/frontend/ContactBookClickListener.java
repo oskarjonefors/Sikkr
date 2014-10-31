@@ -9,11 +9,8 @@ import android.view.View;
  */
 class ContactBookClickListener implements View.OnClickListener {
 
-    final private int position;
     private final Character initialLetter;
-    public ContactBookClickListener(int position, Character initialLetter){
-
-        this.position = position;
+    public ContactBookClickListener(char initialLetter){
         this.initialLetter = initialLetter;
     }
 

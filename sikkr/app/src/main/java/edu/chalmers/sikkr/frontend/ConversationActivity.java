@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.messages.Conversation;
 import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
@@ -40,7 +39,6 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
  */
 public class ConversationActivity extends Activity implements InboxDoneLoadingListener {
     private Conversation thisConversation;
-    private Set<ListableMessage> messageSet;
     private final List<ListableMessage> messages = new ArrayList<>();
     private VoiceMessageRecorder recorder;
     private ImageButton sendButton;
@@ -131,8 +129,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
             thisConversation = TheInbox.getInstance().getConversation(bundle.getString("number"));
             TextView tv = (TextView)findViewById(R.id.conversation_name);
             tv.setText(bundle.getString("name"));
-            messageSet = thisConversation.getSmsList();
-            messages.addAll(messageSet);
+            messages.addAll(thisConversation.getSmsList());
             Collections.sort(messages);
             adapter = new ConversationAdapter(this, R.layout.conversationitem_left,messages );
             ListView listV = (ListView)findViewById(R.id.conversation_list);
