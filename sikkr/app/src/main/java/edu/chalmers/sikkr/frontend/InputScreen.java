@@ -21,7 +21,7 @@ import java.io.OutputStreamWriter;
 import edu.chalmers.sikkr.R;
 
 /**
- * Created by Jingis on 2014-10-22.
+ * @author Joel Tegman
  */
 public class InputScreen extends Activity {
     private String operator;

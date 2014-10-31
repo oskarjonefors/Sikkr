@@ -23,7 +23,7 @@ public class TintFeedbackButton extends Button {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@SuppressWarnings("NullableProblems") MotionEvent event) {
         final Collection<Drawable> drawables = new ArrayList<>();
         final int color = 0xff888888;
         Drawable[] drawableArray = getCompoundDrawables();
