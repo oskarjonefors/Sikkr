@@ -95,7 +95,7 @@ public class VoiceMessageFileUtility {
                 }
             }
         } catch (Exception e) {
-
+            //NADA
         }
         return messages;
     }
@@ -104,7 +104,7 @@ public class VoiceMessageFileUtility {
         try {
             saveStorableMessage(ServerInterface.convertToStorableMessage(message, receiver));
         } catch (IOException e) {
-
+            //NADA
         }
     }
 
@@ -198,7 +198,7 @@ public class VoiceMessageFileUtility {
             writer.flush();
 
         } catch (IOException | XmlPullParserException e) {
-
+            //NADA
         }
 
     }

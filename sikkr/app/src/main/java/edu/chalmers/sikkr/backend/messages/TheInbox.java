@@ -158,7 +158,7 @@ public class TheInbox implements ProgressListenable {
             try {
                 loader.cancel(true);
             } catch (Exception e) {
-
+                //NADA
             }
         }
 
@@ -173,7 +173,7 @@ public class TheInbox implements ProgressListenable {
         try {
             ServerInterface.addSingletonProgressListener(loader);
         } catch (NullPointerException e) {
-
+            //NADA
         }
         loader.execute(listener);
     }

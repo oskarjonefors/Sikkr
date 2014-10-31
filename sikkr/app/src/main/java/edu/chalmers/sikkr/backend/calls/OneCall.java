@@ -6,8 +6,8 @@ package edu.chalmers.sikkr.backend.calls;
 
 public class OneCall implements Comparable <OneCall> {
 
-    String callNumber, callDate, isCallNew, contactID;
-    int callType, callTypeAmount;
+    private String callNumber, callDate, isCallNew, contactID;
+    private int callType, callTypeAmount;
 
     public void setCallNumber(String callNumber) {
         this.callNumber = callNumber;

@@ -234,6 +234,7 @@ public final class ServerInterface implements ProgressListenable {
      * @param number the number that you want to send the message to.
      * @param content the content of the message as a byte array.
      */
+    @SuppressWarnings("unused")
     public static void sendMessage(String number, byte[] content, long time) {
         getSingleton().sendMessageToServer(number, content, time);
     }
@@ -329,10 +330,10 @@ public final class ServerInterface implements ProgressListenable {
 
     private List<StorableMessage> getReceivedMessagesFromServer() throws Exception {
         writeLine("get_received_messages");
-        return getMessagesFromServer(false);
+        return getMessagesFromServer();
     }
 
-    private List<StorableMessage> getMessagesFromServer(@SuppressWarnings("SameParameterValue") boolean sent) throws Exception {
+    private List<StorableMessage> getMessagesFromServer() throws Exception {
         final List<StorableMessage> messages = new ArrayList<>();
         final int n = INPUT_STREAM.readInt();
         final double numberOfOperations = 8D;
@@ -371,9 +372,9 @@ public final class ServerInterface implements ProgressListenable {
             content = aesDecrypt(encryptedContent, key, iv);
 
 
-            msg = new StorableMessage(senderNumber, receiverNumber, content, time, sent, false);
+            msg = new StorableMessage(senderNumber, receiverNumber, content, time, false, false);
             messages.add(msg);
-            notifyListeners(step, "Loading " + (sent ? "sent " : "incoming") + "web messages");
+            notifyListeners(step, "Loading incoming web messages");
         }
 
         return messages;

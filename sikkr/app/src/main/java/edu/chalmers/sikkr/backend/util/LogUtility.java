@@ -19,13 +19,14 @@ import java.util.Calendar;
  */
 public class LogUtility {
 
-    public static final String TAG = "WriteLogUtility";
+    private final static String TAG = "WriteLogUtility";
 
     @SuppressWarnings("unused")
     public static void writeLogFile(String fileName, Throwable e) {
         writeLogFile(fileName, e, null);
     }
 
+    @SuppressWarnings("unused")
     public static void writeLogFile(String fileName, Throwable e, Context context) {
         if (context != null) {
             Toast.makeText(context, e.getClass().getSimpleName() + " (" + e.getLocalizedMessage() + "):", Toast.LENGTH_SHORT).show();
@@ -40,6 +41,7 @@ public class LogUtility {
         writeLogFile(fileName, true, stacktrace);
     }
 
+    @SuppressWarnings("unused")
     public static void toastInActivityThread(Activity activity, CharSequence text,
                                              @SuppressWarnings("SameParameterValue") int length) {
         activity.runOnUiThread(getToastRunnable(activity, text, length));
@@ -75,6 +77,7 @@ public class LogUtility {
      * @param timeStamp - Whether or not a time stamp should be written in the beginning of every line.
      * @param logRows   - The rows to write to the log.
      */
+    @SuppressWarnings("unused")
     public static void writeLogFile(String fileName, boolean timeStamp, String... logRows) {
         final String fName = fixFilename(fileName);
 
@@ -129,7 +132,7 @@ public class LogUtility {
      *
      * @return the directory in which the log files will be stored
      */
-    public static String getLogDirectory() {
+    private static String getLogDirectory() {
         String logPath;
         if (Environment.getExternalStorageState().equals("mounted")) {
             logPath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -146,7 +149,7 @@ public class LogUtility {
      *
      * @return - A string timestamp
      */
-    public static CharSequence getTimeStamp() {
+    private static CharSequence getTimeStamp() {
         final Calendar cal = Calendar.getInstance();
         return cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" +
 

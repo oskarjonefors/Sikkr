@@ -47,7 +47,7 @@ public class SpeechRecognitionHelper{
                             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                             ownerActivity.startActivity(intent);
                         } catch (Exception ex) {
-
+                            //NADA
                         }
                     }
                 })
@@ -83,7 +83,9 @@ public class SpeechRecognitionHelper{
             if (activities.size() != 0) {
                 return true;
             }
-        }catch(Exception e){ }
+        } catch(Exception e) {
+            //NADA
+        }
 
         return false;
     }

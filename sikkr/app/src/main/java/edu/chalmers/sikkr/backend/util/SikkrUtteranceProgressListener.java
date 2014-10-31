@@ -7,9 +7,9 @@ import edu.chalmers.sikkr.backend.messages.PlaybackListener;
 /**
  * Created by ivaldi on 2014-10-29.
  */
-public class SikkrUtteranceProgressListener extends UtteranceProgressListener {
+public final class SikkrUtteranceProgressListener extends UtteranceProgressListener {
 
-    private PlaybackListener listener;
+    private final PlaybackListener listener;
 
     public SikkrUtteranceProgressListener(PlaybackListener listener) {
         this.listener = listener;
