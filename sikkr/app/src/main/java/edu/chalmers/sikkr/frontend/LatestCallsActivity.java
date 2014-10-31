@@ -61,20 +61,16 @@ public class LatestCallsActivity extends Activity {
             iCall = callList.get(i);
             iCallNumber = MessageUtils.fixNumber(iCall.getCallNumber());
             iCallType = iCall.getCallType();
-            LogUtility.writeLogFile("CreateRefinedList", "Found number " + iCallNumber);
+
 
             if (!map.containsKey(iCallNumber)) {
                 iCall.setCallTypeAmount(1); //Sätt till ett eftersom det är första gången numret uppkommer
                 map.put(iCallNumber, iCall); //Lägg till nummer eftersom det är första gången det uppkommer
-                LogUtility.writeLogFile("CreateRefinedList", "Adding new number to latest calls: " + iCallNumber);
                 for (int j = i + 1; j < callList.size(); j++) {
                     jCall = callList.get(j);
                     jCallNumber = MessageUtils.fixNumber(jCall.getCallNumber());
                     jCallType = jCall.getCallType();
 
-                    LogUtility.writeLogFile("CreateRefinedList", "Testing number " + iCallNumber
-                            + " with type " + iCallType + " against " + jCallNumber + " with type "
-                            + jCallType);
                     if (iCallNumber.equals(jCallNumber)
                             && iCall.getCallType() == jCallType) {
                         iCall.setCallTypeAmount(iCall.getCallTypeAmount() + 1);
@@ -82,8 +78,6 @@ public class LatestCallsActivity extends Activity {
                         break;
                     }
                 }
-            } else {
-                LogUtility.writeLogFile("CreateRefinedList", "The number was already in the list");
             }
         }
 
