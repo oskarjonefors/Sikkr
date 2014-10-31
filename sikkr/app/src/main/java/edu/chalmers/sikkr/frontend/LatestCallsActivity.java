@@ -35,7 +35,6 @@ import edu.chalmers.sikkr.backend.calls.OneCall;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
-import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.MessageUtils;
 
 public class LatestCallsActivity extends Activity {
@@ -216,7 +215,7 @@ public class LatestCallsActivity extends Activity {
                     cursor.moveToNext();
                     contact = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
                 } catch(Exception e){
-                    LogUtility.writeLogFile("getting_contacts_log", e, LatestCallsActivity.this);
+
                 }
                 finally {
                     cursor.close();
