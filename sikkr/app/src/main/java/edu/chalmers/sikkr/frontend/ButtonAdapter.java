@@ -21,7 +21,6 @@ public class ButtonAdapter extends BaseAdapter {
 
 
     final private Context mContext;
-    private Character mLetter;
     final private ArrayList<Character> al;
 
     public ButtonAdapter(Context c) {

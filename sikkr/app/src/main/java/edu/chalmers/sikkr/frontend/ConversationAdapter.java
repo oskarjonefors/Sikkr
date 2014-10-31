@@ -19,9 +19,9 @@ import edu.chalmers.sikkr.backend.util.DateDiffUtility;
  * @author Jesper Olsson
  */
 public class ConversationAdapter extends ArrayAdapter {
-    private Context context;
-    private int layoutId;
-    private List<ListableMessage> list;
+    private final Context context;
+    private final int layoutId;
+    private final List<ListableMessage> list;
 
     public ConversationAdapter(Context context, int layoutId, List list){
         super(context, layoutId, list);
