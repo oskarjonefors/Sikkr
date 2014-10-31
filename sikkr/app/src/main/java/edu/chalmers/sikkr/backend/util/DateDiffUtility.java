@@ -37,9 +37,9 @@ public final class DateDiffUtility {
 
         } else if (timeDays >= 1) {
 
-            return (timeDays / 1) + " " + context.getString(R.string.days_abbrev);
+            return timeDays + " " + context.getString(R.string.days_abbrev);
 
-        } else if ((timeHours / 1) > 0) {
+        } else if (timeHours > 0) {
 
             return timeHours + " " + context.getString(R.string.hours_abbrev);
 
