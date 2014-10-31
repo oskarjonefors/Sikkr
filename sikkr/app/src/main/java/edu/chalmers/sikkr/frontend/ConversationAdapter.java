@@ -7,12 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.util.List;
-
 import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.util.DateDiffUtility;
