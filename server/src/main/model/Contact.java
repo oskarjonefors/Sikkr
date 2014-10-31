@@ -20,8 +20,8 @@ public class Contact implements Serializable {
 	public Contact(String number, RSAPublicKey key) {
 		this.number = number;
 		this.key = key;
-		this.sentMessages = Collections.synchronizedList(new ArrayList<Message>());
-		this.recievedMessages = Collections.synchronizedList(new ArrayList<Message>());
+		this.sentMessages = Collections.synchronizedList(new ArrayList<>());
+		this.recievedMessages = Collections.synchronizedList(new ArrayList<>());
 	}
 	
 	public String getNumber() {

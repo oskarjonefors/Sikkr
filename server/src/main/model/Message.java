@@ -1,6 +1,7 @@
 package main.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Message implements Serializable {
 
@@ -34,7 +35,7 @@ public class Message implements Serializable {
 	
 	
 	public int hashCode() {
-		return 997 * content.hashCode() + 2543 * sender.hashCode() 
+		return 997 * Arrays.hashCode(content) + 2543 * sender.hashCode()
 				+ 1087 * reciever.hashCode() + 23 * ((int) (timeInMillis % Integer.MAX_VALUE));
 	}
 	

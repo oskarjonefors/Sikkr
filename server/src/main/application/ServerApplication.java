@@ -13,7 +13,7 @@ public class ServerApplication {
 	
 	public ServerApplication() {
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-		Thread thread = null;
+		Thread thread;
 		try {
 			thread = new ServerThread(new ServerConsoleUI());
 			thread.start();

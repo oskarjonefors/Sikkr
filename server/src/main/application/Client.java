@@ -43,10 +43,6 @@ public class Client {
 		return address;
 	}
 	
-	public Thread getAssociatedThread() {
-		return thread;
-	}
-	
 	public synchronized void startNewAssociatedThread(Thread thread) {
 		if (this.thread == null && !started) {
 			this.thread = thread;

@@ -4,6 +4,7 @@ import java.security.interfaces.RSAPublicKey;
 
 import main.model.Contact;
 
+@SuppressWarnings("SameReturnValue")
 public interface InformationListener {
 	
 	void addContact(Contact c);

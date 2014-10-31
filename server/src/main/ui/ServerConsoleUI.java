@@ -125,7 +125,11 @@ public final class ServerConsoleUI implements InformationListener {
 			logger.log(e.getLevel(), e.getLog());
 			break;
 		case THROWABLE:
-			e.getThrowable().printStackTrace();
+            try {
+                throw e.getThrowable();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
 			break;
 		}
 	}

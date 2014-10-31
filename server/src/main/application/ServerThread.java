@@ -5,14 +5,10 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-
-import javax.net.ssl.SSLServerSocketFactory;
 
 import main.util.InformationEvent;
 import main.util.InformationListener;
@@ -40,10 +36,10 @@ public class ServerThread extends Thread {
 
 		this.socket = new ServerSocket(listener.getPort());
 		this.writeSocket = new ServerSocket(listener.getWritePort());
-		this.readyClients = new HashSet<Client>();
+		this.readyClients = new HashSet<>();
 		
 		this.stateHolder = new StateHolder();
-		this.clients = new HashMap<InetAddress, Client>();
+		this.clients = new HashMap<>();
 	}
 	
 	/*
@@ -52,14 +48,14 @@ public class ServerThread extends Thread {
 	
 	@Override
 	public void run() {
-		this.stateHolder.state = State.RUNNING;
+		this.stateHolder.state = ServerState.RUNNING;
         HashSet<Client> tmp = new HashSet<>();
 		IndividualServerSocketThread standard = new IndividualServerSocketThread(socket, SocketApplication.STANDARD);
 		IndividualServerSocketThread write = new IndividualServerSocketThread(writeSocket, SocketApplication.WRITE);
 
         standard.start();
         write.start();
-		while (stateHolder.state == State.RUNNING) {
+		while (stateHolder.state == ServerState.RUNNING) {
             readyClients.forEach((client) -> startClientThread(client, tmp));
             readyClients.removeAll(tmp);
             tmp.forEach((client) -> clients.remove(client.getInetAddress()));
@@ -67,7 +63,7 @@ public class ServerThread extends Thread {
             try {
                 sleep(500);
             } catch (InterruptedException e) {
-
+                listener.sendInformation(new InformationEvent(e));
             }
         }
 	}
@@ -86,11 +82,11 @@ public class ServerThread extends Thread {
 	 */
 	
 	private final static class StateHolder {
-		public ServerThread.State state;
+		public ServerState state;
 	}
 
-	private enum State {
-		RUNNING, NOT_RUNNING;
+	private enum ServerState {
+		RUNNING, NOT_RUNNING
 	}
 	
 	private enum SocketApplication {
@@ -110,12 +106,12 @@ public class ServerThread extends Thread {
 		
 		public void run() {
 			try {
-				while(stateHolder.state == ServerThread.State.RUNNING) {
+				while(stateHolder.state == ServerState.RUNNING) {
                     new ClientSetupThread(socket.accept(), application).start();
                 }
 			} catch (IOException e) {
 				listener.sendInformation(new InformationEvent(e));
-				stateHolder.state = ServerThread.State.NOT_RUNNING;
+				stateHolder.state = ServerState.NOT_RUNNING;
 			}
 		}
 		

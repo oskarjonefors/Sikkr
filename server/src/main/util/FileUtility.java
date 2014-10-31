@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.KeyFactory;
@@ -18,7 +17,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -41,12 +39,12 @@ public final class FileUtility {
 	public static List<Contact> readContacts() throws Exception {
 		String filename = "contacts.xml";
 		Logger.getGlobal().info("Reading contacts from: "+(new File(filename)).getAbsolutePath());
-		List<Contact> contacts = new ArrayList<Contact>();
+		List<Contact> contacts = new ArrayList<>();
 		if ((new File(filename)).exists()) {
 			XMLStreamReader reader = INPUT_FACTORY.createXMLStreamReader(filename, new FileInputStream(filename));
 			while (reader.hasNext()) {
 				if (reader.next() == XMLStreamReader.START_ELEMENT 
-						&& reader.getName().getLocalPart() == "Contact") {
+						&& reader.getName().getLocalPart().equals("Contact")) {
 					String number = reader.getAttributeValue(0); //Number
 					RSAPublicKey key = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(getPublicKeyFromFile("contacts/" + number + ".key")));
                     Contact contact = new Contact(number, key);
@@ -59,12 +57,12 @@ public final class FileUtility {
 	
 	public static List<Message> readMessages() throws Exception {
 		String filename = "messages.xml";
-		List<Message> messages = new ArrayList<Message>();
+		List<Message> messages = new ArrayList<>();
 		if ((new File(filename)).exists()) {
 			XMLStreamReader reader = INPUT_FACTORY.createXMLStreamReader(filename, new FileInputStream(filename));
 			while (reader.hasNext()) {
 				if (reader.next() == XMLStreamReader.START_ELEMENT 
-						&& reader.getName().getLocalPart() == "Message") {
+						&& reader.getName().getLocalPart().equals("Message")) {
 					String sender = reader.getAttributeValue(0); //Sender
 					String reciever = reader.getAttributeValue(1); //Reciever
 					long time = Long.parseLong(reader.getAttributeValue(2)); //Timestamp
@@ -88,12 +86,15 @@ public final class FileUtility {
 		String messagesFilename = "messages.xml";
 		File messagesFile = new File(messagesFilename);
 		XMLStreamWriter writer;
-		Set<Message> messages = new HashSet<Message>();
+		Set<Message> messages = new HashSet<>();
 		
-		if (messagesFile.exists()) {
-			messagesFile.delete();
+		if (messagesFile.exists() && !messagesFile.delete()) {
+			throw new IOException("Could not remove old file");
 		}
-		messagesFile.createNewFile();
+
+        if (!messagesFile.exists() && !messagesFile.createNewFile()) {
+            throw new IOException("Could not create a new messages file");
+        }
 		writer = OUTPUT_FACTORY.createXMLStreamWriter(new FileOutputStream(messagesFile));
 		writer.writeStartDocument();
 		writer.writeStartElement("Messages");
@@ -117,8 +118,8 @@ public final class FileUtility {
 			writer.writeAttribute("time", message.getTimeInMillis() + "");
 			writer.writeAttribute("content", path = getRandomContentPath(message));
 			
-			if (!contentDir.exists()) {
-				contentDir.mkdir();
+			if (!contentDir.exists() && !contentDir.mkdir()) {
+				throw new IOException("Could not create non existing content dir");
 			}
 			
 			contentFile = new File(contentDir, path + ".msg");
@@ -154,10 +155,14 @@ public final class FileUtility {
 	
 	public static void saveContacts(Collection<Contact> contactList) throws Exception {
 		File contacts = new File("contacts.xml");
-		if (contacts.exists()) {
-			contacts.delete();
+		if (contacts.exists() && !contacts.delete()) {
+			throw new IOException("Could not remove old contacts.xml file");
 		}
-		contacts.createNewFile();
+
+        if (!contacts.exists() && !contacts.createNewFile()) {
+            throw new IOException("Could not create non existing contacts.xml file");
+        }
+
 		XMLStreamWriter writer = OUTPUT_FACTORY.createXMLStreamWriter(new FileOutputStream(contacts));
 		writer.writeStartDocument();
 		writer.writeStartElement("ContactBook");
@@ -174,15 +179,17 @@ public final class FileUtility {
 			writer.writeEmptyElement("Contact");
 			writer.writeAttribute("number", contact.getNumber());
 			
-			if (keyFile.exists()) {
-				keyFile.delete();
+			if (keyFile.exists() && !keyFile.delete()) {
+				throw new IOException("Could not delete old key file");
 			}
 			
-			if (!keyDirectory.exists()) {
-				keyDirectory.mkdir();
+			if (!keyDirectory.exists() && !keyDirectory.mkdir()) {
+				throw new IOException("Could not create non existing key file directory");
 			}
 			
-			keyFile.createNewFile();
+			if (!keyFile.exists() && !keyFile.createNewFile()) {
+                throw new IOException("Could not create new key file");
+            }
 			
 			DataOutputStream dos = new DataOutputStream(new FileOutputStream(keyFile));
 			dos.write(contact.getPublicKey());

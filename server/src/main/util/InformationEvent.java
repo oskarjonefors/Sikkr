@@ -5,15 +5,15 @@ import java.util.logging.Level;
 public class InformationEvent {
 
 	public enum Type {
-		LOG, THROWABLE;
+		LOG, THROWABLE
 	}
 
-	private Level level;
-	private String log;
-	private Throwable throwable;
+	private final Level level;
+	private final String log;
+	private final Throwable throwable;
 	private final Type type;
 	
-	public InformationEvent(Level level, String log) {
+	public InformationEvent(@SuppressWarnings("SameParameterValue") Level level, String log) {
 		this.level = level;
 		this.log = log;
 		this.type = Type.LOG;
