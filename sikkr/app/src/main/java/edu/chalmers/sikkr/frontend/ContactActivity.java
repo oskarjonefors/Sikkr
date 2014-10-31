@@ -101,21 +101,6 @@ public class ContactActivity extends Activity {
         }
     }
 
-    public void voiceInteraction(View view) {
-        final Button btn = (Button) findViewById(R.id.recordButton);
-        switch (recorder.getRecordingState()) {
-            case RESET:
-                recorder.startRecording();
-                btn.setText(R.string.stop_recording + "...");
-                break;
-            case RECORDING:
-                recorder.stopRecording();
-                btn.setText(R.string.send);
-                break;
-
-        }
-    }
-
     public void recordTheMessage(View v){
         switch (recorder.getRecordingState()) {
             case RESET:

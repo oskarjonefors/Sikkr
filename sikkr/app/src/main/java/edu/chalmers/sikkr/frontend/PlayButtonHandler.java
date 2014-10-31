@@ -15,9 +15,9 @@ import edu.chalmers.sikkr.backend.messages.PlaybackListener;
  */
 public class PlayButtonHandler implements PlaybackListener {
 
-    private Button button;
-    private ListableMessage msg;
-    private Activity activity;
+    private final Button button;
+    private final ListableMessage msg;
+    private final Activity activity;
 
     public PlayButtonHandler(Button button, ListableMessage msg, Activity activity) {
         this.button = button;
