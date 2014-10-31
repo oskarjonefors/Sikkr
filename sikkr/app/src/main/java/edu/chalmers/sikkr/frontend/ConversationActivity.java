@@ -28,6 +28,7 @@ import edu.chalmers.sikkr.backend.messages.ListableMessage;
 import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.messages.PlaybackListener;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
+import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
 import edu.chalmers.sikkr.backend.util.SoundClipPlayer;
@@ -185,7 +186,10 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
      * @param v the view that called this method
      */
     public void sendMessage(View v){
-        VoiceMessageSender.getSharedInstance().sendMessage(recorder.getVoiceMessage(), thisConversation.getAddress());
+        final VoiceMessage vmsg = recorder.getVoiceMessage();
+        VoiceMessageSender.getSharedInstance().sendMessage(vmsg, thisConversation.getAddress());
+        thisConversation.addMessage(vmsg);
+        onDone();
         hideButtons();
     }
 
