@@ -22,7 +22,6 @@ import edu.chalmers.sikkr.backend.calls.CallLog;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
-import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
 import edu.chalmers.sikkr.backend.util.SpeechRecognitionHelper;
@@ -45,7 +44,6 @@ public class StartActivity extends Activity {
     private String[] words;
     private Contact contact;
     private BroadcastReceiver reciever;
-    private static final String TAG = "StartActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -29,10 +29,6 @@ public class SikkrContact implements Contact {
         mobilePhoneNumbers = new ArrayList<String>();
     }
 
-    public SikkrContact(final String name, final String id) {
-        this(name, id, null);
-    }
-
     @Override
     public Bitmap getPhoto() {
         return photo;

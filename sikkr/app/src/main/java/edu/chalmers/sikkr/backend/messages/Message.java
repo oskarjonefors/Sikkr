@@ -5,7 +5,6 @@ import android.net.Uri;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.VoiceMessageFileUtility;
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 

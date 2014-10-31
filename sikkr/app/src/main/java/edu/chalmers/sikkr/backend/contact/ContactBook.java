@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -98,7 +97,6 @@ public class ContactBook implements ProgressListenable {
                 if (contact.getDefaultNumber() != null) {
                     contact.calculatePriority(isFavorite, timesContacted, lastTimeContacted);
                     contact.setFavorite(isFavorite);
-                    Log.d("StartActivity", "Priority for " + contact.getName() + " is " + contact.getPriority());
                     contacts.put(contact_id, contact);
                     contactNameMap.put(name, contact_id);
                 }

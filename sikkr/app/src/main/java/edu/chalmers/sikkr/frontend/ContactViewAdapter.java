@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -52,7 +51,6 @@ public class ContactViewAdapter extends ArrayAdapter<Contact> {
         }
 
         final Contact contact = contacts.get(position);
-        RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.contact_grid_layout);
         holder.displayPic.setOnClickListener(new ContactGridClickListener(contact));
         holder.contactName.setText(contact.getName());
         holder.displayPic.setBackground(new BitmapDrawable(context.getResources(), contact.getPhoto()));

@@ -3,7 +3,7 @@ package edu.chalmers.sikkr.backend.messages;
 import java.util.Arrays;
 
 /**
- * Created by ivaldi on 2014-10-27.
+ * @author Eric Bjuhr
  */
 public class ServerMessage {
 

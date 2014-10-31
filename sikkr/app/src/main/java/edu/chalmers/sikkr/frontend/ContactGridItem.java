@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 /**
- * Created by ivaldi on 2014-09-25.
+ * @author Oskar Jönefors
  */
 public class ContactGridItem {
 
@@ -13,7 +13,6 @@ public class ContactGridItem {
 
     public ContactGridItem(Bitmap image, String name) {
         super();
-        Log.d("ContactGridItem", "SETTING IMAGE " + image.toString());
         this.image = image;
         this.name = name;
     }
@@ -28,7 +27,6 @@ public class ContactGridItem {
 
     public void setImage(Bitmap image) {
         this.image = image;
-        Log.d("ContactGridItem", "SETTING IMAGE " + image.toString());
     }
 
     public void setName(String name) {

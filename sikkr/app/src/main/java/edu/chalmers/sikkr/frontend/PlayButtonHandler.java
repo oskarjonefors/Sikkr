@@ -2,7 +2,6 @@ package edu.chalmers.sikkr.frontend;
 
 import android.app.Activity;
 import android.graphics.drawable.AnimationDrawable;
-import android.util.Log;
 import android.widget.Button;
 
 import edu.chalmers.sikkr.R;
@@ -11,6 +10,7 @@ import edu.chalmers.sikkr.backend.messages.PlaybackListener;
 
 /**
  * @author Oskar Jönefors
+ *
  * Class to handle the animations of the message play buttons.
  */
 public class PlayButtonHandler implements PlaybackListener {
@@ -37,7 +37,6 @@ public class PlayButtonHandler implements PlaybackListener {
                 button.setBackgroundResource(animNbr);
 
                 AnimationDrawable anim = (AnimationDrawable) button.getBackground();
-                Log.d("ANIM", anim.toString());
                 anim.start();
             }});
         }

@@ -20,7 +20,6 @@ import edu.chalmers.sikkr.R;
 import edu.chalmers.sikkr.backend.contact.Contact;
 import edu.chalmers.sikkr.backend.contact.ContactBook;
 import edu.chalmers.sikkr.backend.messages.PlaybackListener;
-import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.SoundClipPlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
 import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
@@ -97,9 +96,8 @@ public class ContactActivity extends Activity {
         try {
             startActivity(phoneIntent);
             finish();
-            Log.i("Finished making a call", "");
         } catch (ActivityNotFoundException e) {
-            Log.v("Exception ocurred, could not make a call", "");
+
         }
     }
 

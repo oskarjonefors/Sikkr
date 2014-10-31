@@ -29,7 +29,6 @@ import edu.chalmers.sikkr.backend.messages.OneSms;
 import edu.chalmers.sikkr.backend.messages.PlaybackListener;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
-import edu.chalmers.sikkr.backend.util.LogUtility;
 import edu.chalmers.sikkr.backend.util.ServerInterface;
 import edu.chalmers.sikkr.backend.util.SoundClipPlayer;
 import edu.chalmers.sikkr.backend.util.VoiceMessageRecorder;
@@ -67,7 +66,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     protected void onResume(){
         super.onResume();
         /**
-         * Reciever to handle incoming text messages dynamically
+         * Receiver to handle incoming text messages dynamically
          */
         broadcastReciever = new BroadcastReceiver() {
             @Override
@@ -113,7 +112,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     }
 
     /**
-     * Method to make the recording button appear and the other buttons dissapear
+     * Method to make the recording button appear and the other buttons disappear
      */
     private void setButtonVisability() {
         sendButton = (ImageButton) findViewById(R.id.conversation_send);

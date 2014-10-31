@@ -11,7 +11,7 @@ import android.view.View;
 import edu.chalmers.sikkr.backend.contact.Contact;
 
 /**
- * Created by ivaldi on 2014-09-29.
+ * @author Oskar Jönefors
  */
 public class ContactGridClickListener implements View.OnClickListener {
 
@@ -48,16 +48,13 @@ public class ContactGridClickListener implements View.OnClickListener {
         //Brings out the phone dialer
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
 
-        //contact.getMobilePhoneNumbers().get(0);
-        //contact.getPhoneNumbers().get(0)))
         //Sets the data for which number to call
         phoneIntent.setData(Uri.parse("tel:" + number));
         try {
             activity.startActivity(phoneIntent);
             activity.finish();
-            Log.i("Finished making a call", "");
         } catch (ActivityNotFoundException e) {
-            Log.v("Exception ocurred, could not make a call", "");
+            Log.e("Exception ocurred, could not make a call", "");
         }
     }
 }

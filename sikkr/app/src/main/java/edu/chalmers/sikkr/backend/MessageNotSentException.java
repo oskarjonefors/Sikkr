@@ -1,7 +1,7 @@
 package edu.chalmers.sikkr.backend;
 
 /**
- * Created by ivaldi on 2014-10-02.
+ * @author Oskar Jönefors
  */
 public class MessageNotSentException extends Exception {
 

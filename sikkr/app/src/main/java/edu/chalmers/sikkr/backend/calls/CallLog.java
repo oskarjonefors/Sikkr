@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,7 +47,6 @@ public class CallLog {
             call.setCallType(cursor.getInt(cursor.getColumnIndex(android.provider.CallLog.Calls.TYPE)));
             call.setIsCallNew(cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.NEW)));
             call.setContactID(getContactIDFromNumber(call.getCallNumber()));
-            Log.d("CallLog", "Get ContactID " + call.getContactID());
 
             if(isCallOld(call.getCallDate())) {
                break;
