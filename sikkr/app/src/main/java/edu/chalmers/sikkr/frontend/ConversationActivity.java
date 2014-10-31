@@ -188,6 +188,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     public void sendMessage(View v){
         final VoiceMessage vmsg = recorder.getVoiceMessage();
         VoiceMessageSender.getSharedInstance().sendMessage(vmsg, thisConversation.getAddress());
+        vmsg.markAsRead();
         thisConversation.addMessage(vmsg);
         onDone();
         hideButtons();
