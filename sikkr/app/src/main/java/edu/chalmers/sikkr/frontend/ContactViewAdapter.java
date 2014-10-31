@@ -24,13 +24,11 @@ import edu.chalmers.sikkr.backend.contact.Contact;
 public class ContactViewAdapter extends ArrayAdapter<Contact> {
 
     private final Context context;
-    private final int layoutResourceId;
     private final List<Contact> contacts;
 
-    public ContactViewAdapter(Context context, int layoutResourceId, List<Contact> contacts) {
-        super(context, layoutResourceId, contacts);
+    public ContactViewAdapter(Context context, List<Contact> contacts) {
+        super(context, R.layout.contact_thumb, contacts);
         this.context = context;
-        this.layoutResourceId = layoutResourceId;
         this.contacts = contacts;
     }
 
@@ -40,7 +38,7 @@ public class ContactViewAdapter extends ArrayAdapter<Contact> {
 
         if(view == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            view = inflater.inflate(layoutResourceId, parent, false);
+            view = inflater.inflate(R.layout.contact_thumb, parent, false);
             holder = new ViewHolder();
             holder.contactName = (TextView)view.findViewById(R.id.contact_name);
             holder.displayPic = (Button)view.findViewById(R.id.contact_thumb);

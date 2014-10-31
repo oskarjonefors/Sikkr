@@ -41,7 +41,7 @@ public class ContactGridActivity extends Activity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_contact_grid);
 
-        ListAdapter adapter = new ContactViewAdapter(this, R.layout.contact_thumb, contactList);
+        ListAdapter adapter = new ContactViewAdapter(this, contactList);
         ((GridView) findViewById(R.id.contact_grid)).setAdapter(adapter);
     }
 
