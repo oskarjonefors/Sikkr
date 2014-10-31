@@ -2,8 +2,13 @@
 <resources>
 
     <string name="app_name">Sikkr</string>
-    <string name="enter_your_phone_number">"Enter your phone number:"</string>
-    <string name="accept">"Accept"</string>
+    <string name="enter_your_phone_number">Enter your phone number:</string>
+    <string name="no_voice_search">Google Speech Search must be installed in order to use voice recognition</string>
+    <string name="install_voice_question">Install Google Voice Search from Google Play?</string>
+    <string name="say_command">Say command</string>
+    <string name="install">Install</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
     <string name="action_settings">Settings</string>
     <string name="calls">Calls</string>
     <string name="favorites">Favorites</string>

@@ -2,8 +2,13 @@
 <resources>
 
     <string name="app_name">Sikkr</string>
-    <string name="enter_your_phone_number">"Mata in ditt telefonnummer:"</string>
-    <string name="accept">"Godkänn"</string>
+    <string name="enter_your_phone_number">Mata in ert telefonnummer:</string>
+    <string name="no_voice_search">Google Speech Search måste installeras för att kunna använda röstkommandon.</string>
+    <string name="install_voice_question">Vill ni installera Google Voice Search från Play Store?</string>
+    <string name="say_command">Säg kommando</string>
+    <string name="install">Installera</string>
+    <string name="accept">Godkänn</string>
+    <string name="cancel">Avbryt</string>
     <string name="action_settings">Inställningar</string>
     <string name="calls">Samtal</string>
     <string name="favorites">Favoriter</string>
