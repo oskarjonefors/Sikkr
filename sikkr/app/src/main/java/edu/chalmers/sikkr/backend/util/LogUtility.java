@@ -21,6 +21,7 @@ public class LogUtility {
 
     public static final String TAG = "WriteLogUtility";
 
+    @SuppressWarnings("unused")
     public static void writeLogFile(String fileName, Throwable e) {
         writeLogFile(fileName, e, null);
     }
@@ -39,7 +40,8 @@ public class LogUtility {
         writeLogFile(fileName, true, stacktrace);
     }
 
-    public static void toastInActivityThread(Activity activity, CharSequence text, int length) {
+    public static void toastInActivityThread(Activity activity, CharSequence text,
+                                             @SuppressWarnings("SameParameterValue") int length) {
         activity.runOnUiThread(getToastRunnable(activity, text, length));
     }
 
@@ -56,9 +58,10 @@ public class LogUtility {
      * all non-alphanumerical characters, and the log will be placed in the 'sikkr' directory in
      * the android data directory.
      *
-     * @param fileName
-     * @param logRows
+     * @param fileName The name of the file (excluding the file name ending) for the lines to be saved to
+     * @param logRows An arbitrary number of rows to be saved to a text file
      */
+    @SuppressWarnings("unused")
     public static void writeLogFile(String fileName, String... logRows) {
         writeLogFile(fileName, false, logRows);
     }
@@ -114,8 +117,8 @@ public class LogUtility {
     /**
      * This will remove all illegal characters from the file name.
      *
-     * @param str
-     * @return
+     * @param str The filename to be fixed
+     * @return The filename without illegal characters
      */
     private static String fixFilename(String str) {
         return str.replaceAll("[^a-zA-Z0-9]", "");
@@ -124,7 +127,7 @@ public class LogUtility {
     /**
      * Return the absolute path of the log directory.
      *
-     * @return
+     * @return the directory in which the log files will be stored
      */
     public static String getLogDirectory() {
         String logPath;
@@ -143,7 +146,7 @@ public class LogUtility {
      *
      * @return - A string timestamp
      */
-    public static String getTimeStamp() {
+    public static CharSequence getTimeStamp() {
         final Calendar cal = Calendar.getInstance();
         return cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" +
 

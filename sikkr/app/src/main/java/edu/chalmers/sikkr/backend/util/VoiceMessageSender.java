@@ -2,7 +2,6 @@ package edu.chalmers.sikkr.backend.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.klinker.android.send_message.Message;
@@ -36,7 +35,6 @@ import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 public class VoiceMessageSender {
 
-    private final String TAG = "VoiceMessageSender";
     private final static VoiceMessageSender singleton = new VoiceMessageSender();
     private Context context;
     private Settings mmsSettings;
@@ -128,7 +126,7 @@ public class VoiceMessageSender {
             Thread t = new Thread(runnable, "MessageSenderThread");
             t.start();
         } catch (Throwable t) {
-
+            //NADA
         }
     }
 
@@ -153,14 +151,10 @@ public class VoiceMessageSender {
             msg.setMedia(getBytes(stream), "audio/3gp");
             msg.setType(Message.TYPE_SMSMMS);
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "Audio file " + vmsg.getFileUri() + " not found.");
             throw new MessageNotSentException("Audio file not found.");
         } catch (IOException e) {
-            Log.e(TAG, "Couldn't read audio file for sending mms.");
             throw new MessageNotSentException("Audio file could not be read.");
         }
-        Log.d(TAG, "Sending message to " + msg.getAddresses()[0] + " with thread id " +
-                MessageUtils.getMessageThreadIdByContactId(context, receiverNbr));
         sendTransaction.sendNewMessage(msg, MessageUtils.getMessageThreadIdByContactId(context, receiverNbr));
     }
 

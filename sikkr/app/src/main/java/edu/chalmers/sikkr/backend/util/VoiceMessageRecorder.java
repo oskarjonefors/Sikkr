@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.UUID;
 
-import edu.chalmers.sikkr.backend.messages.SikkrVoiceMessage;
+import edu.chalmers.sikkr.backend.messages.SikkrRecording;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
@@ -153,7 +153,7 @@ public class VoiceMessageRecorder {
 
             Log.d(TAG, "MMS timestamp set to " + c);
             state = RecordingState.RESET;
-            return new SikkrVoiceMessage(c, Uri.fromFile(new File(currentFilePath)), true);
+            return new SikkrRecording(c, Uri.fromFile(new File(currentFilePath)), true);
         } else {
             throw new IllegalArgumentException(state == RecordingState.RECORDING ? "Cannot get voice message," +
                     "recording has not been stopped." : "Cannot get voice message since one has not been recorded.");

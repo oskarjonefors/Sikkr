@@ -3,6 +3,7 @@ package edu.chalmers.sikkr.backend.util;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -19,20 +20,16 @@ public class FuzzySearchUtility {
      * @param searchElements
      * @return
      */
-    public static List<String> getSearchResults(String pattern, Set<String> searchElements) {
+    public static List<String> getSearchResults(String pattern, Iterable<String> searchElements) {
 
         if (pattern == null || pattern.trim().isEmpty()) {
             return null;
         }
 
-        Set<SearchResult> matches = new TreeSet<SearchResult>();
-        Set<SearchResult> discards = new TreeSet<SearchResult>();
+        Collection<SearchResult> matches = new TreeSet<>();
+        Collection<SearchResult> discards = new TreeSet<>();
         int topMatch = 1000;
 
-        if (pattern == null || pattern.trim().isEmpty()) {
-            return null;
-        }
-        
         for (String str : searchElements) {
             String element;
 

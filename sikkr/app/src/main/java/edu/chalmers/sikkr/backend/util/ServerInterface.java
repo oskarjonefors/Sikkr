@@ -37,7 +37,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.messages.InboxDoneLoadingListener;
-import edu.chalmers.sikkr.backend.messages.ServerMessage;
+import edu.chalmers.sikkr.backend.messages.StorableMessage;
 import edu.chalmers.sikkr.backend.messages.TheInbox;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
@@ -75,7 +75,6 @@ public final class ServerInterface implements ProgressListenable {
     private final Collection<InboxDoneLoadingListener> doneLoadingListeners;
 
     private final Socket SOCKET, WRITE_SOCKET;
-    private final Context context;
 
     /**
      * Creates a new ServerInterface.
@@ -125,7 +124,6 @@ public final class ServerInterface implements ProgressListenable {
 
         listeners = new ArrayList<>();
         doneLoadingListeners = new ArrayList<>();
-        this.context = context;
         thread = new MessageNotificationThread();
         thread.start();
     }
@@ -227,7 +225,7 @@ public final class ServerInterface implements ProgressListenable {
     /**
      * @return a list of recieved messages from the server.
      */
-    public static List<ServerMessage> getReceivedMessages() throws Exception {
+    public static List<StorableMessage> getReceivedMessages() throws Exception {
         return getSingleton().getReceivedMessagesFromServer();
     }
 
@@ -298,8 +296,8 @@ public final class ServerInterface implements ProgressListenable {
         singleton.addInboxDoneLoadingListener(listener);
     }
 
-    public static ServerMessage convertToServerMessage(VoiceMessage message, String number) throws IOException {
-        return new ServerMessage(singleton.LOCAL_NUMBER, number,
+    public static StorableMessage convertToStorableMessage(VoiceMessage message, String number) throws IOException {
+        return new StorableMessage(singleton.LOCAL_NUMBER, number,
                 readByteDataFromFile(new File(message.getFileUri().getPath())),
                 message.getTimestamp().getTimeInMillis(), true, message.isRead());
     }
@@ -329,13 +327,13 @@ public final class ServerInterface implements ProgressListenable {
         return cipher.doFinal(bytes);
     }
 
-    private List<ServerMessage> getReceivedMessagesFromServer() throws Exception {
+    private List<StorableMessage> getReceivedMessagesFromServer() throws Exception {
         writeLine("get_received_messages");
         return getMessagesFromServer(false);
     }
 
-    private List<ServerMessage> getMessagesFromServer(boolean sent) throws Exception {
-        final List<ServerMessage> messages = new ArrayList<>();
+    private List<StorableMessage> getMessagesFromServer(@SuppressWarnings("SameParameterValue") boolean sent) throws Exception {
+        final List<StorableMessage> messages = new ArrayList<>();
         final int n = INPUT_STREAM.readInt();
         final double numberOfOperations = 8D;
 
@@ -358,7 +356,7 @@ public final class ServerInterface implements ProgressListenable {
             final byte[] content;
             final String senderNumber;
             final String receiverNumber;
-            final ServerMessage msg;
+            final StorableMessage msg;
 
             INPUT_STREAM.readFully(encryptedIV);
             INPUT_STREAM.readFully(encryptedKey);
@@ -373,7 +371,7 @@ public final class ServerInterface implements ProgressListenable {
             content = aesDecrypt(encryptedContent, key, iv);
 
 
-            msg = new ServerMessage(senderNumber, receiverNumber, content, time, sent, false);
+            msg = new StorableMessage(senderNumber, receiverNumber, content, time, sent, false);
             messages.add(msg);
             notifyListeners(step, "Loading " + (sent ? "sent " : "incoming") + "web messages");
         }
@@ -431,11 +429,11 @@ public final class ServerInterface implements ProgressListenable {
 
     private void sendMessageToServer(String number, byte[] content, long time) {
         try {
-            ServerMessage savedMsg = new ServerMessage(LOCAL_NUMBER, number, content, time, true, true);
+            StorableMessage savedMsg = new StorableMessage(LOCAL_NUMBER, number, content, time, true, true);
             EncryptedMessage message = new EncryptedMessage(number.getBytes(), content);
             byte[] encryptedIV = encrypt(message.iv);
             byte[] encryptedKey = encrypt(message.aeskey);
-            VoiceMessageFileUtility.saveServerMessage(savedMsg);
+            VoiceMessageFileUtility.saveStorableMessage(savedMsg);
             writeLine("send_message");
             OUTPUT_STREAM.writeInt(encryptedIV.length);
             OUTPUT_STREAM.writeInt(encryptedKey.length);
@@ -449,7 +447,7 @@ public final class ServerInterface implements ProgressListenable {
             OUTPUT_STREAM.flush();
 
         } catch (Exception e) {
-
+            //NADA
         }
     }
 
@@ -550,16 +548,10 @@ public final class ServerInterface implements ProgressListenable {
         }
     }
 
-    private void writeLine(CharSequence line, boolean flush) throws IOException {
+    private void writeLine(CharSequence line) throws IOException {
         BUFFERED_WRITER.append(line);
         BUFFERED_WRITER.newLine();
-        if (flush) {
-            BUFFERED_WRITER.flush();
-        }
-    }
-
-    private void writeLine(CharSequence line) throws IOException {
-        writeLine(line, true);
+        BUFFERED_WRITER.flush();
     }
 
     public void addInboxDoneLoadingListener(InboxDoneLoadingListener listener) {
@@ -606,7 +598,7 @@ public final class ServerInterface implements ProgressListenable {
                     }
                     sleep(sleepyTime);
                 } catch (Throwable e) {
-
+                    //NADA
                 }
             }
         }

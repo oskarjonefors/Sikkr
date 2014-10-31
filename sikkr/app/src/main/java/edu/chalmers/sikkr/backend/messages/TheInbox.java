@@ -122,11 +122,11 @@ public class TheInbox implements ProgressListenable {
     }
 
     private void collectAndSaveServerMessages() throws Exception {
-        final List<ServerMessage> messages = ServerInterface.getReceivedMessages();
+        final List<StorableMessage> messages = ServerInterface.getReceivedMessages();
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
-            for (ServerMessage msg : messages) {
-                VoiceMessageFileUtility.saveServerMessage(msg);
+            for (StorableMessage msg : messages) {
+                VoiceMessageFileUtility.saveStorableMessage(msg);
                 notifyListeners(step, "Preparing web messages");
             }
         } else {

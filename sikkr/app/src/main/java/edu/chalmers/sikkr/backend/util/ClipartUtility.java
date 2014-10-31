@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +52,7 @@ public class ClipartUtility {
         Log.d(TAG, "Trying to read map file " + file.getAbsolutePath());
         try {
             FileInputStream fileIn = new FileInputStream(file.getAbsolutePath());
-            ObjectInputStream objIn = new ObjectInputStream(fileIn);
+            ObjectInput objIn = new ObjectInputStream(fileIn);
             Map<String,String> map = (Map<String,String>) objIn.readObject();
             objIn.close();
             fileIn.close();
@@ -79,7 +81,7 @@ public class ClipartUtility {
             }
 
             FileOutputStream fileOut = new FileOutputStream(mapFilePath);
-            ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
+            ObjectOutput objOut = new ObjectOutputStream(fileOut);
             objOut.writeObject(regMap);
             objOut.close();
             fileOut.close();

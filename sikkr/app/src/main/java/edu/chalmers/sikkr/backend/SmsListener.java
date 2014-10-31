@@ -19,9 +19,7 @@ import edu.chalmers.sikkr.backend.messages.TheInbox;
  */
 
 public class SmsListener extends BroadcastReceiver {
-    private Context context;
     public SmsListener(Context context){
-        this.context = context;
         IntentFilter filter1 = new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
         context.registerReceiver(SmsListener.this, filter1);
     }
@@ -35,10 +33,10 @@ public class SmsListener extends BroadcastReceiver {
                 String date = String.valueOf(smsMessage.getTimestampMillis());
                 OneSms sms = new OneSms(messageBody, date, false);
                 List<Conversation> list = TheInbox.getInstance().getMessageInbox();
-                for(int i = 0;i<list.size();i++){
-                    if(phoneNbr.equals(list.get(i).getAddress())){
+                for(Conversation conversation : list){
+                    if(phoneNbr.equals(conversation.getAddress())){
                         sms.markAsUnread();
-                        list.get(i).addMessage(sms);
+                        conversation.addMessage(sms);
                     }
                 }
             }

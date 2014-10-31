@@ -9,19 +9,17 @@ import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 /**
  * Created by Eric on 2014-10-02.
  */
-public class SikkrVoiceMessage extends AbstractMessage implements VoiceMessage {
+public class SikkrRecording extends AbstractMessage implements VoiceMessage {
 
 
     private final Calendar timestamp;
     private final Uri part;
-    private final boolean sent;
 
     private boolean read;
 
-    public SikkrVoiceMessage(final Calendar timestamp, final Uri part, final boolean sent) {
+    public SikkrRecording(final Calendar timestamp, final Uri part) {
         this.timestamp = timestamp;
         this.part = part;
-        this.sent = sent;
         this.read = false;
     }
 
@@ -43,7 +41,7 @@ public class SikkrVoiceMessage extends AbstractMessage implements VoiceMessage {
 
     @Override
     public boolean isSent(){
-        return sent;
+        return true;
     }
 
     @Override

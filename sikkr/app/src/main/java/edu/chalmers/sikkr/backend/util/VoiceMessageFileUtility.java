@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 import edu.chalmers.sikkr.backend.messages.Message;
-import edu.chalmers.sikkr.backend.messages.ServerMessage;
+import edu.chalmers.sikkr.backend.messages.StorableMessage;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
@@ -47,7 +47,7 @@ public class VoiceMessageFileUtility {
 
         /* Strips away the file extension */
         final String fName = fileName.split("\\.")[0];
-        saveServerMessage(null, fName);
+        saveStorableMessage(null, fName);
 
     }
 
@@ -102,17 +102,17 @@ public class VoiceMessageFileUtility {
 
     public static void saveVoiceMessage(VoiceMessage message, String receiver) {
         try {
-            saveServerMessage(ServerInterface.convertToServerMessage(message, receiver));
+            saveStorableMessage(ServerInterface.convertToStorableMessage(message, receiver));
         } catch (IOException e) {
 
         }
     }
 
-    public static void saveServerMessage(ServerMessage message) {
-        saveServerMessage(message, null);
+    public static void saveStorableMessage(StorableMessage message) {
+        saveStorableMessage(message, null);
     }
 
-    public static void saveServerMessage(ServerMessage message, String markReadMessageName) {
+    public static void saveStorableMessage(StorableMessage message, String markReadMessageName) {
         try {
 
             XmlSerializer writer = inputFactory.newSerializer();
@@ -203,7 +203,7 @@ public class VoiceMessageFileUtility {
 
     }
 
-    private static String getRandomContentPath(ServerMessage message) {
+    private static String getRandomContentPath(StorableMessage message) {
         Random random = new Random();
         String path;
         File dir = new File("messages/");

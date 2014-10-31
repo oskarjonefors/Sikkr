@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * @author Eric Bjuhr
  */
-public class ServerMessage {
+public class StorableMessage {
 
     public final String SENDER, RECEIVER;
     public final byte[] CONTENT;
@@ -13,8 +13,8 @@ public class ServerMessage {
     public final boolean SENT;
     public final boolean READ;
 
-    public ServerMessage(final String SENDER, final String RECEIVER, final byte[] CONTENT,
-                         final long TIMESTAMP, final boolean SENT, final boolean READ) {
+    public StorableMessage(final String SENDER, final String RECEIVER, final byte[] CONTENT,
+                           final long TIMESTAMP, final boolean SENT, final boolean READ) {
         this.SENDER = SENDER;
         this.RECEIVER = RECEIVER;
         this.CONTENT = CONTENT;

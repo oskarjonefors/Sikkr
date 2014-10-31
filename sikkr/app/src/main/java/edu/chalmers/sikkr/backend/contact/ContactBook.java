@@ -162,11 +162,10 @@ public class ContactBook implements ProgressListenable {
     /**
      * Get a set of all the contacts' initial letters.
      */
-    public Set<Character> getInitialLetters() {
+    public Collection<Character> getInitialLetters() {
+        final Collection<Character> validChars = new HashSet<>(Arrays.asList(VALID_INITIAL_CHARACTERS));
+        final Collection<Character> letters = new TreeSet<>();
 
-        Set<Character> validChars = new HashSet<>(Arrays.asList(VALID_INITIAL_CHARACTERS));
-
-        final Set<Character> letters = new TreeSet<>();
         for (final Contact contact : contacts.values()) {
             Character c = Character.toUpperCase(contact.getName().charAt(0));
 
@@ -182,8 +181,8 @@ public class ContactBook implements ProgressListenable {
     /**
      * Get a list of all the contacts in the contact book.
      */
-    Set<Contact> getContacts() {
-        final Set<Contact> c = new TreeSet<>();
+    private Collection<Contact> getContacts() {
+        final Collection<Contact> c = new TreeSet<>();
         for (final Contact contact : contacts.values()) {
             c.add(contact);
         }
@@ -195,8 +194,8 @@ public class ContactBook implements ProgressListenable {
      * @param initialLetter a char ranging from 'a' to 'z' and also 'å' 'ä' or 'ö'
      * @return a set of contacts in alphabetic order.
      */
-    public Set<Contact> getContacts(char initialLetter) {
-        final Set<Contact> c = new TreeSet<>();
+    public Collection<Contact> getContacts(char initialLetter) {
+        final Collection<Contact> c = new TreeSet<>();
         final List<Character> validChars = Arrays.asList(VALID_INITIAL_CHARACTERS);
 
         for (final Contact contact : contacts.values()) {
@@ -272,8 +271,8 @@ public class ContactBook implements ProgressListenable {
         return results;
     }
 
-    Set<Contact> getFavoriteContacts() {
-        final Set<Contact> favSet = new TreeSet<>();
+    Collection<Contact> getFavoriteContacts() {
+        final Collection<Contact> favSet = new TreeSet<>();
 
         for (Contact c : contacts.values()) {
             if (c.isFavorite()) {
@@ -284,7 +283,7 @@ public class ContactBook implements ProgressListenable {
         return favSet;
     }
 
-    public List<Contact> getTopContacts(int nbrOfContacts) {
+    public Collection<Contact> getTopContacts(int nbrOfContacts) {
         final List<Contact> topList = new ArrayList<>();
         final List<Contact> favList = new ArrayList<>();
         favList.addAll(getFavoriteContacts());
