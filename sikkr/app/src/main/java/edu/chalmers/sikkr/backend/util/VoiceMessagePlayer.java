@@ -71,7 +71,7 @@ public class VoiceMessagePlayer implements MediaPlayer.OnCompletionListener {
                 throw new IOException("Could not delete old temp file");
             }
 
-            if (!tmp.exists() && tmp.createNewFile()) {
+            if (!tmp.exists() && !tmp.createNewFile()) {
                 throw new IOException("Could not create new temp file");
             }
 

@@ -18,7 +18,7 @@ import edu.chalmers.sikkr.backend.util.DateDiffUtility;
  * Adapter class for the conversations
  * @author Jesper Olsson
  */
-public class ConversationAdapter extends ArrayAdapter {
+public class ConversationAdapter extends ArrayAdapter<ListableMessage> {
     private final Context context;
     private final List<ListableMessage> list;
 

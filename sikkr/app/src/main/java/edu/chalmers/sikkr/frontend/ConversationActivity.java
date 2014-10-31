@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -42,8 +43,8 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     private ImageButton sendButton;
     private ImageButton cancelButton;
     private Button recordButton;
-    private BroadcastReceiver broadcastReciever;
-    ArrayAdapter adapter;
+    private BroadcastReceiver broadcastReceiver;
+    ArrayAdapter<ListableMessage> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
         /**
          * Receiver to handle incoming text messages dynamically
          */
-        broadcastReciever = new BroadcastReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 TheInbox.getInstance().loadInbox(ConversationActivity.this);
@@ -72,13 +73,13 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
                 adapter.setNotifyOnChange(true);
             }
         };
-        registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
+        registerReceiver(broadcastReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
     @Override
     protected void onPause(){
         super.onPause();
         try{
-            unregisterReceiver(broadcastReciever);
+            unregisterReceiver(broadcastReceiver);
         }catch (Exception e){
 
         }
@@ -96,7 +97,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     protected void onDestroy(){
         super.onDestroy();
         try{
-            unregisterReceiver(broadcastReciever);
+            unregisterReceiver(broadcastReceiver);
         }catch (Exception e){
 
         }
@@ -160,7 +161,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
                 SoundClipPlayer.playSound(this, R.raw.rec_beepbeep, new RecordingWaiter());
 
                 recordButton.setBackgroundResource(R.drawable.rec_button_active);
-                AnimationDrawable anim = (AnimationDrawable) recordButton.getBackground();
+                Animatable anim = (Animatable) recordButton.getBackground();
                 anim.start();
                 break;
             case RECORDING:
