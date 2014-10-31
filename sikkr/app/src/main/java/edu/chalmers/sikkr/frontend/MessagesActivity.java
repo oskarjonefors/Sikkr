@@ -179,7 +179,6 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
         try {
             adapter.notifyDataSetChanged();
         } catch (Throwable t) {
-            Log.e("")
         }
     }
 
