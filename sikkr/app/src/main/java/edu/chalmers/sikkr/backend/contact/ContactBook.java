@@ -17,14 +17,12 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import edu.chalmers.sikkr.backend.ProgressListenable;
 import edu.chalmers.sikkr.backend.util.ClipartUtility;
 import edu.chalmers.sikkr.backend.util.FuzzySearchUtility;
-import edu.chalmers.sikkr.backend.util.MessageUtils;
 import edu.chalmers.sikkr.backend.util.ProgressListener;
 
 import static android.provider.ContactsContract.CommonDataKinds.Phone;

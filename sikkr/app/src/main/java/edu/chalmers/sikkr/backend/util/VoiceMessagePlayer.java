@@ -1,7 +1,6 @@
 package edu.chalmers.sikkr.backend.util;
 
 import android.content.Context;
-import android.drm.DrmStore;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
@@ -68,12 +67,13 @@ public class VoiceMessagePlayer implements MediaPlayer.OnCompletionListener {
                 }
             }
 
-            if (tmp.exists()) {
-                if (!tmp.delete()) {
-                    throw new IOException("Could not create tempfile");
-                }
+            if (tmp.exists() && !tmp.delete()) {
+                throw new IOException("Could not delete old temp file");
             }
-            tmp.createNewFile();
+
+            if (!tmp.exists() && tmp.createNewFile()) {
+                throw new IOException("Could not create new temp file");
+            }
 
             DataInputStream dis = new DataInputStream(context.getContentResolver().openInputStream(msg.getFileUri()));
             byte[] read = new byte[dis.available()];
@@ -98,6 +98,7 @@ public class VoiceMessagePlayer implements MediaPlayer.OnCompletionListener {
         }
     }
 
+    @SuppressWarnings("unused")
     public void stop() {
         if(player != null) {
             player.stop();

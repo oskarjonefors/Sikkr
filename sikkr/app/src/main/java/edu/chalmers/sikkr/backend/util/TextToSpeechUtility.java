@@ -43,7 +43,7 @@ public final class TextToSpeechUtility {
             if (tts.isSpeaking() && listener != null) {
                 listener.playbackDone();
             }
-            final HashMap<String, String> map = new HashMap<String, String>();
+            final HashMap<String, String> map = new HashMap<>();
             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "" + UUID.randomUUID());
             tts.setOnUtteranceProgressListener(new SikkrUtteranceProgressListener(playbackListener));
             tts.speak(msg, TextToSpeech.QUEUE_FLUSH, map);

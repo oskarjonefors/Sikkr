@@ -28,18 +28,20 @@ public class ClipartUtility {
 
     private final static String TAG = "ClipartUtility";
     private final static String FILE_NAME = "contact_clipart_connections.ser";
+    private final String dir;
     private final Map<String,String> regMap;
     private final Context context;
-    private final String mapFilePath;
+    //private final String mapFilePath;
 
     public ClipartUtility(Context context) {
-        mapFilePath = getDataDirectory() + FILE_NAME;
+        //mapFilePath = getDataDirectory() + FILE_NAME;
+        dir = getDataDirectory();
         regMap = getRegMap();
         this.context = context;
     }
 
     private Map<String, String> getRegMap() {
-        File file = new File(mapFilePath);
+        File file = new File(dir, FILE_NAME);
         if (file.exists()) {
             return readMapFile(file);
         } else {
@@ -48,12 +50,13 @@ public class ClipartUtility {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, String> readMapFile(File file) {
         Log.d(TAG, "Trying to read map file " + file.getAbsolutePath());
         try {
             FileInputStream fileIn = new FileInputStream(file.getAbsolutePath());
             ObjectInput objIn = new ObjectInputStream(fileIn);
-            Map<String,String> map = (Map<String,String>) objIn.readObject();
+            Map<String, String> map = (Map<String, String>) objIn.readObject();
             objIn.close();
             fileIn.close();
             Log.d(TAG, "Map file " + file.getAbsolutePath() + " was successfully read.");
@@ -72,22 +75,25 @@ public class ClipartUtility {
 
     public void saveChanges() {
         try {
-
-            File mapFile = new File(mapFilePath);
-            if (!mapFile.exists()) {
-                File dir = new File(getDataDirectory());
-                dir.mkdirs();
-                dir.createNewFile();
+            File dir = new File(getDataDirectory());
+            File mapFile = new File(dir, FILE_NAME);
+            if (!dir.exists() && !dir.mkdirs()) {
+                throw new IOException("Could not create clip art directory");
             }
 
-            FileOutputStream fileOut = new FileOutputStream(mapFilePath);
-            ObjectOutput objOut = new ObjectOutputStream(fileOut);
+            if (mapFile.exists() && !mapFile.delete()) {
+                throw new IOException("Could not remove old map file");
+            }
+
+            if (!mapFile.exists() && mapFile.createNewFile()) {
+                throw new IOException("Could not create new map file");
+            }
+
+            ObjectOutput objOut = new ObjectOutputStream(new FileOutputStream(mapFile));
             objOut.writeObject(regMap);
+            objOut.flush();
             objOut.close();
-            fileOut.close();
-            Log.d(TAG, "Map file successfully saved to " + mapFilePath);
         } catch (IOException e) {
-            Log.e(TAG, "Map file could not be saved to " + mapFilePath);
             e.printStackTrace();
         }
     }

@@ -25,8 +25,8 @@ public class SikkrContact implements Contact {
         this.name = name;
         this.id = id;
         this.photo = photo;
-        phoneNumbers = new ArrayList<String>();
-        mobilePhoneNumbers = new ArrayList<String>();
+        phoneNumbers = new ArrayList<>();
+        mobilePhoneNumbers = new ArrayList<>();
     }
 
     @Override

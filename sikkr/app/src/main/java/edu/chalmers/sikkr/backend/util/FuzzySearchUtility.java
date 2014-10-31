@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -61,7 +60,7 @@ public class FuzzySearchUtility {
             return null;
         }
 
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         for (SearchResult res : matches) {
             results.add(res.name);
         }
