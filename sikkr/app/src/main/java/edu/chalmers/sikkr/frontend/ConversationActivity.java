@@ -47,6 +47,7 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     private ImageButton sendButton;
     private ImageButton cancelButton;
     private Button recordButton;
+    private BroadcastReceiver broadcastReciever;
     ArrayAdapter adapter;
 
     @Override
@@ -61,10 +62,14 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
         recorder = VoiceMessageRecorder.getSharedInstance();
         adapter.setNotifyOnChange(true);
 
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
         /**
          * Reciever to handle incoming text messages dynamically
          */
-        BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
+        broadcastReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
@@ -92,8 +97,9 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
         registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
     @Override
-    public void onPause(){
+    protected void onPause(){
         super.onPause();
+        unregisterReceiver(broadcastReciever);
         try {
             if (recorder.getRecordingState() == VoiceMessageRecorder.RecordingState.RECORDING) {
                 recorder.stopRecording();

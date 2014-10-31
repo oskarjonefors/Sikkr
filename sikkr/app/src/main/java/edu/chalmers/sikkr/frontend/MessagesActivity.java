@@ -14,7 +14,6 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ import edu.chalmers.sikkr.backend.util.VoiceMessageSender;
 public class MessagesActivity extends Activity implements InboxDoneLoadingListener {
     private static List<Conversation> msgList;
     private SmsViewAdapter adapter;
-
+    private BroadcastReceiver broadcastReciever;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ServerInterface.addSingletonInboxDoneLoadingListener(this);
@@ -61,10 +60,15 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.sms_layout);
         createSmsLayout();
+
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
         /**
          * Reciever to handle incoming text messages dynamically
          */
-        BroadcastReceiver broadcastReciever = new BroadcastReceiver() {
+        broadcastReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
@@ -88,6 +92,11 @@ public class MessagesActivity extends Activity implements InboxDoneLoadingListen
         };
 
         registerReceiver(broadcastReciever, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        unregisterReceiver(broadcastReciever);
     }
 
     private void createSmsLayout() {
