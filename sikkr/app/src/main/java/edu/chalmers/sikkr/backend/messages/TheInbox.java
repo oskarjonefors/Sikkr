@@ -138,7 +138,7 @@ public class TheInbox implements ProgressListenable {
 
     public void collectLocalMessages() {
         LogUtility.writeLogFile("TheInbox", "Collecting messages from the device");
-        List<Message> messages = VoiceMessageFileUtility.readMessages();
+        List<Message> messages = VoiceMessageFileUtility.readMessages(null);
         if (!messages.isEmpty()) {
             double step = 1D / (messages.size() * numberOfOperations);
             for (Message msg : messages) {

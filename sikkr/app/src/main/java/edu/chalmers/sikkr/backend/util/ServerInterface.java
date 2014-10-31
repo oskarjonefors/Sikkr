@@ -304,7 +304,7 @@ public final class ServerInterface implements ProgressListenable {
     public static ServerMessage convertToServerMessage(VoiceMessage message, String number) throws IOException {
         return new ServerMessage(singleton.LOCAL_NUMBER, number,
                 readByteDataFromFile(new File(message.getFileUri().getPath())),
-                message.getTimestamp().getTimeInMillis(), true);
+                message.getTimestamp().getTimeInMillis(), true, message.isRead());
     }
 
     /*
@@ -376,7 +376,7 @@ public final class ServerInterface implements ProgressListenable {
             content = aesDecrypt(encryptedContent, key, iv);
 
 
-            msg = new ServerMessage(senderNumber, receiverNumber, content, time, sent);
+            msg = new ServerMessage(senderNumber, receiverNumber, content, time, sent, false);
             messages.add(msg);
             notifyListeners(step, "Loading " + (sent ? "sent " : "incoming") + "web messages");
         }
@@ -434,7 +434,7 @@ public final class ServerInterface implements ProgressListenable {
 
     private void sendMessageToServer(String number, byte[] content, long time) {
         try {
-            ServerMessage savedMsg = new ServerMessage(LOCAL_NUMBER, number, content, time, true);
+            ServerMessage savedMsg = new ServerMessage(LOCAL_NUMBER, number, content, time, true, true);
             EncryptedMessage message = new EncryptedMessage(number.getBytes(), content);
             byte[] encryptedIV = encrypt(message.iv);
             byte[] encryptedKey = encrypt(message.aeskey);

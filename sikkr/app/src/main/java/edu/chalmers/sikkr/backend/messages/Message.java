@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import edu.chalmers.sikkr.backend.util.LogUtility;
+import edu.chalmers.sikkr.backend.util.VoiceMessageFileUtility;
 import edu.chalmers.sikkr.backend.util.VoiceMessagePlayer;
 
 /**
@@ -20,7 +21,7 @@ public final class Message extends AbstractMessage implements VoiceMessage {
     private boolean read = false;
 
     public Message(final String SENDER, final String RECEIVER, final Uri path,
-            final long TIMESTAMP, final boolean sent) {
+            final long TIMESTAMP, final boolean sent, final boolean isRead) {
         LogUtility.writeLogFile("Message", "Constructed new message");
         this.SENDER = SENDER;
         this.RECEIVER = RECEIVER;
@@ -28,6 +29,7 @@ public final class Message extends AbstractMessage implements VoiceMessage {
         this.TIMESTAMP.setTimeInMillis(TIMESTAMP);
         this.sent = sent;
         this.path = path;
+        this.read = isRead;
     }
 
     public String getReceiver() {
@@ -50,7 +52,6 @@ public final class Message extends AbstractMessage implements VoiceMessage {
 
     @Override
     public boolean isSent() {
-        //TODO
         return sent;
     }
 
@@ -62,6 +63,7 @@ public final class Message extends AbstractMessage implements VoiceMessage {
     @Override
     public void markAsRead() {
         read = true;
+        VoiceMessageFileUtility.markMessageAsRead(path.getLastPathSegment());
     }
 
     @Override

@@ -11,14 +11,16 @@ public class ServerMessage {
     public final byte[] CONTENT;
     public final long TIMESTAMP;
     public final boolean SENT;
+    public final boolean READ;
 
     public ServerMessage(final String SENDER, final String RECEIVER, final byte[] CONTENT,
-                         final long TIMESTAMP, final boolean SENT) {
+                         final long TIMESTAMP, final boolean SENT, final boolean READ) {
         this.SENDER = SENDER;
         this.RECEIVER = RECEIVER;
         this.CONTENT = CONTENT;
         this.TIMESTAMP = TIMESTAMP;
         this.SENT = SENT;
+        this.READ = READ;
     }
 
     @Override

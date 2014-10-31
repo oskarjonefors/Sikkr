@@ -1,11 +1,7 @@
 package edu.chalmers.sikkr.backend.util;
 
-import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -29,7 +25,10 @@ import edu.chalmers.sikkr.backend.messages.ServerMessage;
 import edu.chalmers.sikkr.backend.messages.VoiceMessage;
 
 /**
- * Created by ivaldi on 2014-10-27.
+ * @author Oskar Jönefors
+ *
+ * Reads and writes voice messages to file.
+ *
  */
 public class VoiceMessageFileUtility {
 
@@ -45,7 +44,25 @@ public class VoiceMessageFileUtility {
         }
     }
 
-    public static List<Message> readMessages() {
+    public static void markMessageAsRead(String fileName) {
+
+        /* Strips away the file extension */
+        final String fName = fileName.split("\\.")[0];
+        saveServerMessage(null, fName);
+
+    }
+
+    /**
+     * Read all the messages in from file. If a message with a file name matching the
+     * given parameter is found, it will be marked as read before the list is returned.
+     *
+     * @param markReadMessageName  A file name without path and file extension. If this is null, or
+     *                             no matching message is found, no messages will be altered
+     *                             from the way they were previously saved.
+     *
+     * @return  A list of messages. This may be empty but never null.
+     */
+    public static List<Message> readMessages(String markReadMessageName) {
         LogUtility.writeLogFile(TAG, "Reading messages from xml file");
         File file =  new File(new File(getAppPath()), "messages.xml");
         List<Message> messages = new ArrayList<>();
@@ -65,9 +82,16 @@ public class VoiceMessageFileUtility {
                         long time = Long.parseLong(reader.getAttributeValue(2)); //Timestamp
                         boolean sent = Boolean.parseBoolean(reader.getAttributeValue(3)); //sent
                         String path = reader.getAttributeValue(4); //Content path
-                        LogUtility.writeLogFile("ATTRS", "Sender: " + sender + " Receiver: " + receiver
-                                + " Time: " + time);
-                        messages.add(new Message(sender, receiver, Uri.fromFile(new File(getAppPath(), "messages/" + path + ".msg")), time, sent));
+                        boolean isRead = false;
+
+                        if (path != null && path.equals(markReadMessageName)) {
+                            isRead = true;
+                        } else if (reader.getAttributeCount() >= 5) {
+                            isRead = Boolean.parseBoolean(reader.getAttributeValue(5));
+                        }
+
+                        messages.add(new Message(sender, receiver, Uri.fromFile(new File(getAppPath(),
+                                "messages/" + path + ".msg")), time, sent, isRead));
                     }
                 }
             }
@@ -86,6 +110,10 @@ public class VoiceMessageFileUtility {
     }
 
     public static void saveServerMessage(ServerMessage message) {
+        saveServerMessage(message, null);
+    }
+
+    public static void saveServerMessage(ServerMessage message, String markReadMessageName) {
         try {
             LogUtility.writeLogFile(TAG, "Saving a message");
             XmlSerializer writer = inputFactory.newSerializer();
@@ -114,7 +142,7 @@ public class VoiceMessageFileUtility {
                     throw new IOException("Could not create a new file!");
                 }
             } else {
-                previousMessages.addAll(readMessages());
+                previousMessages.addAll(readMessages(markReadMessageName));
                 if (!file.delete() || !file.createNewFile()) {
                     throw new IOException("Could not create a new file!");
                 }
@@ -131,39 +159,45 @@ public class VoiceMessageFileUtility {
                 writer.attribute("", "time", msg.getTimestamp().getTimeInMillis() + "");
                 writer.attribute("", "sent", msg.isSent() + "");
                 writer.attribute("", "content", msg.getFileUri().getLastPathSegment().replace(".msg", ""));
+                writer.attribute("", "isread", msg.isRead() + "");
                 writer.endTag("", "Message");
             }
 
-            File contentDir = new File(sikkrDirectory, "messages/");
-            File contentFile;
-            String path;
-            writer.startTag("", "Message");
-            writer.attribute("", "sender", message.SENDER);
-            writer.attribute("", "receiver", message.RECEIVER);
-            writer.attribute("", "time", message.TIMESTAMP + "");
-            writer.attribute("", "sent", message.SENT + "");
-            writer.attribute("", "content", path = getRandomContentPath(message));
-            writer.endTag("", "Message");
+            if (message != null) {
+                File contentDir = new File(sikkrDirectory, "messages/");
+                File contentFile;
+                String path;
+                writer.startTag("", "Message");
+                writer.attribute("", "sender", message.SENDER);
+                writer.attribute("", "receiver", message.RECEIVER);
+                writer.attribute("", "time", message.TIMESTAMP + "");
+                writer.attribute("", "sent", message.SENT + "");
+                writer.attribute("", "content", path = getRandomContentPath(message));
+                writer.attribute("", "isread", message.READ + "");
+                writer.endTag("", "Message");
+
+                if (contentDir.exists() && !contentDir.isDirectory()) {
+                    if (!contentDir.delete()) {
+                        throw new IOException("Could not delete a misnamed file");
+                    }
+                }
+
+                if (!contentDir.exists()) {
+                    if (!contentDir.mkdir()) {
+                        throw new IOException("Could not create content folder");
+                    }
+                }
+
+                contentFile = new File(contentDir, path + ".msg");
+                DataOutputStream dos = new DataOutputStream(new FileOutputStream(contentFile));
+                dos.write(message.CONTENT);
+                dos.flush();
+                dos.close();
+            }
+
             writer.endDocument();
             writer.flush();
 
-            if (contentDir.exists() && !contentDir.isDirectory()) {
-                if (!contentDir.delete()) {
-                    throw new IOException("Could not delete a misnamed file");
-                }
-            }
-
-            if (!contentDir.exists()) {
-                if (!contentDir.mkdir()) {
-                    throw new IOException("Could not create content folder");
-                }
-            }
-
-            contentFile = new File(contentDir, path + ".msg");
-            DataOutputStream dos = new DataOutputStream(new FileOutputStream(contentFile));
-            dos.write(message.CONTENT);
-            dos.flush();
-            dos.close();
         } catch (IOException | XmlPullParserException e) {
             LogUtility.writeLogFile(TAG, e);
         }

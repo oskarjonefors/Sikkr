@@ -217,7 +217,6 @@ public class ConversationActivity extends Activity implements InboxDoneLoadingLi
     public void readMessage(View view){
 
         Button trybutton =  (Button)view.findViewById(R.id.conversation_icon);
-        //trybutton.setBackgroundResource(R.drawable.play);
 
         final ListableMessage msg = (ListableMessage)view.getTag();
 
