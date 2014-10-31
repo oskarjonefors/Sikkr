@@ -23,7 +23,7 @@
 
     <string name="weeks_abbrev">v</string>
     <string name="days_abbrev">d</string>
-    <string name="hours_abbrev">t</string>
+    <string name="hours_abbrev">tim</string>
     <string name="minutes_abbrev">min</string>
     <string name="earlier">Tidigare</string>
     <string name="just_now">Nyss</string>
@@ -31,7 +31,5 @@
     <string name="found_no_contact">Hittade inte kontakt</string>
     <string name="found_no_contacts_initial_letter">Hittade inga kontakter under bokstaven</string>
     <string name="unknown_command">Okänt kommando</string>
-    <string name="title_activity_conversation">ConversationActivity</string>
-    <string name="title_activity_latest_calls">LatestCallsActivity</string>
 
 </resources>
