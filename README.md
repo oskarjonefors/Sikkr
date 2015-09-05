@@ -1,6 +1,7 @@
 **Sikkr for Android**
 =====
-An Android app for communicating safely in traffic
+An Android app for communicating safely in traffic.
+This app was developed as a project in the course DAT255 - Software Engineering Project at Chalmers University of Technology.
 
 **Getting Started**
 =====
